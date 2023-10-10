@@ -1136,7 +1136,7 @@ const AzureInfrastructureSpecEditable: React.FC<AzureInfrastructureSpecEditableP
               <Accordion
                 panelClassName={css.accordionPanel}
                 detailsClassName={css.accordionDetails}
-                activeId={!isEmpty(formik.errors.releaseName) ? /* istanbul ignore next */ 'advanced' : ''}
+                activeId={'advanced'}
               >
                 <Accordion.Panel
                   id="advanced"
