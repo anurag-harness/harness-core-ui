@@ -24,3 +24,12 @@ export const HOURS = 'hours'
 export const DAYS = 'days'
 export const hoursTimeFormat = 'hh:mma'
 export const daysTimeFormat = 'DoMMM hh:mma'
+
+export const ServiceDependencyDialogProps = {
+  isOpen: true,
+  style: {
+    height: 610,
+    width: 900,
+    padding: 15
+  }
+}

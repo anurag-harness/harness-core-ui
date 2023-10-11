@@ -1346,4 +1346,6 @@ analyzeDeploymentImpact:
   msDisabledWarning: 'Important: Prior to creating this step, ensure you enable the monitored service otherwise, this step will be skipped during execution.'
   validations:
     timeoutValidation: Timeout should be at least 5 minutes
+  reports:
+    noData: No Reports Found
 logsNewBaselineEventMessage: A baseline for comparing the events from the first deployments has not yet been established. Once the deployment runs again, the analysis will be shown.

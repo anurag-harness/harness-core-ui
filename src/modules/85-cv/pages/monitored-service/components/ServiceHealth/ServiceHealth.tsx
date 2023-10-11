@@ -7,8 +7,21 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Container, Heading, Layout, Select, SelectOption, Text, Icon, useToaster } from '@harness/uicore'
+import {
+  Container,
+  Layout,
+  Select,
+  SelectOption,
+  Text,
+  Icon,
+  useToaster,
+  Button,
+  ButtonVariation,
+  Dialog,
+  Heading
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import { useModalHook } from '@harness/use-modal'
 import Card from '@cv/components/Card/Card'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks/useQueryParams'
@@ -29,13 +42,19 @@ import {
   limitMaxSliderWidth,
   updateFilterByNotificationTime
 } from './ServiceHealth.utils'
-import { DEFAULT_MAX_SLIDER_WIDTH, DEFAULT_MIN_SLIDER_WIDTH, TimePeriodEnum } from './ServiceHealth.constants'
+import {
+  DEFAULT_MAX_SLIDER_WIDTH,
+  DEFAULT_MIN_SLIDER_WIDTH,
+  ServiceDependencyDialogProps,
+  TimePeriodEnum
+} from './ServiceHealth.constants'
 import type { ServiceHealthProps } from './ServiceHealth.types'
 import HealthScoreChart from './components/HealthScoreChart/HealthScoreChart'
 import MetricsAndLogs from './components/MetricsAndLogs/MetricsAndLogs'
 import AnomaliesCard from './components/AnomaliesCard/AnomaliesCard'
 import ChangesSourceCard from './components/ChangesSourceCard/ChangesSourceCard'
 import ChangesTable from './components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
+import ReportsTable from './components/ReportsTable/ReportsTable'
 import css from './ServiceHealth.module.scss'
 
 export default function ServiceHealth({
@@ -65,6 +84,24 @@ export default function ServiceHealth({
   const [changeTimelineSummary, setChangeTimelineSummary] = useState<ChangesInfoCardData[] | null>(null)
   const [healthScoreData, setHealthScoreData] = useState<RiskData[]>()
   const containerRef = useRef<HTMLElement>(null)
+  const [openServiceDepedencyModal, hideServiceDepedencyModal] = useModalHook(() => (
+    <Dialog
+      enforceFocus={false}
+      {...ServiceDependencyDialogProps}
+      onClose={hideServiceDepedencyModal}
+      title={getString('pipeline.serviceDependenciesText')}
+    >
+      <Layout.Vertical height={458} spacing={'large'}>
+        <ServiceDependencyGraph monitoredServiceIdentifier={monitoredServiceIdentifier} />
+        <Button
+          width={68}
+          text={getString('close')}
+          variation={ButtonVariation.SECONDARY}
+          onClick={hideServiceDepedencyModal}
+        />
+      </Layout.Vertical>
+    </Dialog>
+  ))
 
   useEffect(() => {
     if (notificationTime) {
@@ -174,15 +211,23 @@ export default function ServiceHealth({
 
   return (
     <>
-      <Select
-        value={selectedTimePeriod}
-        items={getTimePeriods(getString)}
-        className={css.timePeriods}
-        onChange={option => {
-          resetSlider()
-          setSelectedTimePeriod(option)
-        }}
-      />
+      <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <Select
+          value={selectedTimePeriod}
+          items={getTimePeriods(getString)}
+          className={css.timePeriods}
+          onChange={option => {
+            resetSlider()
+            setSelectedTimePeriod(option)
+          }}
+        />
+        <Button
+          className={css.serviceDepedencyButton}
+          text={getString('pipeline.serviceDependenciesText')}
+          variation={ButtonVariation.LINK}
+          onClick={openServiceDepedencyModal}
+        />
+      </Layout.Horizontal>
       <Container className={css.serviceHealthCard}>
         <Card>
           <>
@@ -247,7 +292,7 @@ export default function ServiceHealth({
         </Card>
 
         <Layout.Horizontal spacing="medium">
-          <Container width="60%">
+          <Container width="50%">
             <ChangesTable
               startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
               endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
@@ -255,15 +300,11 @@ export default function ServiceHealth({
               monitoredServiceIdentifier={monitoredServiceIdentifier}
             />
           </Container>
-          <Container width="40%">
+          <Container width="50%">
             <Heading level={2} font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
-              {getString('pipeline.serviceDependenciesText')}
+              {getString('ce.perspectives.reports.title', { count: 0 })}
             </Heading>
-            <Card>
-              <Layout.Vertical height={458}>
-                <ServiceDependencyGraph monitoredServiceIdentifier={monitoredServiceIdentifier} />
-              </Layout.Vertical>
-            </Card>
+            <ReportsTable />
           </Container>
         </Layout.Horizontal>
 

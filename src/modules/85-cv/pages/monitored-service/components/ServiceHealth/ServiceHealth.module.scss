@@ -33,3 +33,11 @@
 .tickerContainer {
   min-height: 72px;
 }
+
+.serviceDepedencyButton {
+  font-size: var(--font-size-small) !important;
+  margin-right: var(--spacing-small) !important;
+  span {
+    font-weight: 500 !important;
+  }
+}
