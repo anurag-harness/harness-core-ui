@@ -496,15 +496,17 @@ export function RightBar(): JSX.Element {
             formName="rightBarForm"
             enableReinitialize
             initialValues={codebaseInitialValues}
-            validationSchema={Yup.object().shape({
-              connectorRef: Yup.mixed().nullable(),
-              ...((connectionType === ConnectionType.Account || !codebase?.connectorRef) &&
-                !codebaseRuntimeInputs.repoName && {
-                  repoName: Yup.string()
-                    .required(getString('common.validation.repositoryName'))
-                    .matches(blankspacesRegex, getString('common.validation.blankRepositoryName'))
-                })
-            })}
+            validationSchema={Yup.lazy((values: CodebaseValues): any =>
+              Yup.object().shape({
+                connectorRef: Yup.mixed().notRequired(),
+                ...((connectionType === ConnectionType.Account || !values.connectorRef) &&
+                  !codebaseRuntimeInputs.repoName && {
+                    repoName: Yup.string()
+                      .required(getString('common.validation.repositoryName'))
+                      .matches(blankspacesRegex, getString('common.validation.blankRepositoryName'))
+                  })
+              })
+            )}
             validate={values => validateCIForm({ values, getString })}
             onSubmit={(values): void => {
               const pipelineData = produce(pipeline, draft => {
@@ -514,6 +516,11 @@ export function RightBar(): JSX.Element {
                   ...(values.repoName && { repoName: values.repoName }),
                   build: RUNTIME_INPUT_VALUE
                 })
+
+                // if connectorRef is empty string (can happen if fixed value changed to runtime input then back to fixed value)
+                if (typeof values.connectorRef === 'string' && values.connectorRef === '') {
+                  unset(draft, 'properties.ci.codebase.connectorRef')
+                }
 
                 // Repo level connectors should not have repoName
                 if (
