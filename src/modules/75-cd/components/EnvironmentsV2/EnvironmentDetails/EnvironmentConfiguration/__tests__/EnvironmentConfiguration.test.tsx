@@ -19,6 +19,13 @@ import { connectorsData } from '@platform/connectors/pages/connectors/__tests__/
 import EnvironmentConfiguration from '../EnvironmentConfiguration'
 import { activeInstanceAPI, envAPI } from '../../EnvironmentDetailSummary/__test__/EnvDetailSummary.mock'
 
+const showErrorMock = jest.fn()
+
+jest.mock('@harness/uicore', () => ({
+  ...jest.requireActual('@harness/uicore'),
+  useToaster: jest.fn(() => ({ showError: showErrorMock, showSuccess: jest.fn(), clear: jest.fn() }))
+}))
+
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 
 const orgIdentifier = 'dfvds'
@@ -87,8 +94,8 @@ const dummy: cdNgServices.NGEnvironmentInfoConfig = {
 }
 
 describe('EnvironmentConfiguration tests', () => {
-  test('Environment Overrides is visible when override v2 FF is disabled ', async () => {
-    render(
+  test('Initial render', async () => {
+    const { container } = render(
       <TestWrapper
         path={routes.toEnvironmentDetails({
           ...projectPathProps,
@@ -124,9 +131,10 @@ describe('EnvironmentConfiguration tests', () => {
         </Formik>
       </TestWrapper>
     )
-    await waitFor(() => expect(screen.getByText('common.environmentOverrides')))
+    await waitFor(() => expect(container).toMatchSnapshot())
   })
-  test('Environment Overrides is not visible when override v2 FF is enabled ', async () => {
+
+  test('Environment Overrides is not visible when Service Override V2 is enabled', async () => {
     jest.spyOn(cdNgServices, 'useGetSettingValue').mockReturnValue({
       data: { data: { value: 'true' } }
     } as any)
@@ -170,5 +178,58 @@ describe('EnvironmentConfiguration tests', () => {
 
     const element = screen.queryByText('common.environmentOverrides')
     expect(element).toBeNull()
+  })
+
+  test('Ensure that when an error occurs, the error is displayed', async () => {
+    jest.spyOn(cdNgServices, 'useGetSettingValue').mockImplementation(() => {
+      return {
+        loading: false,
+        error: {
+          data: {
+            responseMessages: ['error']
+          }
+        },
+        refetch: jest.fn()
+      } as any
+    })
+
+    const { container } = render(
+      <TestWrapper
+        path={routes.toEnvironmentDetails({
+          ...projectPathProps,
+          ...modulePathProps,
+          ...environmentPathProps
+        })}
+        pathParams={{
+          accountId: 'dummy',
+          projectIdentifier: 'dummy',
+          orgIdentifier: 'dummy',
+          module: 'cd',
+          environmentIdentifier: 'Env_1'
+        }}
+        defaultFeatureFlagValues={{
+          CDS_SERVICE_OVERRIDES_2_0: true
+        }}
+      >
+        <Formik initialValues={dummy} onSubmit={() => undefined} formName="TestWrapper">
+          {formikProps => (
+            <FormikForm>
+              <EnvironmentConfiguration
+                formikProps={formikProps}
+                scope={getScopeFromDTO({ accountIdentifier: 'asfav', orgIdentifier, projectIdentifier })}
+                selectedView={SelectedView.VISUAL}
+                setSelectedView={jest.fn()}
+                data={null}
+                isEdit={true}
+                isModified={false}
+                setYamlHandler={jest.fn()}
+              />
+            </FormikForm>
+          )}
+        </Formik>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+    await waitFor(() => expect(showErrorMock).toHaveBeenCalled())
   })
 })
