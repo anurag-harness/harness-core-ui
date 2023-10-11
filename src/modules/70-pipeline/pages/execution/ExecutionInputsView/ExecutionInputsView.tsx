@@ -92,6 +92,7 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
         executionInputSetTemplateYamlError={error}
         storeType={pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType}
         storeMetadata={storeMetadata}
+        executionIdentifier={executionIdentifier}
       />
     </div>
   )

@@ -17,7 +17,9 @@ import {
   useGetTemplateFromPipeline,
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   ResponseInputSetTemplateWithReplacedExpressionsResponse,
-  GetTemplateFromPipelineQueryParams
+  GetTemplateFromPipelineQueryParams,
+  useGetMergeInputForExecution,
+  GetMergeInputForExecutionQueryParams
 } from 'services/pipeline-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
@@ -183,8 +185,29 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     }
   })
 
+  const shouldMergeTemplateWithInputSetYamlforExecutionView = executionView && !isUndefined(executionIdentifier)
+
+  const {
+    data: inputSetMergedData,
+    loading: loadingInputSetsMergedData,
+    error: inputSetMergedCallError
+  } = useMutateAsGet(useGetMergeInputForExecution, {
+    lazy: !shouldMergeTemplateWithInputSetYamlforExecutionView,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      planExecutionId: executionIdentifier
+    } as GetMergeInputForExecutionQueryParams,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
+  })
+
   useEffect(() => {
-    if (!loadingTemplate && !loadingInputSetsData) {
+    if (!loadingTemplate && !loadingInputSetsData && !loadingInputSetsMergedData) {
       let newInputSetTemplate = {} as Pipeline
 
       if (inputSetYamlResponse?.data?.inputSetTemplateYaml) {
@@ -207,8 +230,10 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
   }, [
     loadingTemplate,
     loadingInputSetsData,
+    loadingInputSetsMergedData,
     inputSetYamlResponse?.data?.inputSetTemplateYaml,
     inputSetData?.data?.pipelineYaml,
+    inputSetMergedData?.data?.pipelineYaml,
     executionInputSetTemplateYaml
   ])
 
@@ -232,6 +257,14 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     setInvalidInputSetReferences(get(inputSetData?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
   }, [inputSetData?.data, inputSetData?.data?.errorResponse])
 
+  useEffect(() => {
+    if (inputSetMergedData?.data?.errorResponse) {
+      setSelectedInputSets([])
+      setIsTemplateMergeComplete(true)
+    }
+    setInvalidInputSetReferences(get(inputSetMergedData?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
+  }, [inputSetMergedData?.data, inputSetMergedData?.data?.errorResponse])
+
   const onReconcile = (identifier: string): void => {
     remove(invalidInputSetReferences, id => id === identifier)
     setInvalidInputSetReferences(invalidInputSetReferences)
@@ -247,7 +280,11 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       //  Merge call takes care of merging rerunYAML with the latest updated pipeline
 
       if (executionView) {
-        setInputSet(memoizedParse<Pipeline>(rerunInputSetYaml as any))
+        if (inputSetMergedData?.data?.pipelineYaml) {
+          setInputSet(memoizedParse<Pipeline>(inputSetMergedData?.data?.pipelineYaml as any))
+        } else {
+          setInputSet(memoizedParse<Pipeline>(rerunInputSetYaml as any))
+        }
       } else {
         setInputSet(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any))
       }
@@ -273,14 +310,15 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     rerunInputSetYaml,
     hasRuntimeInputs,
     isTemplateMergeComplete,
-    inputSetData
+    inputSetData,
+    inputSetMergedData
   ])
 
   return {
     inputSet,
     inputSetTemplate,
-    loading: loadingTemplate || loadingInputSetsData || !isTemplateMergeComplete,
-    error: templateError || inputSetError,
+    loading: loadingTemplate || loadingInputSetsData || !isTemplateMergeComplete || loadingInputSetsMergedData,
+    error: templateError || inputSetError || inputSetMergedCallError,
     hasRuntimeInputs,
     hasInputSets: !!inputSetYamlResponse?.data?.hasInputSets,
     inputSetYamlResponse,

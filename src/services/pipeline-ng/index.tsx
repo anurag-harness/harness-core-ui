@@ -8824,6 +8824,68 @@ export const getMergeInputSetForRunPromise = (
     void
   >('POST', getConfig('pipeline/api'), `/inputSets/merge-for-rerun`, props, signal)
 
+export interface GetMergeInputForExecutionQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  resolveExpressions?: boolean
+  resolveExpressionsType?: 'RESOLVE_ALL_EXPRESSIONS' | 'RESOLVE_TRIGGER_EXPRESSIONS' | 'UNKNOWN'
+  planExecutionId: string
+}
+
+export type GetMergeInputForExecutionProps = Omit<
+  MutateProps<ResponseMergeInputSetResponse, Failure | Error, GetMergeInputForExecutionQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Merges pipeline template and input set yaml of pipeline execution for given planExecutionId
+ */
+export const GetMergeInputForExecution = (props: GetMergeInputForExecutionProps) => (
+  <Mutate<ResponseMergeInputSetResponse, Failure | Error, GetMergeInputForExecutionQueryParams, void, void>
+    verb="POST"
+    path={`/inputSets/merge-input-for-execution`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetMergeInputForExecutionProps = Omit<
+  UseMutateProps<ResponseMergeInputSetResponse, Failure | Error, GetMergeInputForExecutionQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Merges pipeline template and input set yaml of pipeline execution for given planExecutionId
+ */
+export const useGetMergeInputForExecution = (props: UseGetMergeInputForExecutionProps) =>
+  useMutate<ResponseMergeInputSetResponse, Failure | Error, GetMergeInputForExecutionQueryParams, void, void>(
+    'POST',
+    `/inputSets/merge-input-for-execution`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
+
+/**
+ * Merges pipeline template and input set yaml of pipeline execution for given planExecutionId
+ */
+export const getMergeInputForExecutionPromise = (
+  props: MutateUsingFetchProps<
+    ResponseMergeInputSetResponse,
+    Failure | Error,
+    GetMergeInputForExecutionQueryParams,
+    void,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseMergeInputSetResponse, Failure | Error, GetMergeInputForExecutionQueryParams, void, void>(
+    'POST',
+    getConfig('pipeline/api'),
+    `/inputSets/merge-input-for-execution`,
+    props,
+    signal
+  )
+
 export interface GetMergeInputSetFromPipelineTemplateQueryParams {
   accountIdentifier: string
   orgIdentifier: string
