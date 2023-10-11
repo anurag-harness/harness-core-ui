@@ -42,7 +42,7 @@ export const conditionOptions: SelectOption[] = [
   { label: 'Change Impact', value: Condition.CHANGE_IMPACT },
   { label: 'Health Score', value: Condition.HEALTH_SCORE },
   { label: 'Change Observed', value: Condition.CHANGE_OBSERVED },
-  { label: 'Deployment Impact Report', value: Condition.DEPLOYMENT_IMPACT_REPORT },
+  { label: 'Analyze Impact Report', value: Condition.DEPLOYMENT_IMPACT_REPORT },
   { label: 'Code Errors', value: Condition.CODE_ERRORS }
 ]
 
