@@ -1151,7 +1151,9 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                             class="bp3-popover-target"
                           >
                             <button
-                              class="bp3-button Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
+                              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
+                              disabled=""
+                              tabindex="-1"
                               type="button"
                             >
                               <span
@@ -1935,7 +1937,9 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                             class="bp3-popover-target"
                           >
                             <button
-                              class="bp3-button Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
+                              class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main btn Button--with-current-color Button--iconOnly Button--withLeftIcon"
+                              disabled=""
+                              tabindex="-1"
                               type="button"
                             >
                               <span
