@@ -19,7 +19,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, isEmpty, set } from 'lodash-es'
+import { defaultTo, isEmpty, set, unset } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikErrors } from 'formik'
 import { produce } from 'immer'
@@ -178,7 +178,7 @@ export const EditStageView: React.FC<EditStageView> = ({
         ...(!codebase &&
           isContextTypeNotStageTemplate(contextType) &&
           values.cloneCodebase && {
-            connectorRef: Yup.mixed().nullable(),
+            connectorRef: Yup.mixed().notRequired(),
             ...((connectionType === 'Account' || !values.connectorRef) && {
               repoName: Yup.string()
                 .required(getString('fieldRequired', { field: repositoryNameLabel }))
@@ -210,6 +210,11 @@ export const EditStageView: React.FC<EditStageView> = ({
             ...(values.repoName && { repoName: values.repoName }),
             build: RUNTIME_INPUT_VALUE
           })
+
+          // if connectorRef is empty string (can happen if fixed value changed to runtime input then back to fixed value)
+          if (typeof values.connectorRef === 'string' && values.connectorRef === '') {
+            unset(draft, 'properties.ci.codebase.connectorRef')
+          }
 
           // Repo level connectors should not have repoName
           if (connectionType === 'Repo' && (draft as PipelineInfoConfig)?.properties?.ci?.codebase?.repoName) {
