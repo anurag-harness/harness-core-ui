@@ -282,6 +282,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                             isEdit
                             context={PipelineContextType.Standalone}
                             scope={getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })}
+                            isServiceOverridesEnabled={isServiceOverridesEnabled}
                           />
                         )
                       },
