@@ -42,6 +42,8 @@ import {
   useDeploymentContext
 } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
+import { useTemplateVariables } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
+import { YamlProperties } from 'services/template-ng'
 import { getDTInfraVariablesValidationField, InstanceScriptTypes } from '../DeploymentInfraUtils'
 import css from './DeploymentInfraSpecifications.module.scss'
 
@@ -58,6 +60,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
   const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { metadataMap, variablesTemplate } = useTemplateVariables()
   const infraAllowableTypes: AllowedTypesWithRunTime[] = [MultiTypeInputType.FIXED]
 
   const scriptType: ScriptType = 'Bash'
@@ -98,6 +101,17 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
     [getString]
   )
 
+  const getYamlPropertiesForVariables = useMemo(
+    (): YamlProperties[] =>
+      defaultTo(
+        (get(variablesTemplate, 'infrastructure.variables', []) as AllNGVariables[])?.map?.(variable =>
+          get(metadataMap[defaultTo(variable.value, '')], 'yamlProperties', {})
+        ),
+        []
+      ),
+    [metadataMap, variablesTemplate]
+  )
+
   return (
     <FormikForm>
       <CardWithOuterTitle
@@ -134,11 +148,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
               addVariableLabel={'platform.variables.newVariable'}
               validationSchema={getDTInfraVariablesValidationField}
               isDrawerMode={true}
-              yamlProperties={(defaultTo(formValues?.variables, []) as AllNGVariables[]).map(variable => ({
-                fqn: `stage.spec.infrastructure.output.variable.${variable?.name}`,
-                variableName: variable?.name,
-                visible: true
-              }))}
+              yamlProperties={getYamlPropertiesForVariables}
             />
           </Layout.Horizontal>
         </Layout.Vertical>
