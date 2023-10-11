@@ -28,7 +28,7 @@ export const daysTimeFormat = 'DoMMM hh:mma'
 export const ServiceDependencyDialogProps = {
   isOpen: true,
   style: {
-    height: 700,
+    height: 610,
     width: 900,
     padding: 15
   }

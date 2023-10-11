@@ -35,7 +35,7 @@
 }
 
 .serviceDepedencyButton {
-  font-size: 12px !important;
+  font-size: var(--font-size-small) !important;
   margin-right: var(--spacing-small) !important;
   span {
     font-weight: 500 !important;
