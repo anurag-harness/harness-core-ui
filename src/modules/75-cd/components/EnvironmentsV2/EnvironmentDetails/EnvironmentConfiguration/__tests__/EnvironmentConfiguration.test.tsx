@@ -9,7 +9,6 @@ import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import { Formik, FormikForm, VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import * as cdNgServices from 'services/cd-ng'
-
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -27,9 +26,6 @@ jest.mock('@harness/uicore', () => ({
 }))
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
-
-const orgIdentifier = 'dfvds'
-const projectIdentifier = 'sdvv'
 
 jest.mock('services/cd-ng', () => ({
   useListGitSync: jest.fn().mockImplementation(() => {
@@ -118,7 +114,7 @@ describe('EnvironmentConfiguration tests', () => {
             <FormikForm>
               <EnvironmentConfiguration
                 formikProps={formikProps}
-                scope={getScopeFromDTO({ accountIdentifier: 'asfav', orgIdentifier, projectIdentifier })}
+                scope={getScopeFromDTO({ accountIdentifier: 'asfav' })}
                 selectedView={SelectedView.VISUAL}
                 setSelectedView={jest.fn()}
                 data={null}
@@ -162,7 +158,7 @@ describe('EnvironmentConfiguration tests', () => {
             <FormikForm>
               <EnvironmentConfiguration
                 formikProps={formikProps}
-                scope={getScopeFromDTO({ accountIdentifier: 'asfav', orgIdentifier, projectIdentifier })}
+                scope={getScopeFromDTO({ accountIdentifier: 'asfav' })}
                 selectedView={SelectedView.VISUAL}
                 setSelectedView={jest.fn()}
                 data={null}
@@ -216,7 +212,7 @@ describe('EnvironmentConfiguration tests', () => {
             <FormikForm>
               <EnvironmentConfiguration
                 formikProps={formikProps}
-                scope={getScopeFromDTO({ accountIdentifier: 'asfav', orgIdentifier, projectIdentifier })}
+                scope={getScopeFromDTO({ accountIdentifier: 'asfav' })}
                 selectedView={SelectedView.VISUAL}
                 setSelectedView={jest.fn()}
                 data={null}
