@@ -156,6 +156,7 @@ jest.mock('services/pipeline-ng', () => ({
   // used within useInputSets
   useGetTemplateFromPipeline: jest.fn(() => getMockFor_useGetTemplateFromPipeline()),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => getMockFor_Generic_useMutate(mockMergeInputSet)),
+  useGetMergeInputForExecution: jest.fn(() => getMockFor_Generic_useMutate(mockMergeInputSet)),
 
   // used within PipelineVaribalesContext
   useCreateVariablesV2: jest.fn(() => ({})),

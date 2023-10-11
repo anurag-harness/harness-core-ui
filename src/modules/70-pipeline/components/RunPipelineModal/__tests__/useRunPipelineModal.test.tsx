@@ -61,6 +61,7 @@ jest.mock('services/pipeline-ng', () => ({
   useRePostPipelineExecuteWithInputSetYaml: jest.fn(() => getMockFor_Generic_useMutate()),
   useRerunStagesWithRuntimeInputYaml: jest.fn(() => getMockFor_Generic_useMutate()),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => getMockFor_Generic_useMutate()),
+  useGetMergeInputForExecution: jest.fn(() => getMockFor_Generic_useMutate()),
   useGetInputSetsListForPipeline: jest.fn(() => ({ data: null, refetch: jest.fn() })),
   useCreateVariablesV2: jest.fn(() => ({})),
   useCreateInputSetForPipeline: jest.fn(() => getMockFor_Generic_useMutate()),
