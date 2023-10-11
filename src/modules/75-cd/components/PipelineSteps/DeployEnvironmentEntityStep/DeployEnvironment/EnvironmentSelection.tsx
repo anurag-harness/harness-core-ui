@@ -61,6 +61,7 @@ interface EnvironmentSelectionProps {
   prependEnvironmentToEnvironmentList(newEnvironmentInfo: EnvironmentYaml): void
   updateFormikAndLocalState(newFormValues: DeployEnvironmentEntityFormState): void
   canPropagateFromStage?: boolean
+  isServiceOverridesEnabled?: boolean
 }
 
 function getSelectedEnvironmentsFromOptions(items: SelectOption | SelectOption[]): string[] {
@@ -89,7 +90,8 @@ export default function EnvironmentSelection({
   environmentsList,
   prependEnvironmentToEnvironmentList,
   updateFormikAndLocalState,
-  canPropagateFromStage
+  canPropagateFromStage,
+  isServiceOverridesEnabled
 }: EnvironmentSelectionProps): React.ReactElement {
   const { getString } = useStrings()
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
@@ -298,7 +300,7 @@ export default function EnvironmentSelection({
         enforceFocus={false}
         lazy
         width={1128}
-        height={840}
+        height={isServiceOverridesEnabled ? 600 : 840}
         className={css.dialogStyles}
       >
         <AddEditEnvironmentModal
@@ -306,6 +308,7 @@ export default function EnvironmentSelection({
           onCreateOrUpdate={updateEnvironmentsList}
           closeModal={closeAddNewModal}
           isEdit={false}
+          isServiceOverridesEnabled={isServiceOverridesEnabled}
         />
       </ModalDialog>
     </Layout.Horizontal>

@@ -453,6 +453,7 @@ export default function DeployEnvironment({
           prependEnvironmentToEnvironmentList={prependEnvironmentToEnvironmentList}
           updateFormikAndLocalState={updateFormikAndLocalState}
           canPropagateFromStage={canPropagateFromStage}
+          isServiceOverridesEnabled={isServiceOverridesEnabled}
         />
       )}
 
