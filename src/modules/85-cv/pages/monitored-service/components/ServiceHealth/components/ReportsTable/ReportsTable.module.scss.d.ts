@@ -7,13 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly main: string
-  readonly serviceDepedencyButton: string
-  readonly serviceHealthCard: string
-  readonly slider: string
-  readonly ticker: string
-  readonly tickerContainer: string
-  readonly tickersRow: string
-  readonly timePeriods: string
+  readonly noDataContainer: string
+  readonly reportsTableCard: string
 }
 export default styles
