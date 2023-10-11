@@ -170,7 +170,7 @@ export default function EnvironmentEntitiesList({
         enforceFocus={false}
         lazy
         width={1128}
-        height={840}
+        height={isServiceOverridesEnabled ? 600 : 840}
         className={css.dialogStyles}
       >
         <AddEditEnvironmentModal
