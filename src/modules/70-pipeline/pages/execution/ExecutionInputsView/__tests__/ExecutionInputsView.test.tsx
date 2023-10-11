@@ -36,6 +36,9 @@ jest.mock('services/pipeline-ng', () => ({
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({
     mutate: jest.fn().mockResolvedValue({ data: {} })
   })),
+  useGetMergeInputForExecution: jest.fn(() => ({
+    mutate: jest.fn().mockResolvedValue({ data: {} })
+  })),
   useGetInputSetsListForPipeline: jest.fn(() => ({ data: null, refetch: jest.fn() })),
   useGetYamlSchema: jest.fn(() => ({ data: null })),
   useCreateInputSetForPipeline: jest.fn(() => ({ data: null })),

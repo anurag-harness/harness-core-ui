@@ -15,7 +15,8 @@ import { useInputSets } from '../useInputSets'
 import type { UseInputSetsProps } from '../useInputSets'
 jest.mock('services/pipeline-ng', () => ({
   useGetTemplateFromPipeline: jest.fn(() => ({})),
-  useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({}))
+  useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({})),
+  useGetMergeInputForExecution: jest.fn(() => ({}))
 }))
 
 const getInitialProps = (): UseInputSetsProps => ({
