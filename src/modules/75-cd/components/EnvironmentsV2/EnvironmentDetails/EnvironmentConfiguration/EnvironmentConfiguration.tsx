@@ -40,8 +40,7 @@ import {
   ManifestConfigWrapper,
   NGEnvironmentInfoConfig,
   ResponseEnvironmentResponse,
-  useGetYamlSchema,
-  useGetSettingValue
+  useGetYamlSchema
 } from 'services/cd-ng'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -55,12 +54,9 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { PermissionRequest, usePermission } from '@rbac/hooks/usePermission'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { SettingType } from '@common/constants/Utils'
 import ServiceManifestOverride from '../ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride'
 import ServiceConfigFileOverride from '../ServiceOverrides/ServiceConfigFileOverride/ServiceConfigFileOverride'
 import css from '../EnvironmentDetails.module.scss'
@@ -121,33 +117,15 @@ export default function EnvironmentConfiguration({
   data,
   isEdit,
   context,
-  scope
+  scope,
+  isServiceOverridesEnabled
 }: EnvironmentConfigurationProps): JSX.Element {
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const history = useHistory()
   const { expressions } = useVariablesExpression()
   const environmentIdentifier = data?.data?.environment?.identifier
-
-  const { CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
-  const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
-    identifier: SettingType.ENABLE_SERVICE_OVERRIDE_V2,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
-    lazy: false
-  })
-  const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
-  React.useEffect(() => {
-    if (enableServiceOverrideSettingsError) {
-      showError(getRBACErrorMessage(enableServiceOverrideSettingsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enableServiceOverrideSettingsError])
 
   const resourceAndScope: Pick<PermissionRequest, 'resource' | 'resourceScope'> = {
     resource: {

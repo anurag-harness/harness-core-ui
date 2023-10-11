@@ -6,13 +6,13 @@
  */
 
 import React, { MutableRefObject, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
 import { Divider } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
-
 import {
   AllowedTypes,
   FormInput,
@@ -23,10 +23,11 @@ import {
   SelectOption,
   useToaster
 } from '@harness/uicore'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
 import { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-
+import { useGetSettingValue } from 'services/cd-ng'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import {
   isMultiTypeExpression,
@@ -43,11 +44,12 @@ import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineU
 import { isDynamicProvisioningRestricted } from '@pipeline/utils/stageHelpers'
 
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
-
+import { SettingType } from '@common/constants/Utils'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -81,6 +83,31 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   selectedPropagatedState?: SelectOption | string
 }
 
+function getSelectedEnvironmentsWhenPropagating(
+  value?: string,
+  previousStages?: StageElementWrapperConfig[]
+): string[] {
+  const prevEnvId = (
+    previousStages?.find(previousStage => previousStage.stage?.identifier === value)
+      ?.stage as DeploymentStageElementConfig
+  )?.spec?.environment?.environmentRef
+  return prevEnvId && isValueFixed(prevEnvId) ? [prevEnvId] : []
+}
+
+export function getAllFixedEnvironments(
+  data: DeployEnvironmentEntityFormState,
+  previousStages?: StageElementWrapperConfig[]
+): string[] {
+  if (data.propagateFrom?.value) {
+    return getSelectedEnvironmentsWhenPropagating(data.propagateFrom?.value as string, previousStages)
+  } else if (data.environment && getMultiTypeFromValue(data.environment) === MultiTypeInputType.FIXED) {
+    return [data.environment as string]
+  } else if (data.environments && Array.isArray(data.environments)) {
+    return data.environments.map(environment => environment.value as string)
+  }
+
+  return []
+}
 export default function DeployEnvironment({
   initialValues,
   readonly,
@@ -100,12 +127,32 @@ export default function DeployEnvironment({
 }: DeployEnvironmentProps): JSX.Element {
   const { values, setFieldValue, setValues, errors, setFieldError, setFieldTouched } =
     useFormikContext<DeployEnvironmentEntityFormState>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const { getString } = useStrings()
-  const { showWarning } = useToaster()
+  const { showWarning, showError } = useToaster()
   const { refetchPipelineVariable } = usePipelineVariables()
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
+  const { getRBACErrorMessage } = useRBACError()
+  const { CD_NG_DYNAMIC_PROVISIONING_ENV_V2, CDS_SERVICE_OVERRIDES_2_0 } = useFeatureFlags()
+  const { data: enableServiceOverrideSettings, error: enableServiceOverrideSettingsError } = useGetSettingValue({
+    identifier: SettingType.ENABLE_SERVICE_OVERRIDE_V2,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: false
+  })
+  const isServiceOverridesEnabled = CDS_SERVICE_OVERRIDES_2_0 && enableServiceOverrideSettings?.data?.value === 'true'
+  React.useEffect(() => {
+    if (enableServiceOverrideSettingsError) {
+      showError(getRBACErrorMessage(enableServiceOverrideSettingsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enableServiceOverrideSettingsError])
 
-  const { CD_NG_DYNAMIC_PROVISIONING_ENV_V2, CDS_SERVICE_OVERRIDES_2_0: isOverridesEnabled } = useFeatureFlags()
+  // mock show error
+  //.toHaveBeenCalled
 
   // State
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
@@ -431,13 +478,14 @@ export default function DeployEnvironment({
             allowableTypes={allowableTypes}
             onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
             onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
-            serviceIdentifiers={serviceIdentifiers.length === 1 || isOverridesEnabled ? serviceIdentifiers : []}
+            serviceIdentifiers={serviceIdentifiers.length === 1 || CDS_SERVICE_OVERRIDES_2_0 ? serviceIdentifiers : []}
             initialValues={initialValues}
             stageIdentifier={stageIdentifier}
             deploymentType={deploymentType}
             customDeploymentRef={customDeploymentRef}
             gitOpsEnabled={gitOpsEnabled}
             setSelectedEnvironments={setSelectedEnvironments}
+            isServiceOverridesEnabled={isServiceOverridesEnabled}
           />
         )}
         {shouldShowDynamicProvisioning && (

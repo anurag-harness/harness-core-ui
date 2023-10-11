@@ -51,6 +51,7 @@ export interface AddEditEnvironmentModalProps {
   isEdit: boolean
   onCreateOrUpdateInsideGroup?: (newEnv: EnvironmentResponse) => void
   insideGroupEnv?: boolean
+  isServiceOverridesEnabled?: boolean
 }
 
 export default function AddEditEnvironmentModal({
@@ -59,7 +60,8 @@ export default function AddEditEnvironmentModal({
   closeModal,
   isEdit,
   onCreateOrUpdateInsideGroup,
-  insideGroupEnv
+  insideGroupEnv,
+  isServiceOverridesEnabled
 }: AddEditEnvironmentModalProps): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
@@ -67,7 +69,6 @@ export default function AddEditEnvironmentModal({
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
-
   const { loading: upsertLoading, mutate: upsertEnvironment } = useUpsertEnvironmentV2({
     queryParams: {
       accountIdentifier: accountId
@@ -172,6 +173,7 @@ export default function AddEditEnvironmentModal({
                   isModified={false}
                   data={{ data: data }}
                   isEdit={isEdit}
+                  isServiceOverridesEnabled={isServiceOverridesEnabled}
                   scope={getScopeFromDTO(
                     isEdit
                       ? {
