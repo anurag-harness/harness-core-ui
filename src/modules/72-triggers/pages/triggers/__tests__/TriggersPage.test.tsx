@@ -29,10 +29,11 @@ const mockDelete = jest.fn().mockReturnValue(Promise.resolve({ data: {}, status:
 const mockUpdateTrigger = jest.fn().mockReturnValue(Promise.resolve({ data: {}, status: {} }))
 const mockCopy = jest.fn()
 const mockGetTriggersFunction = jest.fn()
+const fetchTriggerList = jest.fn()
 jest.mock('services/pipeline-ng', () => ({
   useGetTriggerListForTarget: jest.fn(args => {
     mockGetTriggersFunction(args)
-    return GetTriggerListForTargetResponse
+    return { ...GetTriggerListForTargetResponse, refetch: fetchTriggerList }
   }),
   useGetTrigger: jest.fn(() => GetTriggerResponse),
   useDeleteTrigger: jest.fn().mockImplementation(() => ({ mutate: mockDelete })),
@@ -352,5 +353,13 @@ describe('TriggersPage Triggers tests', () => {
       fireEvent.click(getByTestId(getDeleteTestId(triggerIdentifier)))
       expect(confirmDelete).not.toBeCalled()
     })
+  })
+
+  test('Triggers List should update every minutes', async () => {
+    jest.useFakeTimers()
+    render(<WrapperComponent />)
+    jest.advanceTimersByTime(60 * 1000)
+
+    expect(fetchTriggerList).toHaveBeenCalled()
   })
 })

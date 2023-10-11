@@ -5633,6 +5633,8 @@ export interface StringsMap {
   'triggers.lastActivationAt': string
   'triggers.lastActivationDetails': string
   'triggers.lastActivationLabel': string
+  'triggers.lastCollectedTag': string
+  'triggers.lastCollectedVersion': string
   'triggers.newArtifactLabel': string
   'triggers.newManifestLabel': string
   'triggers.newTrigger': string
@@ -5645,6 +5647,7 @@ export interface StringsMap {
   'triggers.onNewWebhookTitle': string
   'triggers.onScheduleLabel': string
   'triggers.pageNotFound': string
+  'triggers.pending': string
   'triggers.pipelineExecutionInput': string
   'triggers.pipelineInputLabel': string
   'triggers.pipelineReferenceBranch': string
@@ -5685,6 +5688,7 @@ export interface StringsMap {
   'triggers.scheduledLabel': string
   'triggers.selectPipelineStages': string
   'triggers.showAllTriggers': string
+  'triggers.tagLastCollectedAt': string
   'triggers.toast.existingTriggerError': string
   'triggers.toast.payloadInfoBar': string
   'triggers.toast.successfulCreate': string
@@ -5746,6 +5750,9 @@ export interface StringsMap {
   'triggers.validation.repositoryFormat': string
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
+  'triggers.versionLastCollectedAt': string
+  'triggers.waitingForTag': string
+  'triggers.waitingForVersion': string
   'discovery.agentName': string
   'discovery.allDiscoveredServices': string
   'discovery.approxTime': string

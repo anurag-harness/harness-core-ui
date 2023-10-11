@@ -12,9 +12,7 @@ exports[`Test case for trigger status rendering and behavior should render witho
         <span
           class="StyledProps--font StyledProps--main StyledProps--inline"
           tabindex="0"
-        >
-          
-        </span>
+        />
       </span>
     </span>
   </div>

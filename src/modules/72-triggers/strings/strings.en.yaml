@@ -8,6 +8,13 @@ newTriggerWithoutPlus: New Trigger
 pipelineExecutionInput: Pipeline Execution Input
 lastActivationDetails: Last Activation Details
 lastActivationAt: 'Last activation at'
+pending: Pending
+tagLastCollectedAt: Tag(s) last collected at
+versionLastCollectedAt: Version(s) last collected at
+lastCollectedTag: Last collected tag(s)
+lastCollectedVersion: Last collected version(s)
+waitingForTag: Waiting for first collection of tag(s)
+waitingForVersion: Waiting for first collection of version(s)
 showAllTriggers: 'Show All Triggers'
 onNewWebhookTitle: 'On New Webhook'
 onNewArtifactTitleWhole: 'On New Artifact'

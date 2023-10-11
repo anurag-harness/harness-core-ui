@@ -269,8 +269,10 @@ const RenderColumnTrigger: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
 }
 
 const RenderColumnStatus: Renderer<CellProps<NGTriggerDetailsResponse>> = ({ row }) => {
-  const { triggerStatus } = row.original
-  return triggerStatus ? <TriggerStatusCell triggerStatus={triggerStatus} /> : null
+  const { triggerStatus, identifier, type } = row.original
+  return triggerStatus ? (
+    <TriggerStatusCell triggerStatus={triggerStatus} triggerIdentifier={identifier} triggerType={type} />
+  ) : null
 }
 
 const RenderColumnActivity: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
