@@ -151,9 +151,6 @@ export default function DeployEnvironment({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enableServiceOverrideSettingsError])
 
-  // mock show error
-  //.toHaveBeenCalled
-
   // State
   const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(
     getAllFixedEnvironments(initialValues, previousStages)
