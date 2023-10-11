@@ -41,6 +41,7 @@ import type {
   SourceRepo,
   TriggerBaseType
 } from '@triggers/components/Triggers/TriggerInterface'
+import { usePolling } from '@common/hooks/usePolling'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
@@ -92,6 +93,16 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     },
     queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
+
+  usePolling(
+    () => {
+      fetchTriggerList()
+
+      return triggerListDataLoadingError ? Promise.reject() : Promise.resolve()
+    },
+    // Automatically refresh triggers list page  at every 1 minute
+    { startPolling: !triggerListDataLoadingError, pollingInterval: 60_000 }
+  )
 
   const triggerList = triggerListResponse?.data?.content || undefined
   const history = useHistory()

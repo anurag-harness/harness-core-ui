@@ -6,40 +6,54 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { defaultTo } from 'lodash-es'
-import { Color } from '@harness/design-system'
-import { Button, ButtonVariation, IconName, IconProps, Layout, Text } from '@harness/uicore'
-import { UseStringsReturn, useStrings } from 'framework/strings'
-import type { TriggerStatus } from 'services/pipeline-ng'
-import { TriggerStatusEnum } from '../../utils/TriggersListUtils'
+import { Color, FontVariation } from '@harness/design-system'
+import { Button, ButtonVariation, IconProps, Layout, Text } from '@harness/uicore'
+import { Link, useParams } from 'react-router-dom'
+import { String, StringKeys, useStrings } from 'framework/strings'
+import type { NGTriggerDetailsResponse, TriggerStatus } from 'services/pipeline-ng'
+import { killEvent } from '@common/utils/eventUtils'
+import { useQueryParams } from '@common/hooks'
+import { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import TriggerStatusErrorModal from './TriggerStatusErrorModal/TriggerStatusErrorModal'
+import { isTriggerActivityHistoryDisabled } from '../../utils/TriggersListUtils'
 import css from '../TriggersListSection.module.scss'
-
 export interface TriggerStatusProps {
   triggerStatus: TriggerStatus
+  triggerIdentifier: NGTriggerDetailsResponse['identifier']
+  triggerType: NGTriggerDetailsResponse['type']
 }
 
-const getTriggerStatusMessagesMap = (getString: UseStringsReturn['getString']): Map<TriggerStatus['status'], string> =>
-  new Map([
-    ['SUCCESS', getString('success')],
-    ['FAILED', getString('failed')],
-    ['UNKNOWN', getString('common.unknown')]
-  ])
+type TriggerStatusType = Required<TriggerStatus>['status']
 
-const triggerStatusIconMap = new Map<TriggerStatus['status'], { icon?: IconName; iconProps?: Partial<IconProps> }>([
-  ['SUCCESS', { icon: 'full-circle' as IconName, iconProps: { size: 6, color: Color.GREEN_500 } }],
-  ['FAILED', { icon: 'warning-sign' as IconName, iconProps: { size: 12, color: Color.RED_500 } }],
-  ['UNKNOWN', {}]
-])
+const triggerStatusMessagesMap: Record<TriggerStatusType, StringKeys> = {
+  SUCCESS: 'success',
+  FAILED: 'failed',
+  UNKNOWN: 'common.unknown',
+  PENDING: 'triggers.pending'
+}
 
-export default function TriggerStatusCell({ triggerStatus }: TriggerStatusProps): React.ReactElement {
-  const { status, detailMessages } = triggerStatus
+const triggerStatusIconPropsMap: Record<TriggerStatusType, IconProps> = {
+  SUCCESS: { name: 'full-circle', size: 6, color: Color.GREEN_500 },
+  FAILED: { name: 'warning-sign', size: 12, color: Color.RED_500 },
+  UNKNOWN: { name: 'gitops-unknown', size: 12, color: Color.YELLOW_500 },
+  PENDING: { name: 'status-pending', size: 12, color: Color.YELLOW_500 }
+}
+
+export default function TriggerStatusCell({
+  triggerStatus,
+  triggerIdentifier,
+  triggerType
+}: TriggerStatusProps): React.ReactElement {
+  const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
+  const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId, module } =
+    useParams<PipelineType<PipelinePathProps>>()
+  const { status, detailMessages, lastPolled, lastPollingUpdate } = triggerStatus
   const { getString } = useStrings()
   const [modalOpen, setModalOpen] = useState(false)
 
-  const triggerStatusMessagesMap = getTriggerStatusMessagesMap(getString)
-  const statusMsg = defaultTo(triggerStatusMessagesMap.get(status), '')
-  const statusIcon = defaultTo(triggerStatusIconMap.get(status), {})
+  const statusMsg = status && getString(triggerStatusMessagesMap[status])
+  const statusIconProps = status && triggerStatusIconPropsMap[status]
 
   const handleErrorDetailsClick = (e: React.SyntheticEvent): void => {
     e.stopPropagation()
@@ -47,12 +61,96 @@ export default function TriggerStatusCell({ triggerStatus }: TriggerStatusProps)
   }
 
   const renderTooltip = useCallback(() => {
-    if (status === TriggerStatusEnum.SUCCESS) return
+    const isArtifactOrManifestTrigger =
+      triggerType === 'Artifact' || triggerType === 'MultiRegionArtifact' || triggerType === 'Manifest'
+    const triggersActivityHistoryPageLink =
+      triggerIdentifier &&
+      (isTriggerActivityHistoryDisabled(triggerType) ? (
+        <Button text={getString('activityHistoryLabel')} variation={ButtonVariation.LINK} disabled />
+      ) : (
+        <Link
+          to={routes.toTriggersActivityHistoryPage({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier,
+            triggerIdentifier,
+            module,
+            repoIdentifier,
+            branch,
+            connectorRef,
+            repoName,
+            storeType
+          })}
+          style={{ textAlign: 'center' }}
+        >
+          {getString('activityHistoryLabel')}
+        </Link>
+      ))
+
+    if (status === 'SUCCESS' && isArtifactOrManifestTrigger) {
+      return (
+        <Layout.Vertical font={{ variation: FontVariation.SMALL }} spacing="small" padding="medium">
+          {lastPollingUpdate && (
+            <Text
+              font={{ variation: FontVariation.SMALL }}
+              color={Color.WHITE}
+              lineClamp={2}
+              tooltipProps={{ disabled: true }}
+            >
+              <String
+                stringID={
+                  triggerType === 'Manifest' ? 'triggers.versionLastCollectedAt' : 'triggers.tagLastCollectedAt'
+                }
+              />
+              <span>:&nbsp;</span>
+              <time>{new Date(lastPollingUpdate).toLocaleString()}</time>
+            </Text>
+          )}
+          {lastPolled?.length && (
+            <Text font={{ variation: FontVariation.SMALL }} color={Color.WHITE} tooltipProps={{ disabled: true }}>
+              <String
+                stringID={triggerType === 'Manifest' ? 'triggers.lastCollectedVersion' : 'triggers.lastCollectedTag'}
+              />
+              <span>:&nbsp;</span>
+              {lastPolled.map((tag, idx) => {
+                // Show tags/versions in list if more than 1
+                if (lastPolled.length === 1) {
+                  return <span key={idx}>{tag}</span>
+                }
+
+                return <li key={idx}>{tag}</li>
+              })}
+            </Text>
+          )}
+          {triggersActivityHistoryPageLink}
+        </Layout.Vertical>
+      )
+    }
+
+    if (status === 'SUCCESS') return
+
+    if (status === 'PENDING' && isArtifactOrManifestTrigger) {
+      return (
+        <Layout.Vertical font={{ variation: FontVariation.SMALL }} spacing="small" padding="medium">
+          <Text font={{ variation: FontVariation.SMALL }} color={Color.WHITE} tooltipProps={{ disabled: true }}>
+            {getString(triggerType === 'Manifest' ? 'triggers.waitingForVersion' : 'triggers.waitingForTag')}
+          </Text>
+          {triggersActivityHistoryPageLink}
+        </Layout.Vertical>
+      )
+    }
 
     return (
-      <Layout.Vertical font={{ size: 'small' }} spacing="small" padding="small">
+      <Layout.Vertical font={{ variation: FontVariation.SMALL }} spacing="small" padding="medium">
         {detailMessages?.map((error, idx) => (
-          <Text key={idx} font={{ size: 'small' }} color={Color.WHITE} lineClamp={2} tooltipProps={{ disabled: true }}>
+          <Text
+            key={idx}
+            font={{ variation: FontVariation.SMALL }}
+            color={Color.WHITE}
+            lineClamp={2}
+            tooltipProps={{ disabled: true }}
+          >
             {error}
           </Text>
         ))}
@@ -62,17 +160,18 @@ export default function TriggerStatusCell({ triggerStatus }: TriggerStatusProps)
           onClick={handleErrorDetailsClick}
           variation={ButtonVariation.LINK}
         />
+        {triggersActivityHistoryPageLink}
       </Layout.Vertical>
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, detailMessages, triggerStatus])
 
   return (
-    <div onClick={e => e.stopPropagation()}>
+    <div onClick={killEvent}>
       <Text
         inline
-        icon={statusIcon.icon}
-        iconProps={statusIcon.iconProps}
+        icon={statusIconProps?.name}
+        iconProps={statusIconProps}
         tooltip={renderTooltip()}
         tooltipProps={{
           isDark: true,
