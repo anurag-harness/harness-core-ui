@@ -99,9 +99,7 @@ export default function RouteDestinations(): React.ReactElement {
       ) : null}
       {GitOpsRoutes.props.children}
       {IDP_ENABLED ? IDPRoutes().props.children : null}
-      <Route path="/account/:accountId/:module(sto)">
-        <STORoutes />
-      </Route>
+      {STORoutes.props.children}
       <Route path="/account/:accountId/settings">
         <AuthSettingsRoutes />
       </Route>
