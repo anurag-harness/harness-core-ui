@@ -1,5 +1,15 @@
 import React, { FC, useMemo, useState } from 'react'
-import { Formik, FormikForm, FormInput, Layout, ModalDialog, PageError, Pagination, Text } from '@harness/uicore'
+import {
+  FormError,
+  Formik,
+  FormikForm,
+  FormInput,
+  Layout,
+  ModalDialog,
+  PageError,
+  Pagination,
+  Text
+} from '@harness/uicore'
 import { FormikErrors } from 'formik'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import { useModalHook } from '@harness/use-modal'
@@ -148,10 +158,9 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
         }
       }}
       initialValues={{ flagIdentifier: '' }}
-      validateOnChange
       validate={handleValidation}
     >
-      {({ dirty, handleSubmit, isSubmitting, isValid }) => (
+      {({ dirty, errors, handleSubmit, isSubmitting, isValid }) => (
         <ModalDialog
           enforceFocus={false}
           isOpen
@@ -203,6 +212,7 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
                 />
               </Layout.Vertical>
             )}
+            <FormError name="mismatchFlagIdentifierError" errorMessage={errors.flagIdentifier} />
           </FormikForm>
         </ModalDialog>
       )}
