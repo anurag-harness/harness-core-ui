@@ -1,6 +1,7 @@
 import { fireEvent, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
+import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import mockFeature from '@cf/components/EditFlagTabs/__tests__/mockFeature'
@@ -19,16 +20,18 @@ const queryParamsMock = {
 const renderComponent = (props: Partial<ArchiveDialogProps> = {}): RenderResult => {
   return render(
     <TestWrapper>
-      <ArchiveDialog
-        archiveFlag={jest.fn()}
-        flagIdentifier={mockFeature.identifier}
-        flagName={mockFeature.name}
-        gitSync={mockDisabledGitSync}
-        onArchive={jest.fn()}
-        queryParams={queryParamsMock}
-        setShowArchiveDialog={jest.fn()}
-        {...props}
-      />
+      <Formik initialValues={{}} onSubmit={jest.fn()}>
+        <ArchiveDialog
+          archiveFlag={jest.fn()}
+          flagIdentifier={mockFeature.identifier}
+          flagName={mockFeature.name}
+          gitSync={mockDisabledGitSync}
+          onArchive={jest.fn()}
+          queryParams={queryParamsMock}
+          setShowArchiveDialog={jest.fn()}
+          {...props}
+        />
+      </Formik>
     </TestWrapper>
   )
 }

@@ -1,6 +1,6 @@
-import React, { FC, FormEvent, useMemo, useState } from 'react'
-import { Layout, PageError, ModalDialog, Pagination, Text, TextInput } from '@harness/uicore'
-import { Intent } from '@harness/design-system'
+import React, { FC, useMemo, useState } from 'react'
+import { Formik, FormikForm, FormInput, Layout, ModalDialog, PageError, Pagination, Text } from '@harness/uicore'
+import { FormikErrors } from 'formik'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import { useModalHook } from '@harness/use-modal'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -37,8 +37,6 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
   queryParams,
   setShowArchiveDialog
 }) => {
-  const [isAnIdentifierMatch, setIsAnIdentifierMatch] = useState<boolean>(false)
-  const [validationFlagIdentifier, setValidationFlagIdentifier] = useState<string>('')
   const [pageNumber, setPageNumber] = useState<number>(0)
 
   const { showSuccess } = useToaster()
@@ -120,80 +118,95 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
 
       showSuccess(getString('cf.featureFlags.archiving.archiveSuccess'))
       onArchive()
-      setValidationFlagIdentifier('')
       setShowArchiveDialog(false)
     } catch (e) {
       handleResponseError(e)
     }
   }
 
+  interface FlagIdentifierValues {
+    flagIdentifier: string
+  }
+
+  const handleValidation = (values: FlagIdentifierValues): FormikErrors<FlagIdentifierValues> => {
+    const errors: { flagIdentifier?: string } = {}
+
+    if (values?.flagIdentifier !== flagIdentifier) {
+      errors.flagIdentifier = getString('cf.featureFlags.archiving.mismatchIdentifierError')
+    }
+    return errors
+  }
+
   return (
-    <ModalDialog
-      enforceFocus={false}
-      isOpen
-      onClose={() => setShowArchiveDialog(false)}
-      title={getString('cf.featureFlags.archiving.archiveFlag')}
-      footer={
-        <>
-          {state === STATUS.hasNoDependentFlags && (
-            <Layout.Horizontal spacing="small">
-              <ArchiveFlagButtons
-                onArchive={() => {
-                  if (gitSync?.isGitSyncEnabled && !gitSync?.isAutoCommitEnabled) {
-                    showGitModal()
-                  } else {
-                    handleArchive()
-                  }
-                }}
-                onClose={() => setShowArchiveDialog(false)}
-                identifierMatch={isAnIdentifierMatch}
-              />
-            </Layout.Horizontal>
-          )}
-          {state === STATUS.hasDependentFlags && dependentFlagsResponse && (
-            <Pagination
-              gotoPage={setPageNumber}
-              itemCount={dependentFlagsResponse.itemCount || 0}
-              pageCount={dependentFlagsResponse.pageCount || 0}
-              pageIndex={pageNumber}
-              pageSize={CF_DEFAULT_PAGE_SIZE}
-              showPagination={dependentFlagsResponse.pageCount > 1}
-            />
-          )}
-        </>
-      }
+    <Formik
+      formName="archive-flag-form"
+      onSubmit={() => {
+        if (gitSync?.isGitSyncEnabled && !gitSync?.isAutoCommitEnabled) {
+          showGitModal()
+        } else {
+          handleArchive()
+        }
+      }}
+      initialValues={{ flagIdentifier: '' }}
+      validateOnChange
+      validate={handleValidation}
     >
-      {state === STATUS.error && <PageError message={dependentFlagsError} onClick={() => refetchDependentFlags()} />}
+      {({ dirty, handleSubmit, isSubmitting, isValid }) => (
+        <ModalDialog
+          enforceFocus={false}
+          isOpen
+          onClose={() => setShowArchiveDialog(false)}
+          title={getString('cf.featureFlags.archiving.archiveFlag')}
+          footer={
+            <>
+              {state === STATUS.hasNoDependentFlags && (
+                <Layout.Horizontal spacing="small">
+                  <ArchiveFlagButtons
+                    onClick={handleSubmit}
+                    onClose={() => setShowArchiveDialog(false)}
+                    disabled={isSubmitting || !isValid || !dirty}
+                  />
+                </Layout.Horizontal>
+              )}
+              {state === STATUS.hasDependentFlags && dependentFlagsResponse && (
+                <Pagination
+                  gotoPage={setPageNumber}
+                  itemCount={dependentFlagsResponse.itemCount || 0}
+                  pageCount={dependentFlagsResponse.pageCount || 0}
+                  pageIndex={pageNumber}
+                  pageSize={CF_DEFAULT_PAGE_SIZE}
+                  showPagination={dependentFlagsResponse.pageCount > 1}
+                />
+              )}
+            </>
+          }
+        >
+          <FormikForm>
+            {state === STATUS.error && (
+              <PageError message={dependentFlagsError} onClick={() => refetchDependentFlags()} />
+            )}
 
-      {state === STATUS.loading && <ContainerSpinner flex={{ align: 'center-center' }} width={100} />}
+            {state === STATUS.loading && <ContainerSpinner flex={{ align: 'center-center' }} width={100} />}
 
-      {state === STATUS.hasDependentFlags && (
-        <CannotArchiveWarning flagName={flagName} dependentFlagsResponse={dependentFlagsResponse as Features} />
+            {state === STATUS.hasDependentFlags && (
+              <CannotArchiveWarning flagName={flagName} dependentFlagsResponse={dependentFlagsResponse as Features} />
+            )}
+
+            {state === STATUS.hasNoDependentFlags && (
+              <Layout.Vertical spacing="small">
+                <String stringID="cf.featureFlags.archiving.warningDescription" vars={{ flagIdentifier }} useRichText />
+                <Text>{getString('cf.featureFlags.archiving.confirmFlag')}</Text>
+                <FormInput.Text
+                  aria-label={getString('cf.featureFlags.archiving.confirmFlag')}
+                  placeholder={flagIdentifier}
+                  name="flagIdentifier"
+                />
+              </Layout.Vertical>
+            )}
+          </FormikForm>
+        </ModalDialog>
       )}
-
-      {state === STATUS.hasNoDependentFlags && (
-        <Layout.Vertical spacing="small">
-          <String stringID="cf.featureFlags.archiving.warningDescription" vars={{ flagIdentifier }} useRichText />
-          <Text>{getString('cf.featureFlags.archiving.confirmFlag')}</Text>
-          <TextInput
-            onPaste={e => e.preventDefault()}
-            errorText={
-              !isAnIdentifierMatch && validationFlagIdentifier !== ''
-                ? getString('cf.featureFlags.archiving.mismatchIdentifierError')
-                : undefined
-            }
-            intent={!isAnIdentifierMatch && validationFlagIdentifier !== '' ? Intent.DANGER : Intent.PRIMARY}
-            aria-label={getString('cf.featureFlags.archiving.confirmFlag')}
-            placeholder={flagIdentifier}
-            value={validationFlagIdentifier}
-            onChange={(e: FormEvent<HTMLInputElement>) => {
-              setValidationFlagIdentifier(e.currentTarget.value)
-              setIsAnIdentifierMatch(e.currentTarget.value === flagIdentifier)
-            }}
-          />
-        </Layout.Vertical>
-      )}
-    </ModalDialog>
+    </Formik>
   )
 }
 

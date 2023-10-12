@@ -10,34 +10,34 @@ const renderComponent = (props: Partial<ArchiveFlagButtonsProps> = {}): RenderRe
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <ArchiveFlagButtons identifierMatch={false} onArchive={jest.fn()} onClose={jest.fn()} {...props} />
+      <ArchiveFlagButtons disabled={false} onClick={jest.fn()} onClose={jest.fn()} {...props} />
     </TestWrapper>
   )
 }
 
 describe('ArchiveFlagButtons', () => {
-  test('it should disable the Archive button if the user types in a mismatching flag Id', async () => {
-    const onArchiveMock = jest.fn()
+  test('it should disable the Archive button if the user types in a mismatching flag Identifier', async () => {
+    const onClickMock = jest.fn()
 
-    renderComponent({ onArchive: onArchiveMock })
+    renderComponent({ disabled: true, onClick: onClickMock })
 
     expect(screen.getByRole('button', { name: 'archive' })).toBeDisabled()
 
     userEvent.click(screen.getByRole('button', { name: 'archive' }))
 
-    expect(onArchiveMock).not.toHaveBeenCalled()
+    expect(onClickMock).not.toHaveBeenCalled()
   })
 
-  test('it should call onArchive callback if user types in matching flag Id', async () => {
-    const onArchiveMock = jest.fn()
+  test('it should call onClick callback if user types in matching flag Identifier', async () => {
+    const onClickMock = jest.fn()
 
-    renderComponent({ identifierMatch: true, onArchive: onArchiveMock })
+    renderComponent({ disabled: false, onClick: onClickMock })
 
     expect(screen.getByRole('button', { name: 'archive' })).toBeEnabled()
 
     userEvent.click(screen.getByRole('button', { name: 'archive' }))
 
-    await waitFor(() => expect(onArchiveMock).toHaveBeenCalled())
+    await waitFor(() => expect(onClickMock).toHaveBeenCalled())
   })
 
   test('it should call onCancel callback if user closes the Archive modal', async () => {
