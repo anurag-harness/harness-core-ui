@@ -2,6 +2,8 @@ import { fireEvent, render, RenderResult, screen, waitFor } from '@testing-libra
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
+import { cloneDeep } from 'lodash-es'
+import * as yup from 'yup'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
 import type { GitRepo } from 'services/cf'
@@ -226,8 +228,6 @@ describe('ArchiveDialog with Git', () => {
   }
 
   test('it should open Git Modal if project is integrated with Git', async () => {
-    setUseGitRepoMock()
-
     const customCommitMessage = 'MY COMMIT MESSAGE'
     const archiveFlagMock = jest.fn()
 
@@ -256,6 +256,56 @@ describe('ArchiveDialog with Git', () => {
         queryParams: {
           accountIdentifier: 'mockAccountIdentifier',
           commitMsg: customCommitMessage,
+          forceDelete: false,
+          orgIdentifier: 'mockOrgIdentifier',
+          projectIdentifier: 'mockProjectIdentifier'
+        }
+      })
+    })
+  })
+
+  test('it should autocommit with default commit message if git autocommit is toggled on', async () => {
+    const defaultGitCommitMessage = 'DEFAULT GIT COMMIT MESSAGE'
+
+    const mockAutoCommitGitSync = cloneDeep(mockGitSync)
+    mockAutoCommitGitSync.isAutoCommitEnabled = true
+
+    mockAutoCommitGitSync.getGitSyncFormMeta = jest.fn(() => ({
+      gitSyncInitialValues: {
+        gitDetails: {
+          commitMsg: defaultGitCommitMessage,
+          branch: 'main',
+          filePath: '/flags.yaml',
+          repoIdentifier: 'harnesstest',
+          rootFolder: '/.harness/'
+        },
+        autoCommit: true
+      },
+      gitSyncValidationSchema: yup.object().shape({
+        commitMsg: yup.string()
+      })
+    }))
+
+    const archiveFlagMock = jest.fn()
+
+    setUseGitRepoMock({ autoCommit: true })
+
+    renderComponent({ archiveFlag: archiveFlagMock, gitSync: mockAutoCommitGitSync })
+
+    await userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
+
+    await userEvent.click(screen.getByRole('button', { name: 'archive' }))
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('save-flag-to-git-modal-body')).not.toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: 'save' })).not.toBeInTheDocument()
+    })
+
+    await waitFor(() => {
+      expect(archiveFlagMock).toHaveBeenCalledWith('Test_Bool_Flag', {
+        queryParams: {
+          accountIdentifier: 'mockAccountIdentifier',
+          commitMsg: defaultGitCommitMessage,
           forceDelete: false,
           orgIdentifier: 'mockOrgIdentifier',
           projectIdentifier: 'mockProjectIdentifier'
