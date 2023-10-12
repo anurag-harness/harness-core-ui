@@ -9,7 +9,7 @@ import mockFeature from '@cf/components/EditFlagTabs/__tests__/mockFeature'
 import mockGitSync, { mockDisabledGitSync } from '@cf/utils/testData/data/mockGitSync'
 import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import ArchiveDialog, { ArchiveDialogProps } from '../ArchiveDialog'
-import { dependentFlagsResponse, noDependentFlagsResponse } from './__data__/dependentFlagsMock'
+import { buildMockDependentFlags } from './__data__/dependentFlagsMock'
 
 const queryParamsMock = {
   accountIdentifier: 'mockAccountIdentifier',
@@ -51,7 +51,7 @@ describe('ArchiveDialog', () => {
 
   beforeEach(() => {
     useGetDependentFeaturesMock.mockReturnValue({
-      data: noDependentFlagsResponse,
+      data: buildMockDependentFlags(0, false),
       error: null,
       refetch: jest.fn()
     } as any)
@@ -60,11 +60,15 @@ describe('ArchiveDialog', () => {
   })
 
   test('it should display CannotArchiveWarning component if there are dependent flags associated with selected flag', async () => {
+    const isDependentFlagResponse = true
+
     useGetDependentFeaturesMock.mockReturnValue({
-      data: dependentFlagsResponse,
+      data: buildMockDependentFlags(2, isDependentFlagResponse),
       error: null,
       refetch: jest.fn()
     } as any)
+
+    const dependentFlagsResponse = buildMockDependentFlags(2, isDependentFlagResponse)
 
     renderComponent()
 
@@ -77,6 +81,31 @@ describe('ArchiveDialog', () => {
 
     expect(flagId[0]).toHaveTextContent(dependentFlagsResponse.features[0].identifier)
     expect(flagId[1]).toHaveTextContent(dependentFlagsResponse.features[1].identifier)
+
+    expect(screen.queryByRole('button', { name: 'Prev' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Next' })).not.toBeInTheDocument()
+
+    expect(screen.queryByRole('button', { name: 'archive' })).not.toBeInTheDocument()
+    expect(screen.queryByText('cf.featureFlags.archiving.warningDescription')).not.toBeInTheDocument()
+  })
+
+  test('it should display paginated CannotArchiveWarning component if number of dependents exceeds 15', async () => {
+    const isDependentFlagResponse = true
+
+    useGetDependentFeaturesMock.mockReturnValue({
+      data: buildMockDependentFlags(17, isDependentFlagResponse),
+      error: null,
+      refetch: jest.fn()
+    } as any)
+
+    renderComponent()
+
+    expect(screen.getByText('cf.featureFlags.archiving.cannotArchive')).toBeInTheDocument()
+    expect(screen.getByText('cf.featureFlags.archiving.removeFlag')).toBeInTheDocument()
+
+    // Pagination component
+    expect(screen.getByRole('button', { name: 'Prev' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument()
 
     expect(screen.queryByRole('button', { name: 'archive' })).not.toBeInTheDocument()
     expect(screen.queryByText('cf.featureFlags.archiving.warningDescription')).not.toBeInTheDocument()
@@ -138,6 +167,22 @@ describe('ArchiveDialog', () => {
     renderComponent()
 
     expect(screen.getByTestId('page-spinner')).toBeInTheDocument()
+  })
+
+  test('it should display a correct error state', async () => {
+    const error = 'FAIL TO LOAD DEPENDENT FLAGS'
+
+    useGetDependentFeaturesMock.mockReturnValue({
+      data: null,
+      error,
+      refetch: jest.fn(),
+      loading: true
+    } as any)
+
+    renderComponent()
+
+    expect(screen.getByText(error)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
   })
 
   test('it should handle errors if it fails to archive a flag', async () => {
