@@ -39,6 +39,7 @@ export interface EnvironmentEntitiesListProps extends Required<DeployEnvironment
   onRemoveEnvironmentFromList: (id: string) => void
   initialValues: DeployEnvironmentEntityFormState
   setSelectedEnvironments?: Dispatch<SetStateAction<string[]>>
+  isServiceOverridesEnabled?: boolean
 }
 
 export default function EnvironmentEntitiesList({
@@ -54,7 +55,8 @@ export default function EnvironmentEntitiesList({
   customDeploymentRef,
   gitOpsEnabled,
   initialValues,
-  setSelectedEnvironments
+  setSelectedEnvironments,
+  isServiceOverridesEnabled
 }: EnvironmentEntitiesListProps): React.ReactElement {
   const { getString } = useStrings()
   const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -168,7 +170,7 @@ export default function EnvironmentEntitiesList({
         enforceFocus={false}
         lazy
         width={1128}
-        height={840}
+        height={isServiceOverridesEnabled ? 600 : 840}
         className={css.dialogStyles}
       >
         <AddEditEnvironmentModal
@@ -178,6 +180,7 @@ export default function EnvironmentEntitiesList({
           onCreateOrUpdate={handleEnvironmentEntityUpdate}
           closeModal={closeEditModal}
           isEdit={true}
+          isServiceOverridesEnabled={isServiceOverridesEnabled}
         />
       </ModalDialog>
 
