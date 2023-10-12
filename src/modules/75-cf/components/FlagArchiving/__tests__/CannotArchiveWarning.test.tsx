@@ -4,7 +4,10 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Features } from 'services/cf'
 import CannotArchiveWarning, { CannotArchiveWarningProps } from '../CannotArchiveWarning'
-import { dependentFlagsResponse } from './__data__/dependentFlagsMock'
+import { buildMockDependentFlags } from './__data__/dependentFlagsMock'
+
+const isDependentFlagsResponse = true
+const dependentFlagsResponse = buildMockDependentFlags(6, isDependentFlagsResponse)
 
 const renderComponent = (props: Partial<CannotArchiveWarningProps> = {}): RenderResult => {
   return render(

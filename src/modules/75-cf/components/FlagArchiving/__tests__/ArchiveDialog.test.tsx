@@ -173,18 +173,22 @@ describe('ArchiveDialog', () => {
 
   test('it should display a correct error state', async () => {
     const error = 'FAIL TO LOAD DEPENDENT FLAGS'
+    const refetchMock = jest.fn()
 
     useGetDependentFeaturesMock.mockReturnValue({
       data: null,
       error,
-      refetch: jest.fn(),
-      loading: true
+      refetch: refetchMock,
+      loading: false
     } as any)
 
     renderComponent()
 
     expect(screen.getByText(error)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }))
+    expect(refetchMock).toBeCalled()
   })
 
   test('it should handle errors if it fails to archive a flag', async () => {
