@@ -168,7 +168,7 @@ describe('ArchiveDialog', () => {
 
     renderComponent()
 
-    expect(screen.getByTestId('page-spinner')).toBeInTheDocument()
+    expect(document.querySelector('.bp3-spinner')).toBeInTheDocument()
   })
 
   test('it should display a correct error state', async () => {

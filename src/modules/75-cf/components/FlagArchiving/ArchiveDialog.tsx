@@ -10,10 +10,10 @@ import {
   Pagination,
   Text
 } from '@harness/uicore'
+import { Spinner } from '@blueprintjs/core'
 import { FormikErrors } from 'formik'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
 import { useModalHook } from '@harness/use-modal'
-import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useToaster } from '@common/exports'
 import { GitSyncFormValues, UseGitSync } from '@cf/hooks/useGitSync'
 import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
@@ -195,7 +195,7 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
               <PageError message={dependentFlagsError} onClick={() => refetchDependentFlags()} />
             )}
 
-            {state === STATUS.loading && <ContainerSpinner flex={{ align: 'center-center' }} width={100} />}
+            {state === STATUS.loading && <Spinner size={24} />}
 
             {state === STATUS.hasDependentFlags && (
               <CannotArchiveWarning flagName={flagName} dependentFlagsResponse={dependentFlagsResponse as Features} />
