@@ -98,6 +98,31 @@ describe('PricePreview', () => {
   const props = {
     subscriptionDetails,
     setSubscriptionDetails: setSubscriptionDetailsMock,
+    subscriptionProps: {
+      edition: Editions.TEAM,
+      premiumSupport: true,
+      paymentFreq: TimeType.MONTHLY,
+      subscriptionId: 'sdas',
+      billingContactInfo: {
+        name: 'sdad',
+        email: 'sadadsad',
+        billingAddress: 'asddsada',
+        city: 'asdadsa',
+        state: 'sdsas',
+        country: 'adsda',
+        zipCode: 'adsasd',
+        companyName: 'sdasd'
+      },
+      paymentMethodInfo: {
+        paymentMethodId: 'asdadas',
+        cardType: 'VISA',
+        expireDate: '23/05/29',
+        last4digits: '2342',
+        nameOnCard: 'sdasd'
+      },
+      productPrices: { monthly: [], yearly: [] },
+      isValid: true
+    },
     module: 'cf' as Module
   }
 
@@ -134,6 +159,31 @@ describe('PricePreview', () => {
         ...subscriptionDetails,
         paymentFreq: TimeType.MONTHLY
       },
+      subscriptionProps: {
+        edition: Editions.TEAM,
+        premiumSupport: true,
+        paymentFreq: TimeType.MONTHLY,
+        subscriptionId: 'sdas',
+        billingContactInfo: {
+          name: 'sdad',
+          email: 'sadadsad',
+          billingAddress: 'asddsada',
+          city: 'asdadsa',
+          state: 'sdsas',
+          country: 'adsda',
+          zipCode: 'adsasd',
+          companyName: 'sdasd'
+        },
+        paymentMethodInfo: {
+          paymentMethodId: 'asdadas',
+          cardType: 'VISA',
+          expireDate: '23/05/29',
+          last4digits: '2342',
+          nameOnCard: 'sdasd'
+        },
+        productPrices: { monthly: [], yearly: [] },
+        isValid: true
+      },
       setSubscriptionDetails: setSubscriptionDetailsMock,
       module: 'cf' as Module
     }
@@ -152,6 +202,31 @@ describe('PricePreview ci credit card', () => {
     subscriptionDetails,
     setSubscriptionDetails: setSubscriptionDetailsMock,
     invoiceData,
+    subscriptionProps: {
+      edition: Editions.TEAM,
+      premiumSupport: true,
+      paymentFreq: TimeType.MONTHLY,
+      subscriptionId: 'sdas',
+      billingContactInfo: {
+        name: 'sdad',
+        email: 'sadadsad',
+        billingAddress: 'asddsada',
+        city: 'asdadsa',
+        state: 'sdsas',
+        country: 'adsda',
+        zipCode: 'adsasd',
+        companyName: 'sdasd'
+      },
+      paymentMethodInfo: {
+        paymentMethodId: 'asdadas',
+        cardType: 'VISA',
+        expireDate: '23/05/29',
+        last4digits: '2342',
+        nameOnCard: 'sdasd'
+      },
+      productPrices: { monthly: [], yearly: [] },
+      isValid: true
+    },
     module: 'ci' as Module
   }
 
