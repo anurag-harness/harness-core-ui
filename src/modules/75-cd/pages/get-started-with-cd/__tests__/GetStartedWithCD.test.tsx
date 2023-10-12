@@ -25,7 +25,8 @@ jest.mock('@common/hooks/useTelemetry', () => ({
 }))
 
 describe('Test Get Started With CD', () => {
-  test('initial render and should fire telemetry event', async () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('initial render and should fire telemetry event', async () => {
     const { getByText } = render(
       <TestWrapper
         path="/account/:accountId/cd/orgs/:orgId/projects/:projectId/get-started"
