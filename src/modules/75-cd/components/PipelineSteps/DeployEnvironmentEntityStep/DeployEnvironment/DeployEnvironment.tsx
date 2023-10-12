@@ -83,31 +83,6 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   selectedPropagatedState?: SelectOption | string
 }
 
-function getSelectedEnvironmentsWhenPropagating(
-  value?: string,
-  previousStages?: StageElementWrapperConfig[]
-): string[] {
-  const prevEnvId = (
-    previousStages?.find(previousStage => previousStage.stage?.identifier === value)
-      ?.stage as DeploymentStageElementConfig
-  )?.spec?.environment?.environmentRef
-  return prevEnvId && isValueFixed(prevEnvId) ? [prevEnvId] : []
-}
-
-export function getAllFixedEnvironments(
-  data: DeployEnvironmentEntityFormState,
-  previousStages?: StageElementWrapperConfig[]
-): string[] {
-  if (data.propagateFrom?.value) {
-    return getSelectedEnvironmentsWhenPropagating(data.propagateFrom?.value as string, previousStages)
-  } else if (data.environment && getMultiTypeFromValue(data.environment) === MultiTypeInputType.FIXED) {
-    return [data.environment as string]
-  } else if (data.environments && Array.isArray(data.environments)) {
-    return data.environments.map(environment => environment.value as string)
-  }
-
-  return []
-}
 export default function DeployEnvironment({
   initialValues,
   readonly,
