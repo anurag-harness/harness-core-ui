@@ -33,7 +33,7 @@ export interface ArchiveDialogProps {
   flagIdentifier: string
   flagName: string
   gitSync: UseGitSync
-  onArchive: () => void
+  onSuccess: () => void
   queryParams: DeleteFeatureFlagQueryParams
   setShowArchiveDialog: (value: boolean) => void
 }
@@ -43,7 +43,7 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
   flagIdentifier,
   flagName,
   gitSync,
-  onArchive,
+  onSuccess,
   queryParams,
   setShowArchiveDialog
 }) => {
@@ -127,7 +127,7 @@ const ArchiveDialog: FC<ArchiveDialogProps> = ({
       }
 
       showSuccess(getString('cf.featureFlags.archiving.archiveSuccess'))
-      onArchive()
+      onSuccess()
       setShowArchiveDialog(false)
     } catch (e) {
       handleResponseError(e)

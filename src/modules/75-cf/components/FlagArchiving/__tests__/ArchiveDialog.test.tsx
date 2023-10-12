@@ -31,7 +31,7 @@ const renderComponent = (props: Partial<ArchiveDialogProps> = {}): RenderResult 
             flagIdentifier={mockFeature.identifier}
             flagName={mockFeature.name}
             gitSync={mockDisabledGitSync}
-            onArchive={jest.fn()}
+            onSuccess={jest.fn()}
             queryParams={queryParamsMock}
             setShowArchiveDialog={jest.fn()}
             {...props}
@@ -144,9 +144,9 @@ describe('ArchiveDialog', () => {
 
   test('it should allow user to archive a flag', async () => {
     const archiveFeatureFlagMock = jest.fn()
-    const onArchiveMock = jest.fn()
+    const onSuccessMock = jest.fn()
 
-    renderComponent({ archiveFlag: archiveFeatureFlagMock, onArchive: onArchiveMock })
+    renderComponent({ archiveFlag: archiveFeatureFlagMock, onSuccess: onSuccessMock })
 
     expect(screen.queryByRole('button', { name: 'Prev' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Next' })).not.toBeInTheDocument()
@@ -158,7 +158,7 @@ describe('ArchiveDialog', () => {
       expect(archiveFeatureFlagMock).toHaveBeenCalledWith(mockFeature.identifier, {
         queryParams: { ...queryParamsMock }
       })
-      expect(onArchiveMock).toHaveBeenCalled()
+      expect(onSuccessMock).toHaveBeenCalled()
     })
   })
 
@@ -197,12 +197,12 @@ describe('ArchiveDialog', () => {
 
   test('it should handle errors if it fails to archive a flag', async () => {
     const archiveFeatureFlagMock = jest.fn()
-    const onArchiveMock = jest.fn()
+    const onSuccessMock = jest.fn()
 
     const error = 'FAIL TO ARCHIVE'
 
     archiveFeatureFlagMock.mockRejectedValue({ message: error })
-    renderComponent({ archiveFlag: archiveFeatureFlagMock, onArchive: onArchiveMock })
+    renderComponent({ archiveFlag: archiveFeatureFlagMock, onSuccess: onSuccessMock })
 
     await userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
 
@@ -210,7 +210,7 @@ describe('ArchiveDialog', () => {
 
     await waitFor(() => {
       expect(screen.getByText(error)).toBeInTheDocument()
-      expect(onArchiveMock).not.toHaveBeenCalled()
+      expect(onSuccessMock).not.toHaveBeenCalled()
     })
   })
 })

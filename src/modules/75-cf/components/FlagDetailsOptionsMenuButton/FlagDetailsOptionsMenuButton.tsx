@@ -177,7 +177,7 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
           archiveFlag={deleteFeatureFlag}
           flagIdentifier={featureFlag.identifier}
           flagName={featureFlag.name}
-          onArchive={() => history.push(featureFlagListURL)}
+          onSuccess={() => history.push(featureFlagListURL)}
           gitSync={gitSync}
           queryParams={queryParams}
           setShowArchiveDialog={setShowArchiveDialog}
