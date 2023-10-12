@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Text, TextInput, Label, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -13,10 +13,18 @@ import type { UseStringsReturn } from 'framework/strings'
 import { String, useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
-import { getCommandStrWithNewline } from '../../utils'
-import { CDOnboardingSteps, PipelineSetupState, WhereAndHowToDeployType } from '../../types'
+import { getCommandsByDeploymentType } from '../../utils'
+import { CDOnboardingSteps, PipelineSetupState, WhatToDeployType, WhereAndHowToDeployType } from '../../types'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
+import ConfigureGCP from './GCP/ConfigureGCP'
+import ConfigureAWS from './AWS/ConfigureAWS'
+import { DEPLOYMENT_TYPE_TO_DIR_MAP, SERVERLESS_FUNCTIONS } from '../../Constants'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
+
+const INFRATYPE_TO_COMPONENT_MAP: { [key: string]: FunctionComponent } = {
+  [SERVERLESS_FUNCTIONS.GOOGLE_CLOUD_FUNCTION]: ConfigureGCP,
+  [SERVERLESS_FUNCTIONS.AWS_LAMBDA_FUNCTION]: ConfigureAWS
+}
 
 export default function PipelineSetupStep({
   onUpdate,
@@ -27,6 +35,9 @@ export default function PipelineSetupStep({
 }): JSX.Element {
   const { getString } = useStrings()
   const { stepsProgress } = useOnboardingStore()
+  const deploymentData = React.useMemo((): WhatToDeployType => {
+    return stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData
+  }, [stepsProgress])
   return (
     <Layout.Vertical className={css.deploymentSteps}>
       <Layout.Vertical margin={{ top: 'xxlarge', bottom: 'xlarge' }}>
@@ -35,7 +46,7 @@ export default function PipelineSetupStep({
             useRichText
             color={Color.BLACK}
             className={css.marginBottomLarge}
-            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.title"
+            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.title"
             vars={{ guestBookURL: 'https://github.com/harness-community/harnesscd-example-apps/tree/master/guestbook' }}
           />
         </Text>
@@ -44,17 +55,21 @@ export default function PipelineSetupStep({
             useRichText
             color={Color.BLACK}
             className={css.marginBottomLarge}
-            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.whyGitDetails"
+            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.whyGitDetails"
           />
         </Text>
-        <Layout.Vertical margin={{ top: 'medium' }}>
+        <Layout.Vertical margin={{ top: 'medium', left: 'xlarge' }}>
           <Layout.Vertical width={400}>
-            <Label>{getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubusername')}</Label>
+            <Label>
+              {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubusername')}
+            </Label>
             <TextInput
               id="githubusername"
               name="githubusername"
               defaultValue={state.githubUsername}
-              placeholder={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubusername')}
+              placeholder={getString(
+                'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubusername'
+              )}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const value = e.target.value
                 onUpdate({ ...state, githubUsername: value })
@@ -63,7 +78,7 @@ export default function PipelineSetupStep({
           </Layout.Vertical>
           <Layout.Vertical width={400}>
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-              <Label>{getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubpat')}</Label>
+              <Label>{getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubpat')}</Label>
               <Button
                 target="_blank"
                 className={css.alignTitle}
@@ -71,7 +86,7 @@ export default function PipelineSetupStep({
                 size={ButtonSize.SMALL}
                 href="https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
               >
-                {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.whereToFindGitPat')}
+                {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.whereToFindGitPat')}
               </Button>
             </Layout.Horizontal>
 
@@ -79,7 +94,7 @@ export default function PipelineSetupStep({
               defaultValue={state.githubPat}
               id="githubpat"
               name="githubpat"
-              placeholder={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubpat')}
+              placeholder={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubpat')}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const value = e.target.value
                 onUpdate({ ...state, githubPat: value })
@@ -88,15 +103,27 @@ export default function PipelineSetupStep({
           </Layout.Vertical>
         </Layout.Vertical>
       </Layout.Vertical>
+      <InfraDetailsComponent
+        infraType={(stepsProgress[CDOnboardingSteps.WHAT_TO_DEPLOY].stepData as WhatToDeployType)?.artifactType?.id}
+      />
       <Text color={Color.BLACK} font={{ variation: FontVariation.FORM_TITLE }} margin={{ bottom: 'large' }}>
         <String
           color={Color.BLACK}
           stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.createEntities"
+          vars={{
+            num:
+              (stepsProgress[CDOnboardingSteps.WHAT_TO_DEPLOY].stepData as WhatToDeployType)?.svcType?.id ===
+              'KubernetesService'
+                ? 2
+                : 3
+          }}
         />
       </Text>
       <CLISteps
         getString={getString}
         state={state}
+        artifactType={deploymentData?.artifactType?.id as string}
+        artifactSubtype={deploymentData?.artifactSubType?.id as string}
         delegateName={
           (stepsProgress[CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY].stepData as WhereAndHowToDeployType)?.delegateName
         }
@@ -108,55 +135,29 @@ export default function PipelineSetupStep({
 function CLISteps({
   getString,
   state,
-  delegateName
+  delegateName,
+  artifactType,
+  artifactSubtype
 }: {
   getString: UseStringsReturn['getString']
   state: PipelineSetupState
+  artifactType: string
+  artifactSubtype?: string
   delegateName?: string
 }): JSX.Element {
   const { accountId } = useParams<AccountPathProps>()
-
   const commandSnippet = React.useMemo((): string => {
-    return getCommandStrWithNewline([
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.cloneRepo'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.clonecmd', {
-        gitUser:
-          state.githubUsername ||
-          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.gitusernamePlaceholder')
-      }),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.cdDir'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.cddir'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.login'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.logincmd', {
-        accId: accountId,
-        apiKey: state.apiKey
-      }),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createSecret'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createsecret', {
-        gitPat:
-          state.githubPat ||
-          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.gitpatPlaceholder')
-      }),
-
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createGitIcon'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createGithubIcon', {
-        gitUser:
-          state.githubUsername ||
-          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.gitusernamePlaceholder')
-      }),
-
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createK8scon'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createk8scon', {
-        delegateName
-      }),
-
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createSvc'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createsvccmd'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createEnv'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createenvcmd'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createInfra'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createinfracmd')
-    ])
+    const dirPath = DEPLOYMENT_TYPE_TO_DIR_MAP[artifactType]
+    return getCommandsByDeploymentType({
+      getString,
+      dirPath,
+      delegateName,
+      githubPat: state?.githubPat,
+      githubUsername: state?.githubUsername,
+      apiKey: state?.apiKey,
+      accountId,
+      artifactSubtype
+    })
   }, [state])
 
   return (
@@ -180,4 +181,9 @@ function CLISteps({
       />
     </Layout.Vertical>
   )
+}
+
+export function InfraDetailsComponent({ infraType = '' }): JSX.Element | null {
+  const InfraTypeComponent = INFRATYPE_TO_COMPONENT_MAP[infraType] ?? null
+  return InfraTypeComponent ? <InfraTypeComponent /> : null
 }

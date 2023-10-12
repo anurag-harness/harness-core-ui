@@ -6,6 +6,9 @@ import DelegateCommandLineCreation from '@delegates/pages/delegates/delegateComm
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { DelegateCommandLineTypes, DelegateDefaultName } from '@delegates/constants'
+import { ONBOARDING_INTERACTIONS } from './TrackingConstants'
+import { getBranchingProps } from './utils'
+import { useOnboardingStore } from './Store/OnboardingStore'
 import css from './CDOnboardingWizardWithCLI.module.scss'
 export interface DelgateDetails {
   delegateName?: DelegateDefaultName
@@ -24,6 +27,7 @@ export interface useCreateDelegateViaCommandsModalProps {
 
 export default function DelegateModal(props: useCreateDelegateViaCommandsModalProps): JSX.Element {
   const { trackEvent } = useTelemetry()
+  const { stepsProgress } = useOnboardingStore()
   const [delgateDetails, setDelegateDetails] = React.useState<DelgateDetails>({})
   const onClose = (): void => {
     trackEvent(DelegateActions.DelegateCommandLineCreationClosed, {
@@ -33,6 +37,14 @@ export default function DelegateModal(props: useCreateDelegateViaCommandsModalPr
   }
   const onDelegateConfigChange = (data: DelgateDetails): void => {
     setDelegateDetails(data)
+  }
+
+  const onVerificationStart = (): void => {
+    trackEvent(ONBOARDING_INTERACTIONS.DELEGATE_VERIFICATION_START, {
+      ...getBranchingProps(stepsProgress),
+      delegateName: delgateDetails?.delegateName,
+      delegateType: delgateDetails?.delegateType
+    })
   }
   return (
     <Dialog enforceFocus={false} isOpen={Boolean(props.isOpen)}>
@@ -46,6 +58,7 @@ export default function DelegateModal(props: useCreateDelegateViaCommandsModalPr
           oldDelegateCreation={props?.oldDelegateCreation}
           onDelegateConfigChange={onDelegateConfigChange}
           checkAndSuggestDelegateName={props?.checkAndSuggestDelegateName}
+          onVerificationStart={onVerificationStart}
         />
       </Drawer>
     </Dialog>

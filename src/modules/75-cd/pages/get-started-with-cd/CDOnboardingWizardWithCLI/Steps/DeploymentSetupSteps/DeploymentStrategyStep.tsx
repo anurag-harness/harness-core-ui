@@ -12,8 +12,14 @@ import { Layout, CardSelect, Text, Icon, IconName } from '@harness/uicore'
 import { StringsMap } from 'stringTypes'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
 import { String, useStrings } from 'framework/strings'
-import { DEPLOYMENT_STRATEGY_TYPES, StrategyVideoByType } from '../../Constants'
-import { CDOnboardingSteps, DeploymentStrategyTypes } from '../../types'
+import {
+  DEPLOYMENT_STRATEGY_TYPES,
+  DEPLOYMENT_TYPE_MAP,
+  DEPLOYMENT_TYPE_TO_DIR_MAP,
+  DEPLOYMENT_TYPE_TO_FILE_MAPS,
+  StrategyVideoByType
+} from '../../Constants'
+import { CDOnboardingSteps, DeploymentStrategyTypes, WhatToDeployType } from '../../types'
 import { useOnboardingStore } from '../../Store/OnboardingStore'
 import VerifyPipeline from '../VerificationComponents/VerifyPipeline'
 import css from '../../CDOnboardingWizardWithCLI.module.scss'
@@ -28,13 +34,35 @@ export default function DeploymentStrategySelection({
 }: DeploymentStrategySelectionProps): JSX.Element {
   const { stepsProgress } = useOnboardingStore()
   const [state, setState] = React.useState<DeploymentStrategyTypes | undefined>(() => {
-    return stepsProgress[CDOnboardingSteps.DEPLOYMENT_STEPS]?.stepData?.strategy || DEPLOYMENT_STRATEGY_TYPES.Canary
+    const preSavedStrategy = stepsProgress[CDOnboardingSteps.DEPLOYMENT_STEPS]?.stepData?.strategyId
+    const artifactSubType = stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData?.artifactSubType?.id
+    const artifactType = stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData?.artifactType?.id
+    const [firstDeploymentType] = DEPLOYMENT_TYPE_MAP[artifactSubType || artifactType]
+
+    if (preSavedStrategy && preSavedStrategy !== firstDeploymentType) {
+      return DEPLOYMENT_STRATEGY_TYPES[firstDeploymentType]
+    } else if (!preSavedStrategy) {
+      return DEPLOYMENT_STRATEGY_TYPES[firstDeploymentType]
+    }
+
+    return DEPLOYMENT_STRATEGY_TYPES[preSavedStrategy]
   })
   const { getString } = useStrings()
+  const deploymentData = React.useMemo((): WhatToDeployType => {
+    return stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData
+  }, [stepsProgress])
 
   const deploymentStrategies = React.useMemo((): DeploymentStrategyTypes[] => {
-    return Object.values(DEPLOYMENT_STRATEGY_TYPES).map((data: DeploymentStrategyTypes) => {
-      return data
+    return Object.values(DEPLOYMENT_STRATEGY_TYPES).filter((data: DeploymentStrategyTypes) => {
+      const artifactSubType = deploymentData.artifactSubType?.id
+      const artifactType = deploymentData.artifactType?.id
+      let isSupportedStrategy = true
+      if (artifactSubType && !DEPLOYMENT_TYPE_MAP[artifactSubType].includes(data.id)) {
+        isSupportedStrategy = false
+      } else if (artifactType && !artifactSubType && !DEPLOYMENT_TYPE_MAP[artifactType].includes(data.id)) {
+        isSupportedStrategy = false
+      }
+      return isSupportedStrategy
     })
   }, [])
 
@@ -49,13 +77,23 @@ export default function DeploymentStrategySelection({
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} font={{ variation: FontVariation.FORM_TITLE }} margin={{ bottom: 'large' }}>
-        <String color={Color.BLACK} stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.title" />
+        <String
+          color={Color.BLACK}
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.title"
+          vars={{
+            num:
+              (stepsProgress[CDOnboardingSteps.WHAT_TO_DEPLOY].stepData as WhatToDeployType)?.svcType?.id ===
+              'KubernetesService'
+                ? 3
+                : 4
+          }}
+        />
       </Text>
       <Text color={Color.BLACK} padding={{ bottom: 'xlarge' }}>
         <String
           color={Color.BLACK}
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.description"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.description"
         />
       </Text>
 
@@ -124,12 +162,23 @@ export default function DeploymentStrategySelection({
 function PipelineCommandStep({ strategy }: { strategy: DeploymentStrategyTypes }): JSX.Element {
   const { getString } = useStrings()
 
+  const { stepsProgress } = useOnboardingStore()
+  const deploymentData = React.useMemo((): WhatToDeployType => {
+    return stepsProgress?.[CDOnboardingSteps.WHAT_TO_DEPLOY]?.stepData
+  }, [stepsProgress])
+
+  const dirPath = DEPLOYMENT_TYPE_TO_DIR_MAP[deploymentData.artifactType?.id as string]
+  const pipelineFileName = DEPLOYMENT_TYPE_TO_FILE_MAPS[deploymentData.artifactSubType?.id as string]?.[strategy.id]
+
   return (
     <Layout.Vertical margin={{ bottom: 'xlarge', top: 'large' }}>
       <CommandBlock
         darkmode
         allowCopy={true}
-        commandSnippet={getString(strategy.pipelineCommand)}
+        commandSnippet={getString(strategy.pipelineCommand, {
+          type: dirPath,
+          pipeline: pipelineFileName || strategy.pipelineName
+        })}
         ignoreWhiteSpaces={false}
         downloadFileProps={{ downloadFileName: 'harness-cli-setup', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}

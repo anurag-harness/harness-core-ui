@@ -24,7 +24,7 @@ import {
   useCreateToken,
   useListAggregatedApiKeys,
   useListAggregatedTokens,
-  useRotateToken
+  useDeleteToken
 } from 'services/cd-ng'
 
 import { DEFAULT_IDENTIFIER, DEFAULT_TOKEN_IDENTIFIER, API_KEY_TYPE, TOKEN_MASK } from '../../Constants'
@@ -39,7 +39,7 @@ export default function ApiKeySetup({
   const { accountId } = useParams<ProjectPathProps>()
   const [token, setToken] = React.useState<string | undefined>()
   const { mutate: createApiKey } = useCreateApiKey({ queryParams: { accountIdentifier: accountId } })
-  const { mutate: createToken } = useCreateToken({
+  const { mutate: createToken, loading: creatingApiToken } = useCreateToken({
     queryParams: { accountIdentifier: accountId }
   })
   const { data } = useListAggregatedApiKeys({
@@ -73,9 +73,6 @@ export default function ApiKeySetup({
     })
     return validToken
   }, [tokenData])
-  const { mutate: rotateToken, loading: rotatingToken } = useRotateToken({
-    identifier: existingToken || (token as string)
-  })
 
   const apiKey = React.useMemo(() => {
     return data?.data?.content?.[0]?.apiKey?.identifier
@@ -91,6 +88,15 @@ export default function ApiKeySetup({
         }
       })
   }, [apiKey])
+
+  const { mutate: deleteToken } = useDeleteToken({
+    queryParams: {
+      accountIdentifier: accountId,
+      apiKeyType: API_KEY_TYPE,
+      parentIdentifier: currentUserInfo.uuid,
+      apiKeyIdentifier: apiKey as string
+    }
+  })
 
   const createApiKeyHandler = async (): Promise<void> => {
     if (!apiKey) {
@@ -111,54 +117,48 @@ export default function ApiKeySetup({
   }
 
   const createApiToken = async (apikeyid = apiKey): Promise<void> => {
+    const validTo = moment().add('30', 'd').unix() * 1000
+    const tokenId = `${getIdentifierFromName(DEFAULT_TOKEN_IDENTIFIER)}_${validTo}`
     await createToken({
       accountIdentifier: accountId,
       apiKeyIdentifier: apikeyid as string,
       apiKeyType: 'USER',
       name: DEFAULT_TOKEN_IDENTIFIER,
-      identifier: getIdentifierFromName(DEFAULT_TOKEN_IDENTIFIER),
+      identifier: tokenId,
       parentIdentifier: currentUserInfo.uuid,
-      validTo: moment().add('30', 'd').unix() * 1000
+      validTo
     }).then(res => {
       setToken(res?.data as string)
+      deleteToken(existingToken)
       return res
     })
   }
   useDeepCompareEffect(() => {
     token && onKeyGenerate({ ...state, apiKey: token as string })
   }, [token])
-  const rotateSecretCallback = (): void => {
-    rotateToken('' as any, {
-      queryParams: {
-        accountIdentifier: accountId,
 
-        apiKeyIdentifier: DEFAULT_IDENTIFIER,
-        parentIdentifier: currentUserInfo.uuid,
-        apiKeyType: API_KEY_TYPE,
-        rotateTimestamp: moment().add('30', 'd').unix() * 1000
-      }
-    }).then(res => {
-      setToken(res?.data as string)
-      return res
-    })
-  }
-  if (tokensFetching || rotatingToken) {
+  if (tokensFetching || creatingApiToken) {
     return (
       <Layout.Horizontal padding="large">
         <Icon size={16} name="steps-spinner" color={Color.BLUE_800} style={{ marginRight: '12px' }} />
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.fetchingApiKeys"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.fetchingApiKeys"
         />
       </Layout.Horizontal>
     )
   }
+
+  const generateOrUpdateToken = (): Promise<void> => {
+    return existingToken ? createApiToken() : createApiKeyHandler()
+  }
+
   return (
     <Layout.Vertical>
       <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.title"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.title"
         />
       </Text>
       {token ? (
@@ -166,20 +166,21 @@ export default function ApiKeySetup({
           hideMessage={Boolean(existingToken) && !token}
           maskToken={Boolean(existingToken) && !token}
           token={Boolean(existingToken) && !token ? TOKEN_MASK : (token as string)}
-          rotateSecretCallback={rotateSecretCallback}
+          rotateSecretCallback={createApiToken}
         />
       ) : (
         <Button
+          margin={{ left: 'xlarge' }}
           width={250}
           variation={ButtonVariation.PRIMARY}
-          onClick={existingToken ? rotateSecretCallback : createApiKeyHandler}
+          onClick={generateOrUpdateToken}
         >
           <String
             className={css.marginBottomLarge}
             stringID={
               existingToken
-                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.regenerateButton'
-                : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.generateButton'
+                ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.regenerateButton'
+                : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.generateButton'
             }
           />
         </Button>

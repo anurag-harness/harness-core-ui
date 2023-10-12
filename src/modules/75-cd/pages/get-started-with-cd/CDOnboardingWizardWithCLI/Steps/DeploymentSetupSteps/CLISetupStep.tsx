@@ -55,7 +55,7 @@ export default function CLISetupStep({
             <String
               useRichText
               className={css.marginBottomLarge}
-              stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step3.title"
+              stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.forkStep.title"
             />
           </Text>
         </Text>
@@ -83,7 +83,7 @@ function InstallCLIInfo(): JSX.Element {
         <Text color={Color.BLACK}>
           <String
             className={css.marginBottomLarge}
-            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.title"
+            stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.title"
           />
         </Text>
         <Layout.Vertical padding={{ left: 'medium' }}>
@@ -115,36 +115,42 @@ const CLIDownloadMac = ({ version }: { version: string }): JSX.Element => {
 
   const getCommands = (): string => {
     return getCommandStrWithNewline([
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.mac', {
+        version
+      }),
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractmac', {
+        version
+      }),
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.exportMac'),
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.setPath')
     ])
   }
   return (
     <Layout.Vertical>
-      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
+      {/* <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.download"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.download"
         />
-      </Text>
+      </Text> */}
       <CommandBlock
         darkmode
         allowCopy
         ignoreWhiteSpaces={false}
-        commandSnippet={getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mac', { version })}
+        commandSnippet={getCommands()}
         downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
       />
-      <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
+      {/* <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.extract"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.extract"
         />
       </Text>
       <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.move"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.move"
         />
       </Text>
       <CommandBlock
@@ -158,9 +164,9 @@ const CLIDownloadMac = ({ version }: { version: string }): JSX.Element => {
       <Text color={Color.BLACK} padding={{ top: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.restart"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.restart"
         />
-      </Text>
+      </Text> */}
     </Layout.Vertical>
   )
 }
@@ -170,8 +176,17 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
 
   const getCommands = (): string => {
     return getCommandStrWithNewline([
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness'),
-      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod')
+      getString(
+        selectedValue === SYSTEM_ARCH_TYPES.ARM
+          ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.arm'
+          : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.amd',
+        { version }
+      ),
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractmac', {
+        version
+      }),
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.exportMac'),
+      getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.setPath')
     ])
   }
   return (
@@ -199,35 +214,30 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
         />
       </Layout.Horizontal>
 
-      <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
+      {/* <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.download"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.download"
         />
-      </Text>
+      </Text> */}
       <CommandBlock
         darkmode
         allowCopy
         ignoreWhiteSpaces={false}
-        commandSnippet={getString(
-          selectedValue === SYSTEM_ARCH_TYPES.ARM
-            ? 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.arm'
-            : 'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.amd',
-          { version }
-        )}
+        commandSnippet={getCommands()}
         downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
       />
-      <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
+      {/* <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.extract"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.extract"
         />
       </Text>
       <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.move"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.move"
         />
       </Text>
       <CommandBlock
@@ -241,9 +251,9 @@ const CLIDownloadLinux = ({ version }: { version: string }): JSX.Element => {
       <Text color={Color.BLACK} padding={{ top: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.restart"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.restart"
         />
-      </Text>
+      </Text> */}
     </Layout.Vertical>
   )
 }
@@ -256,7 +266,7 @@ const CLIDownloadWin = ({ version }: { version: string }): JSX.Element => {
       <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description1"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.wininstall.description1"
         />
       </Text>
       <CommandBlock
@@ -264,24 +274,24 @@ const CLIDownloadWin = ({ version }: { version: string }): JSX.Element => {
         allowCopy
         ignoreWhiteSpaces={false}
         commandSnippet={getCommandStrWithNewline([
-          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.win', { version })
+          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.win', { version })
         ])}
         downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
       />
       <Text color={Color.BLACK} padding={{ top: 'large', bottom: 'large' }}>
-        <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.extract" />
+        <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.extract" />
       </Text>
       <Text color={Color.BLACK} padding={{ bottom: 'large' }}>
-        <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.move" />
+        <String stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.move" />
       </Text>
       <CommandBlock
         darkmode
         allowCopy
         ignoreWhiteSpaces={false}
         commandSnippet={getCommandStrWithNewline([
-          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup1'),
-          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup2')
+          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.wininstall.winpathsetup1'),
+          getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.wininstall.winpathsetup2')
         ])}
         downloadFileProps={{ downloadFileName: 'harness-cli-install-steps', downloadFileExtension: 'xdf' }}
         copyButtonText={getString('common.copy')}
@@ -290,7 +300,7 @@ const CLIDownloadWin = ({ version }: { version: string }): JSX.Element => {
       <Text color={Color.BLACK} padding={{ top: 'large' }}>
         <String
           className={css.marginBottomLarge}
-          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.restart"
+          stringID="cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.restart"
         />
       </Text>
     </Layout.Vertical>
