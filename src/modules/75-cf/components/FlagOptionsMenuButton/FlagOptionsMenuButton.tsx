@@ -24,11 +24,11 @@ import type { UseGitSync } from '@cf/hooks/useGitSync'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { FeatureFlagStatus } from '@cf/pages/feature-flags/FlagStatus'
+import ArchiveDialog from '../FlagArchiving/ArchiveDialog'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
 import useRestoreFlagDialog from '../FlagArchiving/useRestoreFlagDialog'
 import { FilterProps } from '../TableFilters/TableFilters'
 import css from './FlagOptionsMenuButton.module.scss'
-import ArchiveDialog from '../FlagArchiving/ArchiveDialog'
 
 export interface FlagOptionsMenuButtonProps {
   environment?: string
