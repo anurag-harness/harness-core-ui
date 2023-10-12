@@ -4,8 +4,10 @@ import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cfServices from 'services/cf'
+import type { GitRepo } from 'services/cf'
 import mockFeature from '@cf/components/EditFlagTabs/__tests__/mockFeature'
-import { mockDisabledGitSync } from '@cf/utils/testData/data/mockGitSync'
+import mockGitSync, { mockDisabledGitSync } from '@cf/utils/testData/data/mockGitSync'
+import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import ArchiveDialog, { ArchiveDialogProps } from '../ArchiveDialog'
 import { dependentFlagsResponse, noDependentFlagsResponse } from './__data__/dependentFlagsMock'
 
@@ -20,24 +22,32 @@ const queryParamsMock = {
 const renderComponent = (props: Partial<ArchiveDialogProps> = {}): RenderResult => {
   return render(
     <TestWrapper>
-      <Formik initialValues={{}} onSubmit={jest.fn()}>
-        <ArchiveDialog
-          archiveFlag={jest.fn()}
-          flagIdentifier={mockFeature.identifier}
-          flagName={mockFeature.name}
-          gitSync={mockDisabledGitSync}
-          onArchive={jest.fn()}
-          queryParams={queryParamsMock}
-          setShowArchiveDialog={jest.fn()}
-          {...props}
-        />
-      </Formik>
+      <FFGitSyncProvider>
+        <Formik initialValues={{}} onSubmit={jest.fn()}>
+          <ArchiveDialog
+            archiveFlag={jest.fn()}
+            flagIdentifier={mockFeature.identifier}
+            flagName={mockFeature.name}
+            gitSync={mockDisabledGitSync}
+            onArchive={jest.fn()}
+            queryParams={queryParamsMock}
+            setShowArchiveDialog={jest.fn()}
+            {...props}
+          />
+        </Formik>
+      </FFGitSyncProvider>
     </TestWrapper>
   )
 }
 
 describe('ArchiveDialog', () => {
   const useGetDependentFeaturesMock = jest.spyOn(cfServices, 'useGetDependentFeatures')
+
+  jest.spyOn(cfServices, 'useGetGitRepo').mockReturnValue({
+    loading: false,
+    refetch: jest.fn(),
+    data: { repoSet: false }
+  } as any)
 
   beforeEach(() => {
     useGetDependentFeaturesMock.mockReturnValue({
@@ -146,6 +156,66 @@ describe('ArchiveDialog', () => {
     await waitFor(() => {
       expect(screen.getByText(error)).toBeInTheDocument()
       expect(onArchiveMock).not.toHaveBeenCalled()
+    })
+  })
+})
+
+describe('ArchiveDialog with Git', () => {
+  const setUseGitRepoMock = (repoDetails: Partial<GitRepo> = {}, repoSet = true): void => {
+    jest.spyOn(cfServices, 'useGetGitRepo').mockReturnValue({
+      loading: false,
+      refetch: jest.fn(),
+      data: {
+        repoDetails: {
+          autoCommit: repoDetails.autoCommit || false,
+          branch: repoDetails.branch || 'main',
+          enabled: repoDetails.enabled ?? true,
+          filePath: repoDetails.filePath || '/flags.yaml',
+          repoIdentifier: repoDetails.repoIdentifier || 'harnesstest',
+          rootFolder: repoDetails.rootFolder || '/.harness/',
+          yamlError: repoDetails.yamlError || ''
+        },
+        repoSet: repoSet
+      }
+    } as any)
+  }
+
+  test('it should open Git Modal if project is integrated with Git', async () => {
+    setUseGitRepoMock()
+
+    const customCommitMessage = 'MY COMMIT MESSAGE'
+    const archiveFlagMock = jest.fn()
+
+    setUseGitRepoMock({ autoCommit: false })
+
+    renderComponent({ archiveFlag: archiveFlagMock, gitSync: mockGitSync })
+
+    await userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
+
+    await userEvent.click(screen.getByRole('button', { name: 'archive' }))
+
+    await waitFor(() => expect(screen.getByTestId('save-flag-to-git-modal-body')).toBeInTheDocument())
+
+    const commitMessageTextbox = screen.getByPlaceholderText('common.git.commitMessage')
+
+    await userEvent.clear(commitMessageTextbox)
+    await userEvent.type(commitMessageTextbox, customCommitMessage)
+
+    expect(commitMessageTextbox).toHaveValue(customCommitMessage)
+
+    // click confirm save to git button
+    await userEvent.click(screen.getByRole('button', { name: 'save' }))
+
+    await waitFor(() => {
+      expect(archiveFlagMock).toHaveBeenCalledWith('Test_Bool_Flag', {
+        queryParams: {
+          accountIdentifier: 'mockAccountIdentifier',
+          commitMsg: customCommitMessage,
+          forceDelete: false,
+          orgIdentifier: 'mockOrgIdentifier',
+          projectIdentifier: 'mockProjectIdentifier'
+        }
+      })
     })
   })
 })
