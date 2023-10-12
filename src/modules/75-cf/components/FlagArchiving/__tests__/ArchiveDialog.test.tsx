@@ -95,9 +95,10 @@ describe('ArchiveDialog', () => {
     const isDependentFlagResponse = true
 
     useGetDependentFeaturesMock.mockReturnValue({
-      data: buildMockDependentFlags(17, isDependentFlagResponse),
+      data: buildMockDependentFlags(20, isDependentFlagResponse),
       error: null,
-      refetch: jest.fn()
+      refetch: jest.fn(),
+      loading: false
     } as any)
 
     renderComponent()
@@ -146,8 +147,11 @@ describe('ArchiveDialog', () => {
     const onArchiveMock = jest.fn()
 
     renderComponent({ archiveFlag: archiveFeatureFlagMock, onArchive: onArchiveMock })
-    await userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
 
+    expect(screen.queryByRole('button', { name: 'Prev' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Next' })).not.toBeInTheDocument()
+
+    await userEvent.type(screen.getByRole('textbox'), mockFeature.identifier)
     await userEvent.click(screen.getByRole('button', { name: 'archive' }))
 
     await waitFor(() => {
