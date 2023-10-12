@@ -4,7 +4,10 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Features } from 'services/cf'
 import CannotArchiveWarning, { CannotArchiveWarningProps } from '../CannotArchiveWarning'
-import { dependentFlagsResponse } from './__data__/dependentFlagsMock'
+import { buildMockDependentFlags } from './__data__/dependentFlagsMock'
+
+const isDependentFlagsResponse = true
+const dependentFlagsResponse = buildMockDependentFlags(6, isDependentFlagsResponse)
 
 const renderComponent = (props: Partial<CannotArchiveWarningProps> = {}): RenderResult => {
   return render(
@@ -13,16 +16,8 @@ const renderComponent = (props: Partial<CannotArchiveWarningProps> = {}): Render
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
       <CannotArchiveWarning
-        flagIdentifier="my_new_flag_id"
         flagName="my_new_flag"
         dependentFlagsResponse={dependentFlagsResponse as Features}
-        queryParams={{
-          accountIdentifier: 'dummy',
-          orgIdentifier: 'dummy',
-          projectIdentifier: 'dummy'
-        }}
-        pageNumber={0}
-        setPageNumber={jest.fn()}
         {...props}
       />
     </TestWrapper>

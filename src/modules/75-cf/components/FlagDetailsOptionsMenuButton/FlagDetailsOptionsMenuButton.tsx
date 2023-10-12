@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useCallback, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { MutateMethod, MutateRequestOptions } from 'restful-react/dist/Mutate'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
@@ -28,7 +28,7 @@ import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import routes from '@common/RouteDefinitions'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
-import useArchiveFlagDialog from '../FlagArchiving/useArchiveFlagDialog'
+import ArchiveDialog from '../FlagArchiving/ArchiveDialog'
 import useRestoreFlagDialog from '../FlagArchiving/useRestoreFlagDialog'
 import useEditFlagDetailsModal from '../FlagActivation/hooks/useEditFlagDetailsModal'
 
@@ -64,7 +64,7 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
   const { withActiveEnvironment, activeEnvironment } = useActiveEnvironment()
   const { FFM_7921_ARCHIVING_FEATURE_FLAGS } = useFeatureFlags()
-  const [openedArchivedDialog, setOpenedArchivedDialog] = useState<boolean>(false)
+  const [showArchiveDialog, setShowArchiveDialog] = useState<boolean>()
 
   const featureFlagListURL = withActiveEnvironment(
     routes.toCFFeatureFlags({
@@ -81,20 +81,6 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
     deleteFeatureFlag,
     onSuccess: () => history.push(featureFlagListURL)
   })
-
-  const { openDialog: openArchiveDialog } = useArchiveFlagDialog({
-    flagData: featureFlag,
-    gitSync,
-    queryParams,
-    archiveFlag: deleteFeatureFlag,
-    onArchive: () => history.push(featureFlagListURL),
-    openedArchivedDialog
-  })
-
-  const onClickArchiveButton = useCallback(() => {
-    setOpenedArchivedDialog(true)
-    openArchiveDialog()
-  }, [openArchiveDialog])
 
   const openRestoreFlagDialog = useRestoreFlagDialog({
     flagData: featureFlag,
@@ -127,7 +113,7 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
     archive: {
       icon: 'archive',
       text: getString('archive'),
-      onClick: onClickArchiveButton,
+      onClick: () => setShowArchiveDialog(true),
       permission: {
         resource: { resourceType: ResourceType.FEATUREFLAG },
         permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
@@ -184,7 +170,23 @@ const FlagDetailsOptionsMenuButton: FC<FlagDetailsOptionsMenuButtonProps> = ({
     }
   }
 
-  return <RbacOptionsMenuButton items={getMenuItems(!!FFM_7921_ARCHIVING_FEATURE_FLAGS, featureFlag, options)} />
+  return (
+    <>
+      {showArchiveDialog && (
+        <ArchiveDialog
+          archiveFlag={deleteFeatureFlag}
+          flagIdentifier={featureFlag.identifier}
+          flagName={featureFlag.name}
+          onSuccess={() => history.push(featureFlagListURL)}
+          gitSync={gitSync}
+          queryParams={queryParams}
+          setShowArchiveDialog={setShowArchiveDialog}
+        />
+      )}
+
+      <RbacOptionsMenuButton items={getMenuItems(!!FFM_7921_ARCHIVING_FEATURE_FLAGS, featureFlag, options)} />
+    </>
+  )
 }
 
 export default FlagDetailsOptionsMenuButton

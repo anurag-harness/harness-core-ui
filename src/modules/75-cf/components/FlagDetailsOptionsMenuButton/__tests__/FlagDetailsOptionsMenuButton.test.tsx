@@ -306,13 +306,22 @@ describe('FlagDetailsOptionsMenuButton', () => {
     })
 
     test('it should render archive modal when user clicks archive menu button', async () => {
+      jest.spyOn(cfServices, 'useGetDependentFeatures').mockReturnValue({
+        data: noDependentFlagsResponse,
+        error: null,
+        loading: false,
+        refetch: jest.fn()
+      } as any)
+
       renderComponent(isArchivingFFOn)
 
       await userEvent.click(document.querySelector('[data-icon="Options"]') as HTMLButtonElement)
       await userEvent.click(document.querySelector('[data-icon="archive"]') as HTMLButtonElement)
 
-      expect(screen.getByText('cf.featureFlags.archiving.archiveFlag')).toBeInTheDocument()
-      expect(screen.getByRole('textbox')).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.getByText('cf.featureFlags.archiving.archiveFlag')).toBeInTheDocument()
+        expect(screen.getByRole('textbox')).toBeInTheDocument()
+      })
     })
 
     test('it should archive a flag correctly', async () => {
@@ -352,7 +361,6 @@ describe('FlagDetailsOptionsMenuButton', () => {
       const error = 'FAILED TO GET DEPENDENT FLAGS'
 
       jest.spyOn(cfServices, 'useGetDependentFeatures').mockReturnValue({
-        data: dependentFlagsResponse,
         error,
         loading: false,
         refetch: jest.fn()

@@ -24,8 +24,8 @@ import type { UseGitSync } from '@cf/hooks/useGitSync'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { FeatureFlagStatus } from '@cf/pages/feature-flags/FlagStatus'
+import ArchiveDialog from '../FlagArchiving/ArchiveDialog'
 import useDeleteFlagModal from '../FlagActivation/hooks/useDeleteFlagModal'
-import useArchiveFlagDialog from '../FlagArchiving/useArchiveFlagDialog'
 import useRestoreFlagDialog from '../FlagArchiving/useRestoreFlagDialog'
 import { FilterProps } from '../TableFilters/TableFilters'
 import css from './FlagOptionsMenuButton.module.scss'
@@ -61,7 +61,7 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
   const { getString } = useStrings()
   const { isPlanEnforcementEnabled } = usePlanEnforcement()
   const { FFM_7921_ARCHIVING_FEATURE_FLAGS, FFM_8344_FLAG_CLEANUP } = useFeatureFlags()
-  const [openedArchivedDialog, setOpenedArchivedDialog] = useState<boolean>(false)
+  const [showArchiveDialog, setShowArchiveDialog] = useState<boolean>()
 
   const planEnforcementProps = isPlanEnforcementEnabled
     ? {
@@ -79,15 +79,6 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     queryParams,
     deleteFeatureFlag: deleteFlag,
     onSuccess: refetchFlags
-  })
-
-  const { openDialog: openArchiveDialog } = useArchiveFlagDialog({
-    archiveFlag: deleteFlag,
-    flagData,
-    onArchive: refetchFlags,
-    openedArchivedDialog,
-    gitSync,
-    queryParams
   })
 
   const openRestoreFlagDialog = useRestoreFlagDialog({
@@ -111,11 +102,6 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     )
   }
 
-  const onClickArchiveButton = (): void => {
-    setOpenedArchivedDialog(true)
-    openArchiveDialog()
-  }
-
   const handleNotStaleClick = (): void => {
     //TODO: Implement on click
   }
@@ -128,7 +114,7 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     archive: {
       icon: 'archive',
       text: getString('archive'),
-      onClick: onClickArchiveButton,
+      onClick: () => setShowArchiveDialog(true),
       permission: {
         resource: { resourceType: ResourceType.FEATUREFLAG },
         permission: PermissionIdentifier.DELETE_FF_FEATUREFLAG
@@ -199,7 +185,23 @@ const FlagOptionsMenuButton: FC<FlagOptionsMenuButtonProps> = ({
     }
   }
 
-  return <RbacOptionsMenuButton items={getMenuItems(!!FFM_7921_ARCHIVING_FEATURE_FLAGS, flagData, options)} />
+  return (
+    <>
+      {showArchiveDialog && (
+        <ArchiveDialog
+          archiveFlag={deleteFlag}
+          flagIdentifier={flagData.identifier}
+          flagName={flagData.name}
+          onSuccess={refetchFlags}
+          gitSync={gitSync}
+          queryParams={queryParams}
+          setShowArchiveDialog={setShowArchiveDialog}
+        />
+      )}
+
+      <RbacOptionsMenuButton items={getMenuItems(!!FFM_7921_ARCHIVING_FEATURE_FLAGS, flagData, options)} />
+    </>
+  )
 }
 
 export default FlagOptionsMenuButton
