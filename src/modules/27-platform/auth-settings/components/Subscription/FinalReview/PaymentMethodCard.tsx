@@ -48,7 +48,7 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
               setView?.(SubscribeViews.PAYMENT_METHOD)
             }}
           >
-            {!fromPaymentMethodPage ? getString('edit') : false}
+            {!fromPaymentMethodPage ? getString('edit') : ''}
           </Button>
         </Layout.Horizontal>
         <Layout.Vertical spacing="xsmall">
