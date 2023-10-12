@@ -37,6 +37,7 @@ interface PricePreviewProps {
   module: Module
   canChangePaymentFrequency?: boolean
   invoiceData?: InvoiceDetailDTO
+  subscriptionProps: SubscriptionProps
 }
 
 const PaymentFrequencyToggle: React.FC<{
@@ -162,7 +163,8 @@ const PricePreview: React.FC<PricePreviewProps> = ({
   subscriptionDetails,
   setSubscriptionDetails,
   canChangePaymentFrequency,
-  invoiceData
+  invoiceData,
+  subscriptionProps
 }) => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
@@ -170,7 +172,6 @@ const PricePreview: React.FC<PricePreviewProps> = ({
   const products = useMemo(() => {
     return getSubscriptionBreakdownsByModuleAndFrequency({ module, subscriptionDetails })
   }, [module, subscriptionDetails])
-
   const numberOfMau = defaultTo(quantities?.featureFlag?.numberOfMau, 0)
   const premiumSupportUnitPriceForDevs = getDollarAmount(
     productPrices.yearly.find(price => {
@@ -180,7 +181,7 @@ const PricePreview: React.FC<PricePreviewProps> = ({
       }
     })?.unitAmount
   )
-
+  const isPremuiumSupported = subscriptionProps?.premiumSupport || false
   const premiumSupportUnitPriceForMau = getDollarAmount(
     productPrices.yearly.find(price => {
       const isSamePlan = isSelectedPlan(price, premiumSupport, subscriptionDetails.edition, PLAN_TYPES.MAU)
@@ -236,14 +237,13 @@ const PricePreview: React.FC<PricePreviewProps> = ({
     totalAmount = premiumSupport ? totalAmount + mauUnitAmount + premiumSupportUnitPrice : totalAmount + mauUnitAmount
     totalAmount = !isNil(taxAmount) ? totalAmount + taxAmount : totalAmount
   }
-
   return (
     <Layout.Vertical className={cx(css.pricePreview, colorBorder)}>
       <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'large' }}>
         {getString('platform.authSettings.pricePreview.title')}
       </Text>
       <PaymentFrequencyToggle
-        disabled={!canChangePaymentFrequency}
+        disabled={!canChangePaymentFrequency || isPremuiumSupported}
         paymentFrequency={paymentFreq}
         setPaymentFrequency={(value: TimeType) => {
           if (value === TimeType.MONTHLY) {

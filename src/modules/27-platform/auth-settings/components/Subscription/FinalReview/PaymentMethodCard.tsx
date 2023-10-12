@@ -17,9 +17,15 @@ interface PaymentMethodCardProps {
   paymentMethodInfo: PaymentMethodProps
   setView?: (view: SubscribeViews) => void
   module: Module
+  fromPaymentMethodPage?: boolean
 }
 
-const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({ paymentMethodInfo, setView, module }) => {
+const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
+  paymentMethodInfo,
+  setView,
+  module,
+  fromPaymentMethodPage
+}) => {
   const { getString } = useStrings()
   const { last4digits, cardType, expireDate } = paymentMethodInfo
   const paymentDescr = `${cardType} ending in ${last4digits}`
@@ -42,7 +48,7 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({ paymentMethodInfo
               setView?.(SubscribeViews.PAYMENT_METHOD)
             }}
           >
-            {getString('edit')}
+            {!fromPaymentMethodPage ? getString('edit') : false}
           </Button>
         </Layout.Horizontal>
         <Layout.Vertical spacing="xsmall">

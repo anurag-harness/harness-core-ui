@@ -167,6 +167,7 @@ const View: React.FC<UseSubscribeModalProps> = ({ module, plan, time, onClose, c
           onPriceSkewsLoad={onPriceSkewsLoad}
         />
         <PricePreview
+          subscriptionProps={subscriptionProps}
           subscriptionDetails={subscriptionProps}
           setSubscriptionDetails={setSubscriptionProps}
           module={module}

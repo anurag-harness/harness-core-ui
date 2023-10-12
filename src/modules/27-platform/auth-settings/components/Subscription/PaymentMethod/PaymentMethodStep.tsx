@@ -151,6 +151,7 @@ export default function PaymentMethodStep({
                 paymentMethodInfo={subscriptionProps.paymentMethodInfo}
                 setView={setView}
                 module={module}
+                fromPaymentMethodPage={true}
               />
             </Radio>
           </Layout.Horizontal>
