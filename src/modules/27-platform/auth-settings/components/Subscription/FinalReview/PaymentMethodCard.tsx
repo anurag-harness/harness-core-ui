@@ -38,18 +38,20 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
           <Text font={{ variation: FontVariation.H5 }}>
             {getString('platform.authSettings.billingInfo.paymentMethod')}
           </Text>
-          <Button
-            variation={ButtonVariation.LINK}
-            onClick={() => {
-              trackEvent(CreditCard.CalculatorReviewStepEditPayment, {
-                category: Category.CREDIT_CARD,
-                module
-              })
-              setView?.(SubscribeViews.PAYMENT_METHOD)
-            }}
-          >
-            {!fromPaymentMethodPage ? getString('edit') : ''}
-          </Button>
+          {!fromPaymentMethodPage ? (
+            <Button
+              variation={ButtonVariation.LINK}
+              onClick={() => {
+                trackEvent(CreditCard.CalculatorReviewStepEditPayment, {
+                  category: Category.CREDIT_CARD,
+                  module
+                })
+                setView?.(SubscribeViews.PAYMENT_METHOD)
+              }}
+            >
+              {getString('edit')}
+            </Button>
+          ) : null}
         </Layout.Horizontal>
         <Layout.Vertical spacing="xsmall">
           <Text>{paymentDescr}</Text>
