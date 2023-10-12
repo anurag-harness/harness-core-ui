@@ -13,16 +13,8 @@ const renderComponent = (props: Partial<CannotArchiveWarningProps> = {}): Render
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
       <CannotArchiveWarning
-        flagIdentifier="my_new_flag_id"
         flagName="my_new_flag"
         dependentFlagsResponse={dependentFlagsResponse as Features}
-        queryParams={{
-          accountIdentifier: 'dummy',
-          orgIdentifier: 'dummy',
-          projectIdentifier: 'dummy'
-        }}
-        pageNumber={0}
-        setPageNumber={jest.fn()}
         {...props}
       />
     </TestWrapper>

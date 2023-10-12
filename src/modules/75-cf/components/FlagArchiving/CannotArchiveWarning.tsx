@@ -6,35 +6,25 @@
  */
 
 import React, { FC } from 'react'
-import { Layout, Pagination, Text } from '@harness/uicore'
+import { Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { Link } from 'react-router-dom'
-import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
+import { Link, useParams } from 'react-router-dom'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import routes from '@common/RouteDefinitions'
 import { useStrings, String } from 'framework/strings'
-import type { Features, GetDependentFeaturesQueryParams } from 'services/cf'
+import type { Features } from 'services/cf'
 import { ItemContainer } from '../ItemContainer/ItemContainer'
 import css from './useArchiveFlagDialog.module.scss'
 
 export interface CannotArchiveWarningProps {
   dependentFlagsResponse: Features
-  flagIdentifier: string
   flagName: string
-  queryParams: GetDependentFeaturesQueryParams
-  pageNumber: number
-  setPageNumber: (pageNum: number) => void
 }
 
-export const CannotArchiveWarning: FC<CannotArchiveWarningProps> = ({
-  dependentFlagsResponse,
-  flagName,
-  queryParams,
-  pageNumber,
-  setPageNumber
-}) => {
+export const CannotArchiveWarning: FC<CannotArchiveWarningProps> = ({ dependentFlagsResponse, flagName }) => {
   const { getString } = useStrings()
   const { withActiveEnvironment } = useActiveEnvironment()
+  const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
 
   return (
     <Layout.Vertical spacing="small">
@@ -44,36 +34,28 @@ export const CannotArchiveWarning: FC<CannotArchiveWarningProps> = ({
         useRichText
         vars={{ flagName }}
       />
-      {dependentFlagsResponse?.features?.map(flag => (
-        <ItemContainer data-testid="dependent-flag-row" key={flag.identifier}>
+      {dependentFlagsResponse?.features?.map(dependentFlag => (
+        <ItemContainer data-testid="dependent-flag-row" key={dependentFlag.identifier}>
           <Link
             to={withActiveEnvironment(
               routes.toCFFeatureFlagsDetail({
-                accountId: queryParams.accountIdentifier,
-                orgIdentifier: queryParams.orgIdentifier as string,
-                projectIdentifier: queryParams.projectIdentifier as string,
-                featureFlagIdentifier: flag.identifier
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                featureFlagIdentifier: dependentFlag.identifier
               })
             )}
           >
-            {flag.name}
+            {dependentFlag.name}
           </Link>
           <Text data-testId="flagIdentifierLabel">
-            {getString('common.ID')}: {flag.identifier}
+            {getString('common.ID')}: {dependentFlag.identifier}
           </Text>
         </ItemContainer>
       ))}
       <Text padding={{ top: 'medium' }} color={Color.GREY_500} font={{ variation: FontVariation.BODY2 }}>
         {getString('cf.featureFlags.archiving.removeFlag')}
       </Text>
-      <Pagination
-        gotoPage={setPageNumber}
-        itemCount={dependentFlagsResponse.itemCount || 0}
-        pageCount={dependentFlagsResponse.pageCount || 0}
-        pageIndex={pageNumber}
-        pageSize={CF_DEFAULT_PAGE_SIZE}
-        showPagination={dependentFlagsResponse.pageCount > 1}
-      />
     </Layout.Vertical>
   )
 }
