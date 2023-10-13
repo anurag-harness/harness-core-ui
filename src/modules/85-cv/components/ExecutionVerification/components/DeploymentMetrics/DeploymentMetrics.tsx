@@ -28,6 +28,7 @@ import cx from 'classnames'
 import { isEqual } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
+import { GetDataError } from 'restful-react'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -35,6 +36,7 @@ import type { ExecutionNode } from 'services/pipeline-ng'
 import {
   AnalysedDeploymentNode,
   GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+  HealthSourceV2,
   VerificationOverview,
   useGetHealthSourcesForVerifyStepExecutionId,
   useGetMetricsAnalysisForVerifyStepExecutionId,
@@ -80,6 +82,10 @@ interface DeploymentMetricsProps {
   selectedNode?: AnalysedDeploymentNode
   overviewData: VerificationOverview | null
   overviewLoading?: boolean
+  healthSourcesData: HealthSourceV2[] | null
+  healthSourcesError: GetDataError<unknown> | null
+  healthSourcesLoading: boolean
+  fetchHealthSources: () => Promise<void>
 }
 
 type UpdateViewState = {
@@ -90,7 +96,17 @@ type UpdateViewState = {
 }
 
 export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
-  const { step, selectedNode, activityId, overviewData, overviewLoading } = props
+  const {
+    step,
+    selectedNode,
+    activityId,
+    overviewData,
+    overviewLoading,
+    fetchHealthSources,
+    healthSourcesData,
+    healthSourcesError,
+    healthSourcesLoading
+  } = props
   const { getString } = useStrings()
   const pageParams = useQueryParams<ExecutionQueryParams>()
 
@@ -176,18 +192,18 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     return getFilterDisplayText(selectedOptions, baseText, getString('all'))
   }, [])
 
-  const {
-    data: healthSourcesData,
-    error: healthSourcesError,
-    loading: healthSourcesLoading,
-    refetch: fetchHealthSources
-  } = useGetHealthSourcesForVerifyStepExecutionId({
-    accountIdentifier: accountId,
-    orgIdentifier,
-    projectIdentifier,
-    verifyStepExecutionId: activityId,
-    lazy: true
-  })
+  // const {
+  //   data: healthSourcesData,
+  //   error: healthSourcesError,
+  //   loading: healthSourcesLoading,
+  //   refetch: fetchHealthSources
+  // } = useGetHealthSourcesForVerifyStepExecutionId({
+  //   accountIdentifier: accountId,
+  //   orgIdentifier,
+  //   projectIdentifier,
+  //   verifyStepExecutionId: activityId,
+  //   lazy: true
+  // })
 
   useEffect(() => {
     if (activityId) {
