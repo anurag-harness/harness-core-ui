@@ -31,6 +31,7 @@ import {
 } from './ExecutionVerificationView.utils'
 import { ManualInterventionVerifyStep } from './components/ManualInterventionVerifyStep/ManualInterventionVerifyStep'
 import InterruptedHistory from './components/InterruptedHistory/InterruptedHistory'
+import { LogsQueryParamName } from './ExecutionVerificationView.constants'
 import css from './ExecutionVerificationView.module.scss'
 
 interface ExecutionVerificationViewProps {
@@ -66,7 +67,7 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
     orgIdentifier,
     projectIdentifier,
     verifyStepExecutionId: activityId,
-    lazy: true
+    lazy: type !== LogsQueryParamName
   })
 
   const canEnableMetricsTab = getCanEnableMetricsTab(healthSourcesData)
