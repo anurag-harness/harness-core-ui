@@ -32,6 +32,7 @@ interface VerifyDelegateConnectionProps {
   onDone: HideModal
   showDoneButton?: boolean
   verificationInProgressLabel?: keyof StringsMap
+  onVerificationStart?: () => void
 }
 
 const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
@@ -42,7 +43,8 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
     onDone,
     onErrorHandler,
     showDoneButton = true,
-    verificationInProgressLabel
+    verificationInProgressLabel,
+    onVerificationStart
   } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -76,7 +78,9 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
         setCounter(counter + POLL_INTERVAL)
         verifyHeartBeat()
       }, POLL_INTERVAL)
-
+      if (counter === 0) {
+        onVerificationStart?.()
+      }
       if (counter >= DELEGATE_COMMAND_LINE_TIME_OUT) {
         window.clearTimeout(timerId)
         setVerifyHeartBeat(true)
@@ -87,7 +91,7 @@ const VerifyDelegateConnection: FC<VerifyDelegateConnectionProps> = props => {
       return () => {
         window.clearTimeout(timerId)
       }
-    } else if (data && data?.resource && data?.resource?.numberOfConnectedDelegates !== 0) {
+    } else if (data && data?.resource && data?.resource?.numberOfConnectedDelegates !== 0 && !showSuccess) {
       setVerifyHeartBeat(true)
       setShowSuccess(true)
       onSuccessHandler && onSuccessHandler()

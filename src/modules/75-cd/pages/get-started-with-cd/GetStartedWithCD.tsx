@@ -84,7 +84,7 @@ const GetStartedWithAB: React.FC = () => {
   } = useAppStore()
   return (
     <WithABFFProvider
-      fallback={<GetStartedWithCD />}
+      fallback={<GetStartedWithCDV2 />}
       featureFlagsToken={window.HARNESS_PLG_FF_SDK_KEY}
       config={{ experimentKey: PLG_EXPERIMENTS.CD_GET_STARTED, identifier: uuid }}
     >

@@ -651,6 +651,10 @@ k8sDryRunStepDescription: Perform a dry run on the manifests configured for this
 getStartedWithCD:
   title: Get started with comprehensive deployments
   description: Set up a Harness CD pipeline or a GitOps app to automate deployment of your service to your infrastructure
+  nopath: This path will soon be updated in the UI for a seamless experience
+  checkdocs: In the meantime, don't worry! You can still set up your deployment by following our comprehensive documentation. Simply refer to step-by-step guide.
+  docLink: View documentation
+  downloadZipFile: Download zip file
   flowByQuestions:
     what:
       title: What do you want to deploy?
@@ -660,6 +664,13 @@ getStartedWithCD:
       K8sSteps:
         k8sSvcRep: How is your Kubernetes Service represented?
         artifact: Your artifact is usually specified in the image tag(s) of these manifests.
+        k8sHelm: Select deployment type for Helm
+      ServerlessSteps:
+        svcrep: How is your Serverless Function represented?
+        artifactgcf: Select deployment type for Google Cloud Function
+        artifactaws: Select deployment type for AWS Lambda
+      TraditionalApp:
+        artifact: How is your Application represented?
     howNwhere:
       title: How and where do you want to deploy?
       subtitle: Choose how you would like to deploy.
@@ -684,29 +695,33 @@ getStartedWithCD:
           description: In the GitOps Workflow approach, Harness GitOps will watch the state of your application as defined in a git repo and will then pull any changes into the Kubernetes cluster. You have the Hosted GitOps and Self-Managed GitOps options to get started with Harness GitOps.
     deploymentSteps:
       headsteps:
-        preparation: '1. Preparation'
-        createEntities: '2. Create the required Harness entities'
-        verifyPipeline: '4. Verify that pipeline has been created'
-      createEntitytitle: Run these commands to create the Harness entities necessary to deploy your pipeline. Learn more
+        preparation: '1.Download CLI and set up GitHub access'
+        createEntities: '{{num}}. Create the required Harness entities'
+        verifyPipeline: '{{num}}. Verify that pipeline has been created'
+        configureGcp: '2.Configure GCP'
+        configureAws: '2.Configure AWS'
+      createEntitytitle: 'Run these commands to create the Harness entities necessary to deploy your pipeline. <a href="https://github.com/harness/harness-cli" target="_blank">Learn more </a>'
       title: Set up your deployment
       stepsTitle: Here are the steps you can run to start deploying with Harness CD in a pipeline
       stepsIntro: 'To set up the deployment, follow the steps below using the sample application located at  <a target="_blank" href="{{sampleAppURL}}">{{sampleAppURL}} </a>. If you prefer to deploy your own application, make sure to edit the sample YAMLs provided to point to your application manifests and artifacts'
       stepsIntro2: If you want to deploy your own application, all you have to do is edit the sample application YAMLs provided to point to your application manifests and artifact.
       steps:
-        step1:
+        prepareStep:
           title: '1.2 Create an API key for CLI authentication.'
           generateButton: Generate API key
           regenerateButton: Re-Generate API key
           apiKeyPlacholder: HARNESS-API-KEY
           fetchingApiKeys: Fetching Api Keys
-        step2:
+        setupStep:
           title: 1.1 Download the Harness CLI.
           arm: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-arm64.tar.gz'
           amd: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-linux-amd64.tar.gz'
           mac: 'curl -LO https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-darwin-amd64.tar.gz'
           win: 'Invoke-WebRequest -Uri https://github.com/harness/harness-cli/releases/download/{{version}}/harness-{{version}}-windows-amd64.zip -OutFile ./harness.zip'
-          extract: '# Extract the downloaded zip file and change directory to extracted file location'
+          extractmac: 'tar -xvf harness-{{version}}-darwin-amd64.tar.gz'
           mvharness: 'mv harness /usr/local/bin/'
+          exportMac: 'export PATH="$(pwd):$PATH"'
+          setPath: echo 'export PATH="'$(pwd)':$PATH"' >> ~/.bash_profile
           chmod: 'chmod +x /usr/local/bin/harness'
           commmonInstallSteps:
             download: a. Download the zip file below.
@@ -719,16 +734,37 @@ getStartedWithCD:
             description3: 'c. Set Path variables by running commands below'
             winpathsetup1: '$currentPath = Get-Location'
             winpathsetup2: '[Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$currentPath", [EnvironmentVariableTarget]::Machine)'
+        configureGCPStep:
+          getPermissions: '2.1 Get GCP function storage permissions. <a href="#" target="_blank">Where do I locate this?</a>'
+          createBucket: '2.2 Create GCP bucket. <a href="#" target="_blank">How do I make this?</a>'
+          downloadArtifact: '2.3 Download zip file and add to GCP.  <a href="#" target="_blank">Where do I put this?</a>'
+          inputGCPInfo: '2.4 Input GCP information. <a href="#" target="_blank">Where do I find this?</a>'
+          uploadSVCKey: Upload your GCP service key
+          gcpProjectName: GCP project name
+          gcpRegion: GCP region
+          gcpBucketName: GCP bucket name
+          placholders:
+            projectName: Your project name
+            bucketName: Bucket name
+        configureAWSStep:
+          getPermissions: '2.1 Get AWS function storage permissions. <a href="#" target="_blank">Where do I locate this?</a>'
+          createBucket: '2.2 Create S3 bucket. <a href="#" target="_blank">How do I make this?</a>'
+          downloadArtifact: '2.3 Download zip file and add to AWS S3 bucket.  <a href="#" target="_blank">Where do I put this?</a>'
+          inputAWSInfo: '2.4 Input AWS information. <a href="#" target="_blank">Where do I find this?</a>'
+          uploadSVCKey: Upload your AWS service key
+          awsProjectName: AWS project name
+          awsRegion: AWS region
+          awsBucketName: AWS bucket name
 
-        step3:
-          title: '1.3. Fork <a href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
-        step4:
+        forkStep:
+          title: '1.3. Fork <a target="_blank" href="https://github.com/harness-community/harnesscd-example-apps/fork">harnesscd-example-apps</a> respository through the Github web interface. This enables personal experimentation and modifications without impacting the original codebase.'
+        gitStep:
           title: '1.4. Provide GitHub access details.'
           githubusername: 'GitHub username'
           githubpat: 'GitHub Personal Access Token (PAT)'
           whereToFindGitPat: How do I find this?
           whyGitDetails: As you’ll eventually control deployment configuration by editing YAML definitions, Harness CD needs to read from your repository.
-        step5:
+        pipelineSetupStep:
           title: '5. Pipeline Setup'
           description1: 'Run the steps to deploy the sample guestbook application located at <a target="_blank" href="{{guestBookURL}}">{{guestBookURL}}</a>.'
           description2: You will first create a Harness Service representing this application and a Harness Environment representing the infrastructure where you are deploying (and already identified by the Delegate installed in the previous step).
@@ -739,11 +775,18 @@ getStartedWithCD:
             cddir: cd harnesscd-example-apps
             logincmd: 'harness login --api-key {{apiKey}} --account-id {{accId}}'
             createsecret: 'harness secret  --token {{gitPat}} apply'
-            createGithubIcon: 'harness connector --file guestbook/harnesscd-pipeline/github-connector.yml apply --git-user {{gitUser}} '
-            createk8scon: 'harness connector --file guestbook/harnesscd-pipeline/kubernetes-connector.yml apply --delegate-name {{delegateName}}'
-            createsvccmd: harness service --file guestbook/harnesscd-pipeline/service.yml apply
-            createenvcmd: harness environment --file guestbook/harnesscd-pipeline/environment.yml apply
-            createinfracmd: harness infrastructure  --file guestbook/harnesscd-pipeline/infrastructure-definition.yml apply
+            k8s:
+              createGithubcon: 'harness connector --file {{type}}/harnesscd-pipeline/github-connector.yml apply --git-user {{gitUser}} '
+              createk8scon: 'harness connector --file {{type}}/harnesscd-pipeline/kubernetes-connector.yml apply --delegate-name {{delegateName}}'
+              createsvccmd: harness service --file {{type}}/harnesscd-pipeline/{{service}}.yml apply
+              createenvcmd: harness environment --file {{type}}/harnesscd-pipeline/{{environment}}.yml apply
+              createinfracmd: harness infrastructure  --file {{type}}/harnesscd-pipeline/{{infrastructureDefinition}}.yml apply
+            serverless:
+              createGithubcon: 'harness connector --file {{type}}/harnesscd-pipeline/github-connector.yml apply --git-user {{gitUser}} '
+              createk8scon: 'harness connector --file {{type}}/harnesscd-pipeline/kubernetes-connector.yml apply --delegate-name {{delegateName}}'
+              createsvccmd: harness service --file {{type}}/harnesscd-pipeline/service.yml apply
+              createenvcmd: harness environment --file {{type}}/harnesscd-pipeline/environment.yml apply
+              createinfracmd: harness infrastructure  --file {{type}}/harnesscd-pipeline/infrastructure-definition.yml apply
             comments:
               cloneRepo: '# Clone the repository'
               cdDir: '# Change the directory'
@@ -762,11 +805,12 @@ getStartedWithCD:
               blueGreen:
                 subtitle: 'Continuously roll out updates without downtime'
             createpipeline:
-              createcanarycmd: harness pipeline --file guestbook/harnesscd-pipeline/canary-pipeline.yml apply
-              createbluegreencmd: harness pipeline --file guestbook/harnesscd-pipeline/bluegreen-pipeline.yml apply
-              createrollingcmd: harness pipeline --file guestbook/harnesscd-pipeline/rolling-pipeline.yml apply
-        step6:
-          title: 3. Pick deployment strategy
+              createcanarycmd: harness pipeline --file {{type}}/harnesscd-pipeline/{{pipeline}}.yml apply
+              createbluegreencmd: harness pipeline --file {{type}}/harnesscd-pipeline/{{pipeline}}.yml apply
+              createrollingcmd: harness pipeline --file {{type}}/harnesscd-pipeline/{{pipeline}}.yml apply
+              createbasiccmd: harness pipeline --file {{type}}/harnesscd-pipeline/{{pipeline}}.yml apply
+        deploymentStrategyStep:
+          title: '{{num}}. Pick deployment strategy'
           description: Create a pipeline with your preferred deployment strategy. We recommend starting with the Canary strategy as it reduces the probability of failed changes.
           verifyPipeline: Verify once you have complete the steps above to make sure they were successfully executed.
           pipelinenotfound: Pipeline not created

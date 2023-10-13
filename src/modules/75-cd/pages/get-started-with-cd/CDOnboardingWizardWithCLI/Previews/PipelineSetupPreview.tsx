@@ -17,7 +17,9 @@ export default function PipelineSetupPreview(): JSX.Element {
     <Layout.Vertical>
       <Layout.Horizontal margin={{ bottom: 'small' }}>
         <Text icon="main-tick" iconProps={{ color: Color.SUCCESS }} color={Color.BLACK}>
-          {getString('cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.pipelinesuccess')}
+          {getString(
+            'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.pipelinesuccess'
+          )}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>

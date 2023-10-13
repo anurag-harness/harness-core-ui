@@ -9,6 +9,7 @@
 declare const styles: {
   readonly alignTitle: string
   readonly almostFullScreenCloseBtn: string
+  readonly blueIcons: string
   readonly bold: string
   readonly buttons: string
   readonly copyButton: string
@@ -21,8 +22,10 @@ declare const styles: {
   readonly infraCards: string
   readonly marginBottomLarge: string
   readonly marginBottomxl: string
+  readonly missingSwimlanes: string
   readonly nodelegatebg: string
   readonly padLeft: string
+  readonly redIcon: string
   readonly relative: string
   readonly rotateButton: string
   readonly secretInput: string

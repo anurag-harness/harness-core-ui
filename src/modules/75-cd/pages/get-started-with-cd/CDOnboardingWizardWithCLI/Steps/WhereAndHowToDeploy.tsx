@@ -9,6 +9,7 @@ import React from 'react'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { Layout, Text, CardSelect, Icon, IconName } from '@harness/uicore'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useStrings } from 'framework/strings'
 import {
   CDOnboardingSteps,
@@ -22,6 +23,8 @@ import { useOnboardingStore } from '../Store/OnboardingStore'
 import { DEPLOYMENT_FLOW_ENUMS, DEPLOYMENT_FLOW_TYPES } from '../Constants'
 import type { DelgateDetails } from '../DelegateModal'
 import CDPipeline from './DeploymentFlowTypes/CDPipeline'
+import { getBranchingProps } from '../utils'
+import { ONBOARDING_INTERACTIONS, WIZARD_STEP_OPEN } from '../TrackingConstants'
 import css from '../CDOnboardingWizardWithCLI.module.scss'
 
 interface WhereAndHowToDeployProps {
@@ -29,6 +32,7 @@ interface WhereAndHowToDeployProps {
 }
 function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.Element {
   const { stepsProgress } = useOnboardingStore()
+  const { trackEvent } = useTelemetry()
   const deploymentTypeDetails = React.useMemo((): WhatToDeployType => {
     return stepsProgress[CDOnboardingSteps.WHAT_TO_DEPLOY].stepData
   }, [stepsProgress])
@@ -47,11 +51,16 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
   const { getString } = useStrings()
 
   React.useEffect(() => {
+    trackEvent(WIZARD_STEP_OPEN.HOW_N_WHERE_STEP_OPENED, getBranchingProps(stepsProgress))
+  }, [])
+
+  React.useEffect(() => {
     saveProgress(CDOnboardingSteps.HOW_N_WHERE_TO_DEPLOY, state)
   }, [state])
 
   const openDelagateDialog = (): void => {
     !state.installDelegateTried && setState(prevState => ({ ...prevState, installDelegateTried: true }))
+    trackEvent(WIZARD_STEP_OPEN.CREATE_DELEGATE_FLYOUT_OPENED, getBranchingProps(stepsProgress))
     setDrawerOpen(true)
   }
   const closeDelegateDialog = (data: DelgateDetails): void => {
@@ -74,10 +83,28 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
 
   const onDelegateFail = (): void => {
     onChangeHandler('FAILED')
+    trackEvent(ONBOARDING_INTERACTIONS.DELEGATE_VERIFICATION_FAIL, {
+      ...getBranchingProps(stepsProgress),
+      delegateName: state?.delegateName,
+      delegateType: state?.delegateType
+    })
   }
 
   const onDelegateSuccess = (): void => {
     onChangeHandler('SUCCESS')
+    trackEvent(ONBOARDING_INTERACTIONS.DELEGATE_VERIFICATION_SUCCESS, {
+      ...getBranchingProps(stepsProgress),
+      delegateName: state?.delegateName,
+      delegateType: state?.delegateType
+    })
+  }
+
+  const onVerificationStart = (): void => {
+    trackEvent(ONBOARDING_INTERACTIONS.DELEGATE_VERIFICATION_START, {
+      ...getBranchingProps(stepsProgress),
+      delegateName: state?.delegateName,
+      delegateType: state?.delegateType
+    })
   }
   const setType = (selectedType: DeploymentFlowType): void => {
     setState(prevState => ({ ...prevState, type: selectedType }))
@@ -128,6 +155,7 @@ function WhereAndHowToDeploy({ saveProgress }: WhereAndHowToDeployProps): JSX.El
             isDrawerOpen={isDrawerOpen}
             closeDelegateDialog={closeDelegateDialog}
             onDelegateFail={onDelegateFail}
+            onVerificationStart={onVerificationStart}
           />
         )}
         {state.type?.id === DEPLOYMENT_FLOW_ENUMS.Gitops && <GitopsFlow />}

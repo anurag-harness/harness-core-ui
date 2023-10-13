@@ -6120,6 +6120,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.checkAnnonymously': string
   'cd.getStartedWithCD.checkAuthSettings': string
   'cd.getStartedWithCD.checkDelegateInstalled': string
+  'cd.getStartedWithCD.checkdocs': string
   'cd.getStartedWithCD.clickForOtherDeploymentTypes': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
   'cd.getStartedWithCD.closeOnboarding.title': string
@@ -6159,7 +6160,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.destinationDetails': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.disconnected': string
+  'cd.getStartedWithCD.docLink': string
   'cd.getStartedWithCD.doesntHaveGitRepo': string
+  'cd.getStartedWithCD.downloadZipFile': string
   'cd.getStartedWithCD.ensureFullConnectivity': string
   'cd.getStartedWithCD.entityCreationTitle': string
   'cd.getStartedWithCD.envName': string
@@ -6168,73 +6171,101 @@ export interface StringsMap {
   'cd.getStartedWithCD.failedToAuthenticate': string
   'cd.getStartedWithCD.failedToProvisionCluster': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.createEntitytitle': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.configureAws': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.configureGcp': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.createEntities': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.preparation': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.headsteps.verifyPipeline': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.apiKeyPlacholder': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.fetchingApiKeys': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.generateButton': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.regenerateButton': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step1.title': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.amd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.arm': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.chmod': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.download': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.extract': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.move': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.commmonInstallSteps.restart': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.extract': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mac': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.mvharness': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.title': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.win': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description1': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description2': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.description3': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup1': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step2.wininstall.winpathsetup2': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step3.title': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubpat': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.githubusername': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.title': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.whereToFindGitPat': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step4.whyGitDetails': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.cddir': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.clonecmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.cdDir': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.cloneRepo': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createEnv': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createGitIcon': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createInfra': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createK8scon': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createSecret': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.createSvc': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.comments.login': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createGithubIcon': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createenvcmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createinfracmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createk8scon': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createpipeline.createbluegreencmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createpipeline.createcanarycmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createpipeline.createrollingcmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createsecret': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.createsvccmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.deploymentStrategies.blueGreen.subtitle': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.deploymentStrategies.canary.subtitle': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.deploymentStrategies.rolling.subtitle': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.gitpatPlaceholder': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.gitusernamePlaceholder': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.commands.logincmd': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.description1': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.description2': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step5.title': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.description': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.pipelinenotfound': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.pipelinesuccess': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.recheckpipeline': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.retryVerify': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.title': string
-  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.step6.verifyPipeline': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsBucketName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsProjectName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.awsRegion': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.createBucket': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.downloadArtifact': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.getPermissions': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.inputAWSInfo': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureAWSStep.uploadSVCKey': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.createBucket': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.downloadArtifact': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.gcpBucketName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.gcpProjectName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.gcpRegion': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.getPermissions': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.inputGCPInfo': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.bucketName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.placholders.projectName': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.configureGCPStep.uploadSVCKey': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.description': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.pipelinenotfound': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.pipelinesuccess': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.recheckpipeline': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.retryVerify': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.title': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.deploymentStrategyStep.verifyPipeline': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.forkStep.title': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubpat': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.githubusername': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.title': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.whereToFindGitPat': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.gitStep.whyGitDetails': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.cddir': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.clonecmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cdDir': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.cloneRepo': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createEnv': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createGitIcon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createInfra': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createK8scon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.createSvc': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.comments.login': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createpipeline.createbasiccmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createpipeline.createbluegreencmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createpipeline.createcanarycmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createpipeline.createrollingcmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.createsecret': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.deploymentStrategies.blueGreen.subtitle': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.deploymentStrategies.canary.subtitle': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.deploymentStrategies.rolling.subtitle': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitpatPlaceholder': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.gitusernamePlaceholder': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createGithubcon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createenvcmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createinfracmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createk8scon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.k8s.createsvccmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.logincmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createGithubcon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createenvcmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createinfracmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createk8scon': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.commands.serverless.createsvccmd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.description1': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.description2': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.pipelineSetupStep.title': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.apiKeyPlacholder': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.fetchingApiKeys': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.generateButton': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.regenerateButton': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.prepareStep.title': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.amd': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.arm': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.chmod': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.download': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.extract': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.move': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.commmonInstallSteps.restart': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.exportMac': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.extractmac': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.mac': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.mvharness': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.setPath': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.title': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.win': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.wininstall.description1': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.wininstall.description2': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.wininstall.description3': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.wininstall.winpathsetup1': string
+  'cd.getStartedWithCD.flowByQuestions.deploymentSteps.steps.setupStep.wininstall.winpathsetup2': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsIntro': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsIntro2': string
   'cd.getStartedWithCD.flowByQuestions.deploymentSteps.stepsTitle': string
@@ -6267,7 +6298,12 @@ export interface StringsMap {
   'cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.runWithoutDelegate': string
   'cd.getStartedWithCD.flowByQuestions.reviewAndRunStep.title': string
   'cd.getStartedWithCD.flowByQuestions.what.K8sSteps.artifact': string
+  'cd.getStartedWithCD.flowByQuestions.what.K8sSteps.k8sHelm': string
   'cd.getStartedWithCD.flowByQuestions.what.K8sSteps.k8sSvcRep': string
+  'cd.getStartedWithCD.flowByQuestions.what.ServerlessSteps.artifactaws': string
+  'cd.getStartedWithCD.flowByQuestions.what.ServerlessSteps.artifactgcf': string
+  'cd.getStartedWithCD.flowByQuestions.what.ServerlessSteps.svcrep': string
+  'cd.getStartedWithCD.flowByQuestions.what.TraditionalApp.artifact': string
   'cd.getStartedWithCD.flowByQuestions.what.aboutSvc': string
   'cd.getStartedWithCD.flowByQuestions.what.samplesvc': string
   'cd.getStartedWithCD.flowByQuestions.what.svcrep': string
@@ -6328,6 +6364,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.mappedHarnessProjects': string
   'cd.getStartedWithCD.master': string
   'cd.getStartedWithCD.nameYourCluster': string
+  'cd.getStartedWithCD.nopath': string
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.prepareCluserInfo': string

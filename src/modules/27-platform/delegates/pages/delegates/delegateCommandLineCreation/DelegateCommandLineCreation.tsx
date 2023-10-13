@@ -53,6 +53,7 @@ interface DelegateCommandLineCreationProps {
     delegateType?: DelegateCommandLineTypes
     delegateProblemType?: DelegateCommonProblemTypes
   }) => void
+  onVerificationStart?: () => void
 }
 interface CommonStatesforAllClicksProps {
   commandTypeLocal: CommandType | undefined
@@ -71,6 +72,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   oldDelegateCreation,
   hideDocker,
   onDelegateConfigChange,
+  onVerificationStart,
   delegateName: defaultDelegateName
 }) => {
   const { getString } = useStrings()
@@ -355,6 +357,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                   onClick={() => {
                     setVerifyButtonClicked(true)
                     setShowVerifyButton(false)
+                    onVerificationStart?.()
                     trackEvent(`${DelegateActions.DelegateCommandLineVerify} ${commonProblemsDelegateType}`, {
                       category: Category.DELEGATE
                     })
@@ -373,6 +376,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
               onDone={onDone}
               name={delegateName}
               delegateType={commonProblemsDelegateType}
+              onVerificationStart={onVerificationStart}
             />
           )}
         </>

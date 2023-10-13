@@ -21,6 +21,7 @@ export interface CDPipelineProps {
   isDrawerOpen: boolean
   onDelegateFail: () => void
   onDelegateSuccess: () => void
+  onVerificationStart?: () => void
 }
 export default function CDPipeline({
   state,
@@ -28,7 +29,8 @@ export default function CDPipeline({
   closeDelegateDialog,
   openDelagateDialog,
   onDelegateFail,
-  onDelegateSuccess
+  onDelegateSuccess,
+  onVerificationStart
 }: CDPipelineProps): JSX.Element {
   const { getString } = useStrings()
   return (
@@ -68,6 +70,7 @@ export default function CDPipeline({
             //
           }}
           onErrorHandler={onDelegateFail}
+          onVerificationStart={onVerificationStart}
         />
       )}
     </Layout.Vertical>
