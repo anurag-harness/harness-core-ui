@@ -23,15 +23,10 @@ import {
 import { DeploymentMetrics } from './components/DeploymentMetrics/DeploymentMetrics'
 import { ExecutionVerificationSummary } from './components/ExecutionVerificationSummary/ExecutionVerificationSummary'
 import LogAnalysisContainer from './components/LogAnalysisContainer/LogAnalysisView.container'
-import {
-  getActivityId,
-  getCanEnableLogsTab,
-  getCanEnableMetricsTab,
-  getDefaultTabId
-} from './ExecutionVerificationView.utils'
+import { getActivityId, getCanEnableTabByType, getDefaultTabId } from './ExecutionVerificationView.utils'
 import { ManualInterventionVerifyStep } from './components/ManualInterventionVerifyStep/ManualInterventionVerifyStep'
 import InterruptedHistory from './components/InterruptedHistory/InterruptedHistory'
-import { LogsQueryParamName } from './ExecutionVerificationView.constants'
+import { LogsProviderType, LogsQueryParamName, MetricsProviderType } from './ExecutionVerificationView.constants'
 import css from './ExecutionVerificationView.module.scss'
 
 interface ExecutionVerificationViewProps {
@@ -70,8 +65,8 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
     lazy: type !== LogsQueryParamName
   })
 
-  const canEnableMetricsTab = getCanEnableMetricsTab(healthSourcesData)
-  const canEnableLogsTab = getCanEnableLogsTab(healthSourcesData)
+  const canEnableMetricsTab = getCanEnableTabByType(healthSourcesData, MetricsProviderType)
+  const canEnableLogsTab = getCanEnableTabByType(healthSourcesData, LogsProviderType)
 
   const [selectedTab, setSelectedTab] = useState(() =>
     getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab })
@@ -79,7 +74,7 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
 
   useEffect(() => {
     setSelectedTab(getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab }))
-  }, [canEnableLogsTab, canEnableMetricsTab, getString, type])
+  }, [canEnableLogsTab, canEnableMetricsTab, type])
 
   const handleTabChange = useCallback(nextTabId => {
     setSelectedNode(undefined)
@@ -114,10 +109,12 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
                 activityId={activityId}
                 overviewData={data}
                 overviewLoading={loading}
-                healthSourcesData={healthSourcesData}
-                healthSourcesError={healthSourcesError}
-                healthSourcesLoading={healthSourcesLoading}
-                fetchHealthSources={fetchHealthSources}
+                healthSourceDetails={{
+                  healthSourcesData,
+                  healthSourcesError,
+                  healthSourcesLoading,
+                  fetchHealthSources
+                }}
               />
             </Layout.Horizontal>
           }

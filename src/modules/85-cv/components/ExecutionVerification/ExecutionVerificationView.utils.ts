@@ -36,22 +36,17 @@ export const getDefaultTabId = ({
   }
 }
 
-const isHealthSourcesPresent = (healthSources: HealthSourceV2[] | null): healthSources is NonNullable<Array<any>> => {
+const isHealthSourcesPresent = (healthSources: HealthSourceV2[] | null): healthSources is HealthSourceV2[] => {
   return Boolean(healthSources && Array.isArray(healthSources))
 }
 
-export const getCanEnableMetricsTab = (healthSources: HealthSourceV2[] | null): boolean => {
+export const getCanEnableTabByType = (
+  healthSources: HealthSourceV2[] | null,
+  type: typeof MetricsProviderType | typeof LogsProviderType
+): boolean => {
   if (!isHealthSourcesPresent(healthSources)) {
     return false
   }
 
-  return healthSources.some(healthSource => healthSource.providerType === MetricsProviderType)
-}
-
-export const getCanEnableLogsTab = (healthSources: HealthSourceV2[] | null): boolean => {
-  if (!isHealthSourcesPresent(healthSources)) {
-    return false
-  }
-
-  return healthSources.some(healthSource => healthSource.providerType === LogsProviderType)
+  return healthSources.some(healthSource => healthSource.providerType === type)
 }

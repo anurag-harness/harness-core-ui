@@ -198,10 +198,12 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
-          healthSourcesError={null}
-          fetchHealthSources={useGetHealthSourcesSpy}
-          healthSourcesData={HealthSourcesResponse}
-          healthSourcesLoading={false}
+          healthSourceDetails={{
+            healthSourcesError: null,
+            fetchHealthSources: useGetHealthSourcesSpy,
+            healthSourcesData: HealthSourcesResponse,
+            healthSourcesLoading: false
+          }}
         />
       </TestWrapper>
     )
@@ -277,10 +279,12 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
-          healthSourcesError={null}
-          fetchHealthSources={useGetHealthSourcesSpy}
-          healthSourcesData={HealthSourcesResponse}
-          healthSourcesLoading={false}
+          healthSourceDetails={{
+            healthSourcesError: null,
+            fetchHealthSources: useGetHealthSourcesSpy,
+            healthSourcesData: HealthSourcesResponse,
+            healthSourcesLoading: false
+          }}
         />
       </TestWrapper>
     )
@@ -342,10 +346,12 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
-          healthSourcesError={null}
-          fetchHealthSources={useGetHealthSourcesSpy}
-          healthSourcesData={HealthSourcesResponse}
-          healthSourcesLoading={false}
+          healthSourceDetails={{
+            healthSourcesError: null,
+            fetchHealthSources: useGetHealthSourcesSpy,
+            healthSourcesData: HealthSourcesResponse,
+            healthSourcesLoading: false
+          }}
         />
       </TestWrapper>
     )
@@ -378,10 +384,12 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
-          healthSourcesError={null}
-          fetchHealthSources={useGetHealthSourcesSpy}
-          healthSourcesData={HealthSourcesResponse}
-          healthSourcesLoading={false}
+          healthSourceDetails={{
+            healthSourcesError: null,
+            fetchHealthSources: useGetHealthSourcesSpy,
+            healthSourcesData: HealthSourcesResponse,
+            healthSourcesLoading: false
+          }}
         />
       </TestWrapper>
     )
@@ -419,10 +427,12 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
-          healthSourcesError={null}
-          fetchHealthSources={useGetHealthSourcesSpy}
-          healthSourcesData={HealthSourcesResponse}
-          healthSourcesLoading={false}
+          healthSourceDetails={{
+            healthSourcesError: null,
+            fetchHealthSources: useGetHealthSourcesSpy,
+            healthSourcesData: HealthSourcesResponse,
+            healthSourcesLoading: false
+          }}
         />
       </TestWrapper>
     )
@@ -458,10 +468,12 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
-          healthSourcesError={null}
-          fetchHealthSources={useGetHealthSourcesSpy}
-          healthSourcesData={HealthSourcesResponse}
-          healthSourcesLoading={false}
+          healthSourceDetails={{
+            healthSourcesError: null,
+            fetchHealthSources: useGetHealthSourcesSpy,
+            healthSourcesData: HealthSourcesResponse,
+            healthSourcesLoading: false
+          }}
         />
       </TestWrapper>
     )
@@ -514,10 +526,12 @@ describe('Unit tests for Deployment metrics ', () => {
           step={clonedNode}
           activityId={clonedNode!.progressData!.activityId as unknown as string}
           overviewData={null}
-          healthSourcesError={null}
-          fetchHealthSources={useGetHealthSourcesSpy}
-          healthSourcesData={HealthSourcesResponse}
-          healthSourcesLoading={false}
+          healthSourceDetails={{
+            healthSourcesError: null,
+            fetchHealthSources: useGetHealthSourcesSpy,
+            healthSourcesData: HealthSourcesResponse,
+            healthSourcesLoading: false
+          }}
         />
       </TestWrapper>
     )
@@ -667,10 +681,12 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
-          healthSourcesError={null}
-          fetchHealthSources={useGetHealthSourcesSpy}
-          healthSourcesData={HealthSourcesResponse}
-          healthSourcesLoading={false}
+          healthSourceDetails={{
+            healthSourcesError: null,
+            fetchHealthSources: useGetHealthSourcesSpy,
+            healthSourcesData: HealthSourcesResponse,
+            healthSourcesLoading: false
+          }}
         />
       </TestWrapper>
     )
@@ -708,10 +724,12 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
-          healthSourcesError={null}
-          fetchHealthSources={useGetHealthSourcesSpy}
-          healthSourcesData={HealthSourcesResponse}
-          healthSourcesLoading={false}
+          healthSourceDetails={{
+            healthSourcesError: null,
+            fetchHealthSources: useGetHealthSourcesSpy,
+            healthSourcesData: HealthSourcesResponse,
+            healthSourcesLoading: false
+          }}
         />
       </TestWrapper>
     )
@@ -762,10 +780,12 @@ describe('Unit tests for Deployment metrics ', () => {
             step={MockExecutionNode}
             activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
             overviewData={overviewDataMock}
-            healthSourcesError={null}
-            fetchHealthSources={useGetHealthSourcesSpy}
-            healthSourcesData={HealthSourcesResponse}
-            healthSourcesLoading={false}
+            healthSourceDetails={{
+              healthSourcesError: null,
+              fetchHealthSources: useGetHealthSourcesSpy,
+              healthSourcesData: HealthSourcesResponse,
+              healthSourcesLoading: false
+            }}
           />
         </TestWrapper>
       )

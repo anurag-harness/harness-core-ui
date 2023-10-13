@@ -75,16 +75,20 @@ import type { StartTimestampDataType } from './DeploymentMetrics.types'
 
 import css from './DeploymentMetrics.module.scss'
 
+interface HealthSourcesDetailsType {
+  healthSourcesData: HealthSourceV2[] | null
+  healthSourcesError: GetDataError<unknown> | null
+  healthSourcesLoading: boolean
+  fetchHealthSources: () => Promise<void>
+}
+
 interface DeploymentMetricsProps {
   step: ExecutionNode
   activityId: string
   selectedNode?: AnalysedDeploymentNode
   overviewData: VerificationOverview | null
   overviewLoading?: boolean
-  healthSourcesData: HealthSourceV2[] | null
-  healthSourcesError: GetDataError<unknown> | null
-  healthSourcesLoading: boolean
-  fetchHealthSources: () => Promise<void>
+  healthSourceDetails: HealthSourcesDetailsType
 }
 
 type UpdateViewState = {
@@ -101,10 +105,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     activityId,
     overviewData,
     overviewLoading,
-    fetchHealthSources,
-    healthSourcesData,
-    healthSourcesError,
-    healthSourcesLoading
+    healthSourceDetails: { fetchHealthSources, healthSourcesData, healthSourcesError, healthSourcesLoading }
   } = props
   const { getString } = useStrings()
   const pageParams = useQueryParams<ExecutionQueryParams>()
