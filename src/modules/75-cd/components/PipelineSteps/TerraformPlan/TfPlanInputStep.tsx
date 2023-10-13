@@ -27,7 +27,6 @@ import type { TerraformBackendConfigSpec } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
 import type { TerraformPlanProps } from '../Common/Terraform/TerraformInterfaces'
 import ConfigInputs from './InputSteps/TfConfigSection'
@@ -41,7 +40,6 @@ export default function TfPlanInputStep(
   const { getString } = useStrings()
   const { inputSetData, readonly, initialValues, allowableTypes, stepViewType, formik } = props
   const { expressions } = useVariablesExpression()
-  const { CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
@@ -106,9 +104,7 @@ export default function TfPlanInputStep(
           disabled={readonly}
           setRefValue
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-          isRecordDisabled={selectedRecord =>
-            (selectedRecord as any)?.spec?.readOnly && CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
-          }
+          isRecordDisabled={selectedRecord => (selectedRecord as any)?.spec?.readOnly}
           renderRecordDisabledWarning={
             <Text
               icon="warning-icon"

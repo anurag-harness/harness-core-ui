@@ -79,7 +79,6 @@ import StepArtifactoryAuthentication from '@platform/connectors/components/Creat
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import {
   BackendConfigurationTypes,
@@ -126,7 +125,6 @@ function TerraformPlanWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
-  const { CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
@@ -600,10 +598,7 @@ function TerraformPlanWidget(
                     multiTypeProps={{ expressions, allowableTypes }}
                     gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     disabled={readonly}
-                    isRecordDisabled={selectedRecord =>
-                      (selectedRecord as any)?.spec?.readOnly &&
-                      CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
-                    }
+                    isRecordDisabled={selectedRecord => (selectedRecord as any)?.spec?.readOnly}
                     renderRecordDisabledWarning={
                       <Text
                         icon="warning-icon"

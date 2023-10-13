@@ -80,7 +80,6 @@ import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/con
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import {
   ConnectorMap,
   ConnectorTypes,
@@ -118,7 +117,6 @@ function TerragruntPlanWidget(
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
-  const { CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN } = useFeatureFlags()
 
   const commandTypeOptions: IOptionProps[] = [
     { label: getString('filters.apply'), value: CommandTypes.Apply },
@@ -567,10 +565,7 @@ function TerragruntPlanWidget(
                   multiTypeProps={{ expressions, allowableTypes }}
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                   disabled={readonly}
-                  isRecordDisabled={selectedRecord =>
-                    (selectedRecord as any)?.spec?.readOnly &&
-                    CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
-                  }
+                  isRecordDisabled={selectedRecord => (selectedRecord as any)?.spec?.readOnly}
                   renderRecordDisabledWarning={
                     <Text
                       icon="warning-icon"
