@@ -10,12 +10,19 @@ import userEvent from '@testing-library/user-event'
 import { render, waitFor, screen } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import type { ExecutionNode } from 'services/pipeline-ng'
+import * as cvService from 'services/cv'
+import * as commonHooks from '@common/hooks'
 import {
   LogTypes,
   SLOLogContentProps,
   VerifyStepLogContentProps
 } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
 import { ExecutionVerificationView } from '../ExecutionVerificationView'
+import {
+  HealthSourcesResponse,
+  expectedHealthSourcesParams,
+  expectedHealthSourcesParamsWithMetrics
+} from './ExecutionVerificationView.mock'
 import { getActivityId, getDefaultTabId } from '../ExecutionVerificationView.utils'
 
 jest.mock('../components/DeploymentMetrics/DeploymentMetrics', () => ({
@@ -89,18 +96,22 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
   })
 
   test('Ensure correct tabId is returned  ', () => {
-    jest.mock('framework/strings', () => ({
-      useStrings: () => ({
-        getString: (val: string) => val
-      })
-    }))
-    expect(getDefaultTabId((item: string) => item, undefined)).toEqual('pipeline.verification.analysisTab.metrics')
-    expect(getDefaultTabId((item: string) => item, 'pipeline.verification.analysisTab.logs')).toEqual(
-      'pipeline.verification.analysisTab.logs'
-    )
-    expect(getDefaultTabId((item: string) => item, 'pipeline.verification.analysisTab.metrics')).toEqual(
+    expect(getDefaultTabId({ getString: key => key, canEnableLogsTab: false, canEnableMetricsTab: true })).toEqual(
       'pipeline.verification.analysisTab.metrics'
     )
+
+    expect(
+      getDefaultTabId({
+        getString: key => key,
+        tabName: 'pipeline.verification.analysisTab.logs',
+        canEnableLogsTab: true,
+        canEnableMetricsTab: true
+      })
+    ).toEqual('pipeline.verification.analysisTab.logs')
+
+    expect(
+      getDefaultTabId({ getString: (item: string) => item, canEnableMetricsTab: false, canEnableLogsTab: true })
+    ).toEqual('pipeline.verification.analysisTab.logs')
   })
 
   test('Ensure correct tabs are rendered via queryParams', async () => {
@@ -164,5 +175,55 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
     })
 
     await userEvent.click(dialog?.querySelector('[data-icon="Stroke"]')!)
+  })
+
+  test('should make health sources API call if user opens logs tabs directly', async () => {
+    jest.spyOn(commonHooks, 'useQueryParams').mockImplementation(() => ({ type: 'Logs' }))
+
+    const useGetHealthSourcesForVerifyStepExecutionIdSpy = jest
+      .spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId')
+      .mockReturnValue({
+        data: HealthSourcesResponse,
+        refetch: jest.fn() as unknown
+      } as any)
+
+    render(
+      <TestWrapper
+        path="/:accountId/:orgIdentifier/:projectIdentifier"
+        pathParams={{ accountId: 'acc', orgIdentifier: 'org', projectIdentifier: 'project' }}
+      >
+        <ExecutionVerificationView step={{ progressData: { activityId: '1234_activityId' as any } }} />
+      </TestWrapper>
+    )
+
+    await waitFor(() =>
+      expect(useGetHealthSourcesForVerifyStepExecutionIdSpy).toHaveBeenCalledWith(expectedHealthSourcesParams)
+    )
+  })
+
+  test('should call health sources API call as lazy if user opens Metrics tabs directly', async () => {
+    jest.spyOn(commonHooks, 'useQueryParams').mockImplementation(() => ({ type: 'Metrics' }))
+
+    const useGetHealthSourcesForVerifyStepExecutionIdSpy = jest
+      .spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId')
+      .mockReturnValue({
+        data: HealthSourcesResponse,
+        refetch: jest.fn() as unknown
+      } as any)
+
+    render(
+      <TestWrapper
+        path="/:accountId/:orgIdentifier/:projectIdentifier"
+        pathParams={{ accountId: 'acc', orgIdentifier: 'org', projectIdentifier: 'project' }}
+      >
+        <ExecutionVerificationView step={{ progressData: { activityId: '1234_activityId' as any } }} />
+      </TestWrapper>
+    )
+
+    await waitFor(() =>
+      expect(useGetHealthSourcesForVerifyStepExecutionIdSpy).toHaveBeenCalledWith(
+        expectedHealthSourcesParamsWithMetrics
+      )
+    )
   })
 })

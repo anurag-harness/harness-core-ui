@@ -17,6 +17,7 @@ import {
   healthSourceAPI,
   healthSourceMetricsAPI,
   healthSourcesResponse,
+  healthSourcesResponseWithLogs,
   jiraCreatePayload,
   jiraCreatePostCall,
   jiraIssueTypeMock,
@@ -151,6 +152,8 @@ describe('Verify step', () => {
       'logsRadarChartDataNodeFilterCall'
     )
 
+    cy.intercept('GET', healthSourceMetricsAPI, healthSourcesResponseWithLogs).as('healthSource')
+
     cy.intercept('GET', logsListCLusterFilterCall, logsListCallResponse).as('logsListCLusterFilterCall')
     cy.intercept('GET', logsRadarChartDataCLusterFilterCall, logsRadarChartDataCallResponse).as(
       'logsRadarChartDataCLusterFilterCall'
@@ -266,7 +269,12 @@ describe('Verify step', () => {
     // clicking again to go to verify step page
     cy.get('.bp3-switch').click()
 
-    cy.findByText(/^Logs/i).click({ force: true })
+    cy.wait('@healthSource')
+
+    cy.get('div[data-tab-id="Logs"][aria-disabled="false"]')
+      .should('be.visible')
+      .scrollIntoView()
+      .click({ force: true })
 
     cy.wait('@nodeNames')
 

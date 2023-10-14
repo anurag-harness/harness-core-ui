@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState, useCallback } from 'react'
+import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, Tabs, Tab, NoDataCard, Layout, FlexExpander, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -15,13 +15,18 @@ import type { ExecutionNode } from 'services/pipeline-ng'
 import { useLogContentHook } from '@cv/hooks/useLogContentHook/useLogContentHook'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { LogTypes } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
-import { AnalysedDeploymentNode, useGetVerificationOverviewForVerifyStepExecutionId } from 'services/cv'
+import {
+  AnalysedDeploymentNode,
+  useGetVerificationOverviewForVerifyStepExecutionId,
+  useGetHealthSourcesForVerifyStepExecutionId
+} from 'services/cv'
 import { DeploymentMetrics } from './components/DeploymentMetrics/DeploymentMetrics'
 import { ExecutionVerificationSummary } from './components/ExecutionVerificationSummary/ExecutionVerificationSummary'
 import LogAnalysisContainer from './components/LogAnalysisContainer/LogAnalysisView.container'
-import { getActivityId, getDefaultTabId } from './ExecutionVerificationView.utils'
+import { getActivityId, getCanEnableTabByType, getDefaultTabId } from './ExecutionVerificationView.utils'
 import { ManualInterventionVerifyStep } from './components/ManualInterventionVerifyStep/ManualInterventionVerifyStep'
 import InterruptedHistory from './components/InterruptedHistory/InterruptedHistory'
+import { LogsProviderType, LogsQueryParamName, MetricsProviderType } from './ExecutionVerificationView.constants'
 import css from './ExecutionVerificationView.module.scss'
 
 interface ExecutionVerificationViewProps {
@@ -34,13 +39,8 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
   const [selectedNode, setSelectedNode] = useState<AnalysedDeploymentNode | undefined>()
   const activityId = useMemo(() => getActivityId(step), [step])
   const { type } = useQueryParams<{ type?: string }>()
-  const defaultTabId = useMemo(() => getDefaultTabId(getString, type), [type])
 
   const { openLogContentHook } = useLogContentHook({ verifyStepExecutionId: activityId })
-
-  const handleTabChange = useCallback(() => {
-    setSelectedNode(undefined)
-  }, [])
 
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
@@ -52,15 +52,45 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
     lazy: true
   })
 
+  const {
+    data: healthSourcesData,
+    error: healthSourcesError,
+    loading: healthSourcesLoading,
+    refetch: fetchHealthSources
+  } = useGetHealthSourcesForVerifyStepExecutionId({
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId: activityId,
+    lazy: type !== LogsQueryParamName
+  })
+
+  const canEnableMetricsTab = getCanEnableTabByType(healthSourcesData, MetricsProviderType)
+  const canEnableLogsTab = getCanEnableTabByType(healthSourcesData, LogsProviderType)
+
+  const [selectedTab, setSelectedTab] = useState(() =>
+    getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab })
+  )
+
+  useEffect(() => {
+    setSelectedTab(getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab }))
+  }, [canEnableLogsTab, canEnableMetricsTab, type])
+
+  const handleTabChange = useCallback(nextTabId => {
+    setSelectedNode(undefined)
+    setSelectedTab(nextTabId)
+  }, [])
+
   const content = activityId ? (
     <>
       <ManualInterventionVerifyStep step={step} />
       <InterruptedHistory interruptedHistories={step?.interruptHistories} />
-      <Tabs id="AnalysisTypeTabs" defaultSelectedTabId={defaultTabId} onChange={handleTabChange}>
+      <Tabs id="AnalysisTypeTabs" selectedTabId={selectedTab} onChange={handleTabChange}>
         <Tab
           id={getString('pipeline.verification.analysisTab.metrics')}
           title={getString('pipeline.verification.analysisTab.metrics')}
           panelClassName={css.mainTabPanel}
+          disabled={!canEnableMetricsTab}
           panel={
             <Layout.Horizontal style={{ height: '100%' }}>
               <ExecutionVerificationSummary
@@ -79,6 +109,12 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
                 activityId={activityId}
                 overviewData={data}
                 overviewLoading={loading}
+                healthSourceDetails={{
+                  healthSourcesData,
+                  healthSourcesError,
+                  healthSourcesLoading,
+                  fetchHealthSources
+                }}
               />
             </Layout.Horizontal>
           }
@@ -86,6 +122,7 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
         <Tab
           id={getString('pipeline.verification.analysisTab.logs')}
           title={getString('pipeline.verification.analysisTab.logs')}
+          disabled={!canEnableLogsTab}
           panel={
             <Layout.Horizontal style={{ height: '100%' }}>
               <ExecutionVerificationSummary
