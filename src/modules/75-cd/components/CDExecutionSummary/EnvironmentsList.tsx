@@ -83,7 +83,7 @@ export function EnvironmentsList({ environments, limit = 2, className }: Environ
                       font={{ variation: FontVariation.FORM_LABEL }}
                       key={index}
                     >
-                      {environment.name}
+                      {defaultTo(environment.name, '')}
                     </Text>
                   ))}
                 </Layout.Vertical>
