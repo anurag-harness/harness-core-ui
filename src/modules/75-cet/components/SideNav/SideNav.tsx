@@ -15,6 +15,7 @@ import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ProjectSelector, ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 
 export default function ETSideNav(): React.ReactElement {
   const { getString } = useStrings()
@@ -22,6 +23,7 @@ export default function ETSideNav(): React.ReactElement {
   const history = useHistory()
   const params = useParams<PipelinePathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
+  const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
     updateAppStore({ selectedProject: data })
@@ -100,14 +102,17 @@ export default function ETSideNav(): React.ReactElement {
                   accountId
                 })}
               />
-              <SidebarLink
-                label={getString('common.governance')}
-                to={routes.toCETPolicies({
-                  accountId,
-                  orgIdentifier,
-                  projectIdentifier
-                })}
-              />
+              {canUsePolicyEngine && (
+                <SidebarLink
+                  label={getString('common.governance')}
+                  to={routes.toGovernance({
+                    accountId,
+                    orgIdentifier,
+                    projectIdentifier,
+                    module: 'cet'
+                  })}
+                />
+              )}
               <SidebarLink
                 label={getString('common.defaultSettings')}
                 to={routes.toCETDefaultSettings({

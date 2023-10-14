@@ -2399,7 +2399,7 @@ const routes = {
 
   toCETPolicies: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
-      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/governance/dashboard`
+      `/cet/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/governance`
   ),
 
   toCETEventSummaryOldNotifLink: withAccountId(

@@ -18,7 +18,6 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
 import { Module, ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import PolicyManagementMFE from '@governance/GovernanceApp'
 import ConnectorsPage from '@platform/connectors/pages/connectors/ConnectorsPage'
 import SecretsPage from '@secrets/pages/secrets/SecretsPage'
 import DelegatesPage from '@delegates/pages/delegates/DelegatesPage'
@@ -33,6 +32,7 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
+import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { CETMonitoredServices } from './pages/CETMonitoredServices'
 import SideNav from './components/SideNav/SideNav'
 import CETHomePage from './pages/CETHomePage'
@@ -336,16 +336,6 @@ const ETRoutes: FC = () => {
         licenseRedirectData={licenseRedirectData}
         exact
         sidebarProps={CETSideNavProps}
-        path={[routes.toCETPolicies({ ...accountPathProps, ...projectPathProps, ...orgPathProps })]}
-        pageName={PAGE_NAME.OPAPolicyDashboard}
-      >
-        <PolicyManagementMFE />
-      </RouteWithLayout>
-
-      <RouteWithLayout
-        licenseRedirectData={licenseRedirectData}
-        exact
-        sidebarProps={CETSideNavProps}
         path={[routes.toCETCriticalEvents({ ...accountPathProps, ...projectPathProps, ...etModuleParams })]}
       >
         <CETSettings>
@@ -360,6 +350,13 @@ const ETRoutes: FC = () => {
       >
         <CETMonitoredServices />
       </RouteWithLayout>
+
+      {
+        GovernanceRouteDestinations({
+          sidebarProps: CETSideNavProps,
+          pathProps: { ...accountPathProps, ...projectPathProps, ...etModuleParams }
+        })?.props.children
+      }
     </>
   )
 }
