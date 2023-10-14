@@ -113,6 +113,20 @@ describe('AnalyzeDeploymentImpact', () => {
     expect(getByTestId('errorContainer')).toBeInTheDocument()
   })
 
+  test('should render with No Analysis', async () => {
+    jest.spyOn(cvService, 'useGetSRMAnalysisSummary').mockImplementation(() => {
+      return { data: {}, loading: false } as any
+    })
+
+    const { getByText } = render(
+      <TestWrapper>
+        <AnalyzeDeploymentImpact step={{}} />
+      </TestWrapper>
+    )
+
+    expect(getByText('pipeline.verification.logs.noAnalysis')).toBeInTheDocument()
+  })
+
   test('calculateProgressPercentage', () => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1689487675000)
     const data = { resource: summaryMock } as cvService.RestResponseSRMAnalysisStepDetailDTO
