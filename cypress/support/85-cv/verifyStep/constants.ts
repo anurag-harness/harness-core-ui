@@ -2693,3 +2693,12 @@ export const healthSourcesResponse = [
     providerType: 'METRICS'
   }
 ]
+
+export const healthSourcesResponseWithLogs = [
+  {
+    identifier: 'svc1_env1/slm',
+    name: 'sl-m2',
+    type: 'SumologicLogs',
+    providerType: 'LOGS'
+  }
+]
