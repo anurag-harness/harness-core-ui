@@ -22,27 +22,25 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure correct tabs
         </div>
         <div
           aria-controls="bp3-tab-panel_AnalysisTypeTabs_pipeline.verification.analysisTab.metrics"
-          aria-disabled="false"
+          aria-disabled="true"
           aria-expanded="false"
           aria-selected="false"
           class="bp3-tab"
           data-tab-id="pipeline.verification.analysisTab.metrics"
           id="bp3-tab-title_AnalysisTypeTabs_pipeline.verification.analysisTab.metrics"
           role="tab"
-          tabindex="0"
         >
           pipeline.verification.analysisTab.metrics
         </div>
         <div
           aria-controls="bp3-tab-panel_AnalysisTypeTabs_pipeline.verification.analysisTab.logs"
-          aria-disabled="false"
+          aria-disabled="true"
           aria-expanded="true"
           aria-selected="true"
           class="bp3-tab"
           data-tab-id="pipeline.verification.analysisTab.logs"
           id="bp3-tab-title_AnalysisTypeTabs_pipeline.verification.analysisTab.logs"
           role="tab"
-          tabindex="0"
         >
           pipeline.verification.analysisTab.logs
         </div>
@@ -191,27 +189,25 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure correct tabs
         </div>
         <div
           aria-controls="bp3-tab-panel_AnalysisTypeTabs_pipeline.verification.analysisTab.metrics"
-          aria-disabled="false"
+          aria-disabled="true"
           aria-expanded="true"
           aria-selected="true"
           class="bp3-tab"
           data-tab-id="pipeline.verification.analysisTab.metrics"
           id="bp3-tab-title_AnalysisTypeTabs_pipeline.verification.analysisTab.metrics"
           role="tab"
-          tabindex="0"
         >
           pipeline.verification.analysisTab.metrics
         </div>
         <div
           aria-controls="bp3-tab-panel_AnalysisTypeTabs_pipeline.verification.analysisTab.logs"
-          aria-disabled="false"
+          aria-disabled="true"
           aria-expanded="false"
           aria-selected="false"
           class="bp3-tab"
           data-tab-id="pipeline.verification.analysisTab.logs"
           id="bp3-tab-title_AnalysisTypeTabs_pipeline.verification.analysisTab.logs"
           role="tab"
-          tabindex="0"
         >
           pipeline.verification.analysisTab.logs
         </div>
@@ -409,27 +405,25 @@ exports[`Unit tests for ExecutionVerificationView unit tests Ensure tabs are ren
         </div>
         <div
           aria-controls="bp3-tab-panel_AnalysisTypeTabs_pipeline.verification.analysisTab.metrics"
-          aria-disabled="false"
+          aria-disabled="true"
           aria-expanded="true"
           aria-selected="true"
           class="bp3-tab"
           data-tab-id="pipeline.verification.analysisTab.metrics"
           id="bp3-tab-title_AnalysisTypeTabs_pipeline.verification.analysisTab.metrics"
           role="tab"
-          tabindex="0"
         >
           pipeline.verification.analysisTab.metrics
         </div>
         <div
           aria-controls="bp3-tab-panel_AnalysisTypeTabs_pipeline.verification.analysisTab.logs"
-          aria-disabled="false"
+          aria-disabled="true"
           aria-expanded="false"
           aria-selected="false"
           class="bp3-tab"
           data-tab-id="pipeline.verification.analysisTab.logs"
           id="bp3-tab-title_AnalysisTypeTabs_pipeline.verification.analysisTab.logs"
           role="tab"
-          tabindex="0"
         >
           pipeline.verification.analysisTab.logs
         </div>
