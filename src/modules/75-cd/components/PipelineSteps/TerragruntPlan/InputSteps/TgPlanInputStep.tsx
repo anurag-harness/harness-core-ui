@@ -26,7 +26,6 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@platform/connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import TgPlanConfigSection from './TgPlanConfigSection'
 import TgPlanVarFiles from './TgPlanVarFiles'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
