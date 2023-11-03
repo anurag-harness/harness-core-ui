@@ -37,7 +37,6 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
   const { getString } = useStrings()
   const { inputSetData, readonly, initialValues, allowableTypes, stepViewType } = props
   const { expressions } = useVariablesExpression()
-  const { CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN } = useFeatureFlags()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const template = inputSetData?.template
@@ -103,10 +102,7 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
             disabled={readonly}
             setRefValue
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-            isRecordDisabled={selectedRecord =>
-              (selectedRecord as any)?.spec?.readOnly &&
-              CDS_NOT_ALLOW_READ_ONLY_SECRET_MANAGER_TERRAFORM_TERRAGRUNT_PLAN
-            }
+            isRecordDisabled={selectedRecord => (selectedRecord as any)?.spec?.readOnly}
             renderRecordDisabledWarning={
               <Text
                 icon="warning-icon"
