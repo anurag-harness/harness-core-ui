@@ -132,15 +132,15 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
-      pipelineIdentifier: originalPipeline.identifier,
+      pipelineIdentifier: pipeline.identifier,
       projectIdentifier,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
     },
     requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     body: {
-      originalEntityYaml: yamlStringify({ pipeline: originalPipeline })
+      originalEntityYaml: yamlStringify({ pipeline: pipeline })
     },
-    lazy: isEmpty(originalPipeline)
+    lazy: isEmpty(pipeline)
   })
 
   React.useEffect(() => {
