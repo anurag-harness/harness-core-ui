@@ -1034,7 +1034,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Errors
+                                                <span
+                                                  class="RadioButton--tooltipAlign"
+                                                  data-tooltip-id="RiskCategory_Errors"
+                                                >
+                                                  Errors
+                                                </span>
                                               </label>
                                               <label
                                                 class="RadioButton--radio StyledProps--main"
@@ -1048,7 +1053,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Infrastructure
+                                                <span
+                                                  class="RadioButton--tooltipAlign"
+                                                  data-tooltip-id="RiskCategory_Infrastructure"
+                                                >
+                                                  Infrastructure
+                                                </span>
                                               </label>
                                               <label
                                                 class="RadioButton--radio StyledProps--main"
@@ -1062,7 +1072,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Performance/Throughput
+                                                <span
+                                                  class="RadioButton--tooltipAlign"
+                                                  data-tooltip-id="RiskCategory_Performance_Throughput"
+                                                >
+                                                  Performance/Throughput
+                                                </span>
                                               </label>
                                               <label
                                                 class="RadioButton--radio StyledProps--main"
@@ -1076,7 +1091,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Performance/Other
+                                                <span
+                                                  class="RadioButton--tooltipAlign"
+                                                  data-tooltip-id="RiskCategory_Performance_Other"
+                                                >
+                                                  Performance/Other
+                                                </span>
                                               </label>
                                               <label
                                                 class="RadioButton--radio StyledProps--main"
@@ -1090,7 +1110,12 @@ exports[`Unit tests for createAppd monitoring source Component renders in edit m
                                                 <span
                                                   class="RadioButton--radioIcon"
                                                 />
-                                                Performance/Response Time
+                                                <span
+                                                  class="RadioButton--tooltipAlign"
+                                                  data-tooltip-id="RiskCategory_Performance_ResponseTime"
+                                                >
+                                                  Performance/Response Time
+                                                </span>
                                               </label>
                                             </div>
                                           </div>

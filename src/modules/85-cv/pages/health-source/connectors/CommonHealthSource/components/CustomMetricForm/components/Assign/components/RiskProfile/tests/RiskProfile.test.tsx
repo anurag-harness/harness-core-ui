@@ -187,8 +187,8 @@ describe('Unit tests for RiskProfile', () => {
     expect(getRiskCategoryOptionsV2([{}] as any)).toEqual([])
     expect(getRiskCategoryOptionsV2([{ displayName: 'Id 101' }] as any)).toEqual([])
     expect(getRiskCategoryOptionsV2([{ identifier: 'id101' }] as any)).toEqual([])
-    expect(getRiskCategoryOptionsV2([{ identifier: 'id101', displayName: 'Id 101' }] as any)).toEqual([
-      { label: 'Id 101', value: 'id101' }
-    ])
+    expect(
+      getRiskCategoryOptionsV2([{ identifier: 'id101', displayName: 'Id 101', tooltipId: 'RiskCategory_id101' }] as any)
+    ).toEqual([{ label: 'Id 101', value: 'id101' }])
   })
 })
