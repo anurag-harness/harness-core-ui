@@ -169,7 +169,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
           }
         : {}),
       pipelineBranch: reconcileBranch,
-      branch: get(inputSet, 'gitDetails.branch')
+      branch: reconcileBranch
     },
     inputSetIdentifier: overlayInputSetIdentifier ?? get(inputSet, 'identifier', ''),
     lazy: true
