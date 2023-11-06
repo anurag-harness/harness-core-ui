@@ -674,6 +674,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'RESUME'
     | 'ABORT'
     | 'TIMEOUT'
+    | 'SIGNED_EULA'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -1418,6 +1419,7 @@ export type EcrSpec = ArtifactTypeSpec & {
   jexlCondition?: string
   metaDataConditions?: TriggerEventDataCondition[]
   region?: string
+  registryId?: string
   tag?: string
 }
 
@@ -3465,6 +3467,7 @@ export interface InputSetYamlDiff {
   newYAML?: string
   noUpdatePossible?: boolean
   oldYAML?: string
+  yamlDiffPresent?: boolean
 }
 
 export interface InterruptConfig {
@@ -3542,6 +3545,7 @@ export type JiraApprovalStepInfo = StepSpecType & {
   issueType?: string
   projectKey?: string
   rejectionCriteria?: CriteriaSpecWrapper
+  retryInterval?: string
 }
 
 export type JiraCreateStepInfo = StepSpecType & {
@@ -3570,6 +3574,8 @@ export type JiraUpdateStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   fields?: JiraField[]
   issueKey: string
+  issueType?: string
+  projectKey?: string
   transitionTo?: TransitionTo
 }
 
@@ -4988,6 +4994,8 @@ export interface ResourceDTO {
     | 'CET_AGENT_TOKEN'
     | 'CET_CRITICAL_EVENT'
     | 'CHAOS_SECURITY_GOVERNANCE'
+    | 'END_LEVEL_USER_AGREEMENT'
+    | 'WORKSPACE'
 }
 
 export interface ResourceScope {
@@ -6443,6 +6451,7 @@ export type ServiceNowApprovalStepInfo = StepSpecType & {
   connectorRef: string
   delegateSelectors?: string[]
   rejectionCriteria?: CriteriaSpecWrapper
+  retryInterval?: string
   ticketNumber: string
   ticketType: string
 }
@@ -16371,7 +16380,7 @@ export type ValidateTemplateInputsProps = Omit<
 >
 
 /**
- * This validates whether yaml of pipeline is valid or not
+ * Validates the YAML specification of a pipeline
  */
 export const ValidateTemplateInputs = (props: ValidateTemplateInputsProps) => (
   <Get<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>
@@ -16387,7 +16396,7 @@ export type UseValidateTemplateInputsProps = Omit<
 >
 
 /**
- * This validates whether yaml of pipeline is valid or not
+ * Validates the YAML specification of a pipeline
  */
 export const useValidateTemplateInputs = (props: UseValidateTemplateInputsProps) =>
   useGet<ResponseValidateTemplateInputsResponseDTO, Failure | Error, ValidateTemplateInputsQueryParams, void>(
@@ -16396,7 +16405,7 @@ export const useValidateTemplateInputs = (props: UseValidateTemplateInputsProps)
   )
 
 /**
- * This validates whether yaml of pipeline is valid or not
+ * Validates the YAML specification of a pipeline
  */
 export const validateTemplateInputsPromise = (
   props: GetUsingFetchProps<
@@ -18973,6 +18982,10 @@ export interface GetSchemaYamlQueryParams {
     | 'AwsCdkBootstrap'
     | 'AwsCdkSynth'
     | 'AwsCdkDiff'
+    | 'AwsCdkDeploy'
+    | 'AwsCdkDestroy'
+    | 'IdpScorecard'
+    | 'IdpCheck'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -19300,6 +19313,10 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AwsCdkBootstrap'
     | 'AwsCdkSynth'
     | 'AwsCdkDiff'
+    | 'AwsCdkDeploy'
+    | 'AwsCdkDestroy'
+    | 'IdpScorecard'
+    | 'IdpCheck'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -19625,6 +19642,10 @@ export interface GetStaticSchemaYamlQueryParams {
     | 'AwsCdkBootstrap'
     | 'AwsCdkSynth'
     | 'AwsCdkDiff'
+    | 'AwsCdkDeploy'
+    | 'AwsCdkDestroy'
+    | 'IdpScorecard'
+    | 'IdpCheck'
   scope?: 'account' | 'org' | 'project' | 'unknown'
   version?: string
 }

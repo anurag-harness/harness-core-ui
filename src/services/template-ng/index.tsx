@@ -41,6 +41,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'RESUME'
     | 'ABORT'
     | 'TIMEOUT'
+    | 'SIGNED_EULA'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -460,6 +461,11 @@ export interface EntityDetail {
     | 'RevertPR'
     | 'AwsCdkBootstrap'
     | 'AwsCdkSynth'
+    | 'AwsCdkDiff'
+    | 'AwsCdkDeploy'
+    | 'AwsCdkDestroy'
+    | 'IdpScorecard'
+    | 'IdpCheck'
 }
 
 export interface EntityDetailProtoDTO {
@@ -1987,6 +1993,8 @@ export interface ResourceDTO {
     | 'CET_AGENT_TOKEN'
     | 'CET_CRITICAL_EVENT'
     | 'CHAOS_SECURITY_GOVERNANCE'
+    | 'END_LEVEL_USER_AGREEMENT'
+    | 'WORKSPACE'
 }
 
 export interface ResourceScopeDTO {

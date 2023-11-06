@@ -14,7 +14,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import { HomePageTemplate } from '@projects-orgs/pages/HomePageTemplate/HomePageTemplate'
 import routes from '@common/RouteDefinitions'
-import { Project, useGetLicensesAndSummary } from 'services/cd-ng'
+import { GetLicensesAndSummaryQueryParams, Project, useGetLicensesAndSummary } from 'services/cd-ng'
 import { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -36,7 +36,7 @@ const SEIHomePage: React.FC = () => {
   const createdFromNG = accounts?.find(account => account.uuid === accountId)?.createdFromNG
 
   const { data, error, refetch, loading } = useGetLicensesAndSummary({
-    queryParams: { moduleType },
+    queryParams: { moduleType: moduleType as GetLicensesAndSummaryQueryParams['moduleType'] },
     accountIdentifier: accountId,
     lazy: true
   })
