@@ -13,6 +13,7 @@ import { getCVMonitoringServicesSearchParam, getErrorMessage } from '@cv/utils/C
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { killEvent } from '@common/utils/eventUtils'
 import { useStrings } from 'framework/strings'
+import { MonitoredServiceConfigurationsTabsEnum } from '@cv/pages/monitored-service/components/Configurations/components/Service/components/CommonMonitoredServiceConfigurations/CommonMonitoredServiceConfigurations.constants'
 import ConfigureMonitoredServiceDetails from '../ConfigureMonitoredServiceDetails/ConfigureMonitoredServiceDetails'
 import DetailNotPresent from '../DetailNotPresent/DetailNotPresent'
 import { AnalyseStepNotificationsData } from './AnalyseStepNotifications.types'
@@ -20,7 +21,6 @@ import NotificationDetails from './components/NotificationDetails'
 import { INITIAL_PAGE_NUMBER } from './AnalyseStepNotifications.constants'
 import { getValidNotifications } from './AnalyseStepNotifications.utils'
 import css from './AnalyseStepNotifications.module.scss'
-import { MonitoredServiceConfigurationsTabsEnum } from '@cv/pages/monitored-service/components/Configurations/components/Service/components/CommonMonitoredServiceConfigurations/CommonMonitoredServiceConfigurations.constants'
 
 interface AnalyseStepNotificationsProps {
   identifier: string
