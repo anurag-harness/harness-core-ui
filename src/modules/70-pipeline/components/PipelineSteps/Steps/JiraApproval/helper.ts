@@ -15,8 +15,8 @@ import {
   ApprovalRejectionCriteriaType
 } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { getApprovalRejectionCriteriaForSubmit } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
-import type { JiraApprovalData, JiraProjectSelectOption } from './types'
 import { isValidTimeString } from '@common/components/MultiTypeDuration/helper'
+import type { JiraApprovalData, JiraProjectSelectOption } from './types'
 
 export const processFormData = (values: JiraApprovalData): JiraApprovalData => {
   return {
