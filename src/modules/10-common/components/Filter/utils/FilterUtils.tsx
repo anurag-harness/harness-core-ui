@@ -26,11 +26,11 @@ export const renderItemByType = (data: supportedTypes | Array<supportedTypes> | 
   } else if (typeof data === 'object') {
     if (Object.prototype.hasOwnProperty.call(data, 'key') && Object.prototype.hasOwnProperty.call(data, 'value')) {
       const { key, value } = data as NGTag
-      return key.toString().concat(value ? tagSeparator.concat(value.toString()) : '')
+      return key?.toString().concat(value ? tagSeparator.concat(value.toString()) : '')
     }
     return Object.entries(data)
       .map(([key, value]) => {
-        return key.toString().concat(value ? tagSeparator.concat(value.toString()) : '')
+        return key?.toString().concat(value ? tagSeparator.concat(value.toString()) : '')
       })
       .join(', ')
   } else if (typeof data === 'number') {

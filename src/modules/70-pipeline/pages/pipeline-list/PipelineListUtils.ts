@@ -53,11 +53,17 @@ export const getRouteProps = (pathParams: PipelineListPagePathParams, pipeline?:
 export const usePipelinesQueryParamOptions = (): UseQueryParamsOptions<ProcessedPipelineListPageQueryParams> => {
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
 
-  return useQueryParamsOptions({
-    page: DEFAULT_PAGE_INDEX,
-    size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE,
-    sort: DEFAULT_PIPELINE_LIST_TABLE_SORT
-  })
+  const _options = useQueryParamsOptions(
+    {
+      page: DEFAULT_PAGE_INDEX,
+      size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE,
+      sort: DEFAULT_PIPELINE_LIST_TABLE_SORT
+    },
+    { ignoreEmptyString: false }
+  )
+  const options = useMemo(() => ({ ..._options, strictNullHandling: true }), [_options])
+
+  return options
 }
 
 export const getEmptyStateIllustration = (hasFilter: boolean, module?: Module): string => {

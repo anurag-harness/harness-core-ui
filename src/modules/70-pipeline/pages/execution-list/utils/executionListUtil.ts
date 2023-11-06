@@ -32,11 +32,17 @@ export const getIsSavedFilterApplied = (filterIdentifier?: string): boolean => {
 export const useExecutionsQueryParamOptions = (): UseQueryParamsOptions<ProcessedExecutionListPageQueryParams> => {
   const { PL_NEW_PAGE_SIZE } = useFeatureFlags()
 
-  return useQueryParamsOptions({
-    page: DEFAULT_PAGE_INDEX,
-    size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE,
-    sort: DEFAULT_EXECUTION_LIST_TABLE_SORT
-  })
+  const _options = useQueryParamsOptions(
+    {
+      page: DEFAULT_PAGE_INDEX,
+      size: PL_NEW_PAGE_SIZE ? COMMON_DEFAULT_PAGE_SIZE : DEFAULT_PAGE_SIZE,
+      sort: DEFAULT_EXECUTION_LIST_TABLE_SORT
+    },
+    { ignoreEmptyString: false }
+  )
+  const options = useMemo(() => ({ ..._options, strictNullHandling: true }), [_options])
+
+  return options
 }
 
 export const useExecutionListQueryParams = (): ProcessedExecutionListPageQueryParams => {

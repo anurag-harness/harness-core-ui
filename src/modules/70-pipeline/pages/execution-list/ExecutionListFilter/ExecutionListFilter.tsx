@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import { Layout, SelectOption, useToaster } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import { isEmpty, toLower } from 'lodash-es'
+import { isEmpty, isUndefined, toLower } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { FilterDTO, PipelineExecutionFilterProperties } from 'services/pipeline-ng'
@@ -240,7 +240,10 @@ export function ExecutionListFilter(): React.ReactElement {
   const onApply = (inputFormData: FormikProps<PipelineExecutionFormType>['values']) => {
     if (!isObjectEmpty(inputFormData)) {
       const filterFromFormData = getValidFilterArguments({ ...inputFormData }, 'PipelineExecution')
-      updateQueryParams({ page: undefined, filterIdentifier: undefined, filters: filterFromFormData || {} })
+      updateQueryParams(
+        { page: undefined, filterIdentifier: undefined, filters: filterFromFormData || {} },
+        { strictNullHandling: true, skipNulls: false }
+      )
       hideFilterDrawer()
       trackEvent(CDActions.ApplyAdvancedFilter, {
         category: Category.PIPELINE_EXECUTION
@@ -316,7 +319,10 @@ export function ExecutionListFilter(): React.ReactElement {
         initialFilter={{
           formValues: {
             pipelineName,
-            pipelineTags: _pipelineTags?.reduce((obj, item) => Object.assign(obj, { [item.key]: item.value }), {}),
+            pipelineTags: _pipelineTags?.reduce(
+              (obj, item) => Object.assign(obj, { [item.key]: !isUndefined(item.value) ? item.value : null }),
+              {}
+            ),
             repositoryName,
             status: getMultiSelectFormOptions(status),
             branch,

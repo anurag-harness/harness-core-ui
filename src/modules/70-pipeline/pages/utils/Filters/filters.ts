@@ -102,7 +102,7 @@ export const useFilterWithValidFieldsWithMetaInfoForTemplates = (
 export const prepareFiltersPayload = (filters: PipelineFilterProperties) => {
   if (filters?.pipelineTags) {
     filters.pipelineTags = filters?.pipelineTags?.map(({ key, value }) => {
-      return { key, value: value ?? '' }
+      return { key, value }
     })
   }
 

@@ -9,7 +9,7 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { Layout, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, isUndefined } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
@@ -200,7 +200,10 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const onApply = (inputFormData: FormikProps<PipelineFormType>['values']): void => {
     if (!isObjectEmpty(inputFormData)) {
       const filterFromFormData = getValidFilterArguments({ ...inputFormData }, 'PipelineSetup')
-      updateQueryParams({ page: undefined, filterIdentifier: undefined, filters: filterFromFormData || {} })
+      updateQueryParams(
+        { page: undefined, filterIdentifier: undefined, filters: filterFromFormData || {} },
+        { skipNulls: false, strictNullHandling: true }
+      )
       hideFilterDrawer()
       trackEvent(CDActions.ApplyAdvancedFilter, {
         category: Category.PIPELINE
@@ -247,7 +250,10 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const filterFormValues = useMemo(() => {
     const formValues = {
       name: pipelineName,
-      pipelineTags: _pipelineTags?.reduce((obj, item) => Object.assign(obj, { [item.key]: item.value }), {}),
+      pipelineTags: _pipelineTags?.reduce(
+        (obj, item) => Object.assign(obj, { [item.key]: !isUndefined(item.value) ? item.value : null }),
+        {}
+      ),
       description,
       branch,
       tag,

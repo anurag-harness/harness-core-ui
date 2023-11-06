@@ -26,22 +26,24 @@ export function useQueryParams<T = unknown>(options?: UseQueryParamsOptions<T>):
     }
 
     return params
-  }, [search, options, options?.processQueryParams])
+  }, [search, options])
 
   return queryParams as unknown as T
 }
+
+type CustomQsDecoderOptions = {
+  parseNumbers?: boolean
+  parseBoolean?: boolean
+  ignoreNull?: boolean
+  ignoreEmptyString?: boolean
+}
+
+type CustomQsDecoder = (customQsDecoderOptions?: CustomQsDecoderOptions) => IParseOptions['decoder']
 
 /**
  * By default, all values are parsed as strings by qs, except for arrays and objects
  * This is optional decoder that automatically transforms to numbers, booleans and null
  */
-type CustomQsDecoder = (customQsDecoderOptions?: {
-  parseNumbers?: boolean
-  parseBoolean?: boolean
-  ignoreNull?: boolean
-  ignoreEmptyString?: boolean
-}) => IParseOptions['decoder']
-
 export const queryParamDecodeAll: CustomQsDecoder =
   ({ parseNumbers = true, parseBoolean = true, ignoreNull = true, ignoreEmptyString = true } = {}) =>
   (value, decoder) => {
@@ -80,7 +82,8 @@ const ignoreList = ['searchTerm']
 
 // This uses queryParamDecodeAll as the decoder and assigns the value from default params if the processed param's value is null/undefined.
 export const useQueryParamsOptions = <Q extends object, DKey extends keyof Q>(
-  defaultParams: { [K in DKey]: NonNullable<Q[K]> }
+  defaultParams: { [K in DKey]: NonNullable<Q[K]> },
+  decoderOptions?: CustomQsDecoderOptions
 ): UseQueryParamsOptions<RequiredPick<Q, DKey>> => {
   const defaultParamsRef = useRef(defaultParams)
   useEffect(() => {
@@ -89,7 +92,7 @@ export const useQueryParamsOptions = <Q extends object, DKey extends keyof Q>(
 
   const options = useMemo(
     () => ({
-      decoder: queryParamDecodeAll(),
+      decoder: queryParamDecodeAll(decoderOptions),
       processQueryParams: (params: Q) => {
         const processedParams = { ...params }
 
