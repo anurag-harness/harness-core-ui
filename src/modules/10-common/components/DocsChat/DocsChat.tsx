@@ -265,6 +265,7 @@ function DocsChat(): JSX.Element {
           onChange={handleUserInput}
           onKeyDown={handleKeyDown}
           autoComplete="off"
+          placeholder={getString('common.csBot.placeholder')}
         />
         <button onClick={handleSubmitClick} className={css.submitButton}>
           <Icon name="pipeline-deploy" size={24} />

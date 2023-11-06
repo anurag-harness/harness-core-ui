@@ -12,8 +12,8 @@
   flex-direction: column;
 
   .header {
-    margin: 15px 24px 0px;
-    padding-bottom: 15px;
+    margin: var(--spacing-medium) var(--spacing-large) 0px;
+    padding-bottom: var(--spacing-medium);
     border-bottom: 1px solid var(--grey-200);
   }
 
@@ -32,13 +32,13 @@
   .messagesContainer {
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0 20px;
+    padding: 0 var(--spacing-large);
     margin-top: auto;
     display: flex;
     flex-direction: column;
 
     .messageContainer {
-      margin: 10px 0;
+      margin: var(--spacing-small) 0;
       display: flex;
       align-items: start;
 
@@ -47,7 +47,7 @@
       }
 
       .message {
-        padding: 10px 24px;
+        padding: var(--spacing-small) var(--spacing-large);
         margin: 0 var(--spacing-small);
         display: inline-block;
         max-width: 75%;
@@ -59,7 +59,7 @@
         }
 
         &.loader {
-          padding: 16px 32px;
+          padding: var(--spacing-medium) var(--spacing-xxlarge);
         }
       }
 
@@ -91,9 +91,9 @@
 
     .input {
       width: 100%;
-      padding: 0 42px;
+      padding: 0 var(--spacing-xxxlarge);
       resize: none;
-      min-height: 42px;
+      min-height: var(--spacing-xxxlarge);
       border: 1px solid var(--grey-200);
     }
 
@@ -102,7 +102,7 @@
       padding: var(--spacing-small);
       background: none;
       position: absolute;
-      right: 8px;
+      right: var(--spacing-small);
       svg > path {
         color: var(--ai-purple-800);
       }
@@ -113,8 +113,8 @@
 .chatMenuButton {
   position: absolute;
   padding: 2px 7px 7px 7px;
-  left: 17px;
-  top: 17px;
+  left: var(--spacing-medium);
+  top: var(--spacing-medium);
   border: none;
   border-radius: 50%;
   background-color: var(--grey-500);

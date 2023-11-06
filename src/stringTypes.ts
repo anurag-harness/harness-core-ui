@@ -241,6 +241,7 @@ export interface StringsMap {
   'common.csBot.errorMessage': string
   'common.csBot.feedback': string
   'common.csBot.hdh': string
+  'common.csBot.placeholder': string
   'common.csBot.subtitle': string
   'common.csBot.ticketOnError': string
   'common.csBot.title': string
