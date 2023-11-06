@@ -188,24 +188,6 @@ export const EventSummary: FC<EventSummaryProps> = ({ data, flagData, onClose })
                     original={valueBefore}
                     value={valueAfter}
                     options={DIFF_VIEWER_OPTIONS}
-                    editorDidMount={editor => {
-                      setTimeout(() => {
-                        ;(
-                          editor as unknown as {
-                            setSelection: (param: Record<string, number>) => void
-                          }
-                        ).setSelection({
-                          startLineNumber: 0,
-                          startColumn: 0,
-                          endLineNumber: 0,
-                          endColumn: 0,
-                          selectionStartLineNumber: 0,
-                          selectionStartColumn: 0,
-                          positionLineNumber: 0,
-                          positionColumn: 0
-                        })
-                      }, 0)
-                    }}
                   />
                 )}
 

@@ -61,6 +61,8 @@ const MonacoDiffEditor = forwardRef<MonacoDiffEditorRef, ExtendedMonacoDiffEdito
     return (
       <ReactMonacoDiffEditor
         {...props}
+        value={props.value ?? ''}
+        original={props.original ?? ''}
         theme={theme}
         editorWillMount={editorWillMount}
         editorDidMount={editorDidMount}
