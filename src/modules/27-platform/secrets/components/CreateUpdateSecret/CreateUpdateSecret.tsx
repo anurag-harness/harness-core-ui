@@ -46,9 +46,10 @@ import type { SecretTextSpecDTO, SecretFileSpecDTO } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import {
-  // getIdentifierFromValue,
-  getScopedValueFromDTO
-  // ScopedValueObjectDTO
+  getIdentifierFromValue,
+  getScopedValueFromDTO,
+  getScopeFromValue,
+  getScopeBasedProjectPathParams
 } from '@common/components/EntityReference/EntityReference'
 import { useToaster } from '@common/exports'
 import { IdentifierSchema, NameSchema, VariableSchemaWithoutHook } from '@common/utils/Validation'
@@ -193,15 +194,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
     }
   }, [secretManagersApiResponse])
 
+  const smIdentifier =
+    (secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier ||
+    (secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier
   const {
     data: connectorDetails,
     loading: loadingConnectorDetails,
     error: connectorFetchError,
     refetch: getConnectorDetails
   } = useGetConnector({
-    identifier:
-      (secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier ||
-      (secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.secretManagerIdentifier,
+    identifier: getIdentifierFromValue(smIdentifier),
     lazy: true
   })
 
@@ -250,13 +252,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   useEffect(() => {
     if (secretResponse?.data?.secret && !loadingSecret) {
       setSecret(secretResponse?.data?.secret)
-
-      getConnectorDetails({
+      const scopeFromSMIdentifier = getScopeFromValue(smIdentifier)
+      const payload = {
         queryParams: {
-          accountIdentifier,
-          ...pick(secretResponse?.data.secret, ['orgIdentifier', 'projectIdentifier'])
+          ...getScopeBasedProjectPathParams(
+            { accountId: accountIdentifier, projectIdentifier, orgIdentifier },
+            scopeFromSMIdentifier
+          )
         }
-      })
+      }
+      getConnectorDetails(payload)
       if ((secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.valueType === 'CustomSecretManagerValues') {
         setTemplateInputSets(JSON.parse((secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.value as string))
       }
