@@ -167,7 +167,6 @@ export const EventSummary: FC<EventSummaryProps> = ({ data, flagData, onClose })
 
           <Container margin={{ top: 'small' }}>
             <Button
-              data-testId="yaml-diff-btn"
               className={css.yamlDiffBtn}
               minimal
               rightIcon={showDiff ? 'chevron-up' : 'chevron-down'}
