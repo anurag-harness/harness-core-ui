@@ -20,6 +20,7 @@ import NotificationDetails from './components/NotificationDetails'
 import { INITIAL_PAGE_NUMBER } from './AnalyseStepNotifications.constants'
 import { getValidNotifications } from './AnalyseStepNotifications.utils'
 import css from './AnalyseStepNotifications.module.scss'
+import { MonitoredServiceConfigurationsTabsEnum } from '@cv/pages/monitored-service/components/Configurations/components/Service/components/CommonMonitoredServiceConfigurations/CommonMonitoredServiceConfigurations.constants'
 
 interface AnalyseStepNotificationsProps {
   identifier: string
@@ -142,7 +143,10 @@ export default function AnalyseStepNotifications(props: AnalyseStepNotifications
               projectIdentifier,
               identifier,
               module: 'cv'
-            })}${getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.Configurations })}`}
+            })}${getCVMonitoringServicesSearchParam({
+              tab: MonitoredServiceEnum.Configurations,
+              subTab: MonitoredServiceConfigurationsTabsEnum.NOTIFICATIONS
+            })}`}
             detailToConfigureText={getString('cv.analyzeStep.notifications.configureNotification')}
             refetchDetails={getNotifications}
           />

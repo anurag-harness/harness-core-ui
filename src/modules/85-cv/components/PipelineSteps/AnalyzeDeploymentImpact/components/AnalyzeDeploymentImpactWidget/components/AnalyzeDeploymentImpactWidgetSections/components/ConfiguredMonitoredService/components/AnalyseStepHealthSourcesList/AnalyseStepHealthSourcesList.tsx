@@ -18,6 +18,7 @@ import { getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
 import ConfigureMonitoredServiceDetails from '../ConfigureMonitoredServiceDetails/ConfigureMonitoredServiceDetails'
 import DetailNotPresent from '../DetailNotPresent/DetailNotPresent'
 import css from './AnalyseStepHealthSourceList.module.scss'
+import { MonitoredServiceConfigurationsTabsEnum } from '@cv/pages/monitored-service/components/Configurations/components/Service/components/CommonMonitoredServiceConfigurations/CommonMonitoredServiceConfigurations.constants'
 
 interface AnalyseStepHealthSourcesListProps {
   healthSourcesList: HealthSource[]
@@ -98,7 +99,10 @@ export default function AnalyseStepHealthSourcesList(props: AnalyseStepHealthSou
           projectIdentifier,
           identifier,
           module: 'cv'
-        })}${getCVMonitoringServicesSearchParam({ tab: MonitoredServiceEnum.Configurations })}`}
+        })}${getCVMonitoringServicesSearchParam({
+          tab: MonitoredServiceEnum.Configurations,
+          subTab: MonitoredServiceConfigurationsTabsEnum.HEALTH_SOURCE
+        })}`}
         detailToConfigureText={'Configure Health Source'}
         refetchDetails={fetchMonitoredServiceData}
       />

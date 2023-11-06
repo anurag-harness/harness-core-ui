@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Tab, Tabs } from '@harness/uicore'
+import { Container, Tab, Tabs, Views } from '@harness/uicore'
 import React from 'react'
 import { FormikContextType, useFormikContext } from 'formik'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import type { ChangeSourceDTO, MonitoredServiceDTO } from 'services/cv'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -22,6 +22,10 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { CETAgentConfig } from '@cet/pages/CETAgentConfig'
 import { ModuleName } from 'framework/types/ModuleName'
+import { getSearchString } from '@cv/utils/CommonUtils'
+import routes from '@common/RouteDefinitions'
+import { useQueryParams } from '@common/hooks'
+import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import {
   getIsAgentConfigSectionHidden,
   getIsChangeSrcSectionHidden,
@@ -37,6 +41,7 @@ import type { MonitoredServiceForm } from '../../Service.types'
 import MonitoredServiceOverview from '../MonitoredServiceOverview/MonitoredServiceOverview'
 import MonitoredServiceNotificationsContainer from '../MonitoredServiceNotificationsContainer/MonitoredServiceNotificationsContainer'
 import Dependency from '../../../Dependency/Dependency'
+import { MonitoredServiceConfigurationsTabsEnum } from './CommonMonitoredServiceConfigurations.constants'
 import css from './CommonMonitoredServiceConfigurations.module.scss'
 
 export interface CommonMonitoredServiceConfigurationsProps {
@@ -98,10 +103,22 @@ export default function CommonMonitoredServiceConfigurations(
     isCETLicensePresentAndActive,
     CET_PLATFORM_MONITORED_SERVICE
   )
-  const { projectIdentifier } = useParams<ProjectPathProps & { identifier: string }>()
   const { getString } = useStrings()
   const isNotificationsSectionHidden = getIsNotifcationsSectionHidden(isTemplate, config, identifier)
   const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === LICENSE_STATE_VALUES.ACTIVE
+  const {
+    tab = MonitoredServiceEnum.SLOs,
+    subTab = MonitoredServiceConfigurationsTabsEnum.MONITORED_SERVICE_OVERVIEW,
+    view,
+    notificationTime
+  } = useQueryParams<{
+    tab?: MonitoredServiceEnum
+    view?: Views.GRID
+    notificationTime?: number
+    subTab: MonitoredServiceConfigurationsTabsEnum
+  }>()
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
+  const history = useHistory()
 
   const handleMonitoredServiceTypeChange = (type: MonitoredServiceDTO['type']): void => {
     if (type === formik.values.type) {
@@ -114,11 +131,26 @@ export default function CommonMonitoredServiceConfigurations(
     })
   }
 
+  const onTabChange = (nextTab: MonitoredServiceEnum): void => {
+    if (nextTab !== tab) {
+      history.push({
+        pathname: routes.toCVAddMonitoringServicesEdit({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          identifier,
+          module: 'cv'
+        }),
+        search: getSearchString({ view, tab, subTab: nextTab, notificationTime })
+      })
+    }
+  }
+
   return (
     <Container className={css.configurationTabs}>
-      <Tabs id={'monitoredServiceConfigurations'} defaultSelectedTabId={'monitoredServiceOverview'}>
+      <Tabs id={'monitoredServiceConfigurations'} defaultSelectedTabId={subTab} onChange={onTabChange}>
         <Tab
-          id="monitoredServiceOverview"
+          id={MonitoredServiceConfigurationsTabsEnum.MONITORED_SERVICE_OVERVIEW}
           title={getString('overview')}
           panel={
             <>
@@ -152,7 +184,7 @@ export default function CommonMonitoredServiceConfigurations(
         />
         {isHealthSrcSectionHidden ? null : (
           <Tab
-            id={'healthSource'}
+            id={MonitoredServiceConfigurationsTabsEnum.HEALTH_SOURCE}
             title={getString('platform.connectors.cdng.healthSources.label')}
             panel={
               <HealthSourceTableContainer
@@ -180,7 +212,7 @@ export default function CommonMonitoredServiceConfigurations(
         )}
         {isChangeSrcSectionHidden ? null : (
           <Tab
-            id={'changeSource'}
+            id={MonitoredServiceConfigurationsTabsEnum.CHANGE_SOURCE}
             title={getString('cv.navLinks.adminSideNavLinks.activitySources')}
             panel={
               <ChangeSourceTableContainer
@@ -200,7 +232,7 @@ export default function CommonMonitoredServiceConfigurations(
         )}
         {isAgentConfigSectionHidden ? null : (
           <Tab
-            id={'agentConfig'}
+            id={MonitoredServiceConfigurationsTabsEnum.AGENT_CONFIG}
             title={getString('cet.monitoredservice.agentconfig')}
             panel={
               <CETAgentConfig serviceRef={formik.values?.serviceRef} environmentRef={formik.values?.environmentRef} />
@@ -209,7 +241,7 @@ export default function CommonMonitoredServiceConfigurations(
         )}
         {showDependencies(isTemplate as boolean, config, isSRMLicensePresentAndActive) && (
           <Tab
-            id={getString('pipelines-studio.dependenciesGroupTitle')}
+            id={MonitoredServiceConfigurationsTabsEnum.DEPENDENCIES}
             title={getString('pipelines-studio.dependenciesGroupTitle')}
             panel={
               <Dependency
@@ -225,7 +257,7 @@ export default function CommonMonitoredServiceConfigurations(
         )}
         {isNotificationsSectionHidden ? null : (
           <Tab
-            id={'notifications'}
+            id={MonitoredServiceConfigurationsTabsEnum.NOTIFICATIONS}
             title={getString('rbac.notifications.name')}
             panel={
               <>
