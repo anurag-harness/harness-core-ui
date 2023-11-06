@@ -158,7 +158,7 @@ describe('EnvironmentsV2 Configuration Page', () => {
     cy.get('button[data-testid="create-or-select-secret"]').eq(1).should('not.be.disabled').click()
     cy.wait('@envSecretCall', { timeout: 10000 })
 
-    cy.contains('p', 'Id: secretId.harnessSecretManager').should('be.visible').click()
+    cy.contains('p', 'Id: secretId').should('be.visible').click()
     cy.get('span[data-icon="pipeline-approval"]').should('be.visible') // Approval Icon visible
     cy.contains('button[type="button"]', 'Apply Selected').should('be.visible').click()
     cy.get('button[data-testid="delete-variable-4"]').should('be.visible').click() // Deleting var5
