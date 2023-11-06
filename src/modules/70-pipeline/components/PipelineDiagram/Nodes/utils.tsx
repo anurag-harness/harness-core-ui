@@ -96,5 +96,5 @@ export const getBaseDotNotationWithoutEntityIdentifier = (dotNotation = ''): str
 }
 
 export const getConditionalClassName = (isDisabled: boolean, className?: string): { className?: string } => {
-  return isDisabled ? { className: defaultCss.disabledIcon } : { className }
+  return isDisabled ? { className: defaultCss.disabledIcon } : className ? { className } : {}
 }
