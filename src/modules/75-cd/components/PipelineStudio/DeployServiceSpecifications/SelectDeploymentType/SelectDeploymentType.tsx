@@ -202,7 +202,7 @@ const CardList = ({ items, isReadonly, selectedValue, onChange }: CardListProps)
     onChange(e.target.value as ServiceDeploymentType)
   }
   return (
-    <Layout.Horizontal spacing={'medium'} className={stageCss.cardListContainer}>
+    <Layout.Horizontal className={stageCss.cardListContainer}>
       {items
         .filter(item => (isReadonly && item.value === selectedValue) || !isReadonly)
         .map(item => {
