@@ -1062,7 +1062,7 @@ export const sbomFieldValidationConfig = (
     name: 'spec.sbom.format',
     type: ValidationFieldTypes.Text,
     label: 'ssca.orchestrationStep.sbomFormat',
-    isRequired: stepViewType === StepViewType.InputSet || data.spec.mode !== 'ingestion'
+    isRequired: stepViewType === StepViewType.InputSet && data.spec.mode !== 'ingestion'
   }
 ]
 
