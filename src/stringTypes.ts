@@ -176,7 +176,6 @@ export interface StringsMap {
   'common.cluster': string
   'common.clusterName': string
   'common.clusters': string
-  'common.codeErrorsMonitoredServices': string
   'common.codeErrorsSettings': string
   'common.collapse': string
   'common.combined': string
