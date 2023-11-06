@@ -243,6 +243,15 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
     }
   }
 
+  const pipelineTags = React.useMemo(
+    () =>
+      _pipelineTags?.reduce(
+        (obj, item) => Object.assign(obj, { [item.key]: !isUndefined(item.value) ? item.value : null }),
+        {}
+      ),
+    [_pipelineTags]
+  )
+
   const reset = () => replaceQueryParams({})
 
   /**End Handlers */
@@ -250,10 +259,7 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
   const filterFormValues = useMemo(() => {
     const formValues = {
       name: pipelineName,
-      pipelineTags: _pipelineTags?.reduce(
-        (obj, item) => Object.assign(obj, { [item.key]: !isUndefined(item.value) ? item.value : null }),
-        {}
-      ),
+      pipelineTags,
       description,
       branch,
       tag,

@@ -283,6 +283,14 @@ export function ExecutionListFilter(): React.ReactElement {
     }
   }
 
+  const pipelineTags = React.useMemo(
+    () =>
+      _pipelineTags?.reduce(
+        (obj, item) => Object.assign(obj, { [item.key]: !isUndefined(item.value) ? item.value : null }),
+        {}
+      ),
+    [_pipelineTags]
+  )
   const reset = () => replaceQueryParams({})
 
   /**End Handlers */
@@ -319,10 +327,7 @@ export function ExecutionListFilter(): React.ReactElement {
         initialFilter={{
           formValues: {
             pipelineName,
-            pipelineTags: _pipelineTags?.reduce(
-              (obj, item) => Object.assign(obj, { [item.key]: !isUndefined(item.value) ? item.value : null }),
-              {}
-            ),
+            pipelineTags,
             repositoryName,
             status: getMultiSelectFormOptions(status),
             branch,

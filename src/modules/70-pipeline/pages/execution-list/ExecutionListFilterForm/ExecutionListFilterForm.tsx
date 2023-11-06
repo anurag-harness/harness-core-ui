@@ -9,7 +9,7 @@ import React from 'react'
 import { FormikProps, useFormikContext } from 'formik'
 import { FormInput, SelectOption, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { get, isEmpty, isNull, isUndefined } from 'lodash-es'
+import { get, isEmpty, isNil, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { FilterProperties } from 'services/pipeline-ng'
 import {
@@ -44,9 +44,10 @@ Examples -
 
 type KVAccumulator = { [key: string]: string | undefined | null }
 
-const handleTagsChange = (values: string[]): KVAccumulator => {
+const convertToKVAccumulator = (values: string[]): KVAccumulator => {
+  const filteredValues = values.filter(val => !isNil(val))
   const tagValues =
-    values?.reduce((acc, tag) => {
+    filteredValues?.reduce((acc, tag) => {
       const parts = tag.split(':')
       acc[parts[0]] = !isUndefined(parts[1]) ? parts[1]?.trim() || '' : null
       return acc
@@ -54,11 +55,10 @@ const handleTagsChange = (values: string[]): KVAccumulator => {
   return tagValues
 }
 
-const setTagValues = (formik: any): string[] => {
-  const fieldValue = get(formik?.values, 'pipelineTags')
-  return Object.keys(fieldValue || {}).map(key => {
-    const value = fieldValue[key]
-    if (!isUndefined(value) && !isNull(value)) {
+const convertToKeyValueString = (tagValues: KVAccumulator): string[] => {
+  return Object.keys(tagValues || {}).map(key => {
+    const value = tagValues[key]
+    if (!isNil(value)) {
       if (isEmpty(value)) {
         return `${key}:`
       } else {
@@ -80,7 +80,7 @@ export function ExecutionListFilterForm<
   const { getString } = useStrings()
   const { module } = useParams<ModulePathParams>()
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props
-  const formikFromContext = useFormikContext()
+  const formikFromContext = useFormikContext<T>()
 
   const getBuildTypeOptions = (): React.ReactElement => {
     let buildTypeField: JSX.Element = <></>
@@ -286,10 +286,10 @@ export function ExecutionListFilterForm<
           onChange={changed => {
             const values: string[] = changed as string[]
             formikFromContext?.setFieldTouched('pipelineTags', true, false)
-            formikFromContext?.setFieldValue('pipelineTags', handleTagsChange(values))
+            formikFromContext?.setFieldValue('pipelineTags', convertToKVAccumulator(values))
           }}
           tagsProps={{
-            values: setTagValues(formikFromContext)
+            values: convertToKeyValueString(get(formikFromContext?.values, 'pipelineTags') as KVAccumulator)
           }}
         />
 
