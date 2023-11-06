@@ -12,5 +12,6 @@ declare const styles: {
   readonly container: string
   readonly eventSection: string
   readonly subHeader: string
+  readonly yamlDiffBtn: string
 }
 export default styles

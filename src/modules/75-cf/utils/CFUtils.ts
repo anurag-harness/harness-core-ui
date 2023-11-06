@@ -66,7 +66,7 @@ export enum FeatureFlagMutivariateKind {
 export const CF_LOCAL_STORAGE_ENV_KEY = 'cf_selected_env'
 export const DEFAULT_ENV = { label: '', value: '' }
 export const CF_DEFAULT_PAGE_SIZE = 15
-export const ADIT_LOG_EMPTY_ENTRY_ID = '00000000-0000-0000-0000-000000000000'
+export const AUDIT_LOG_EMPTY_ENTRY_ID = '00000000-0000-0000-0000-000000000000'
 
 export const FeatureFlagActivationStatus = {
   ON: 'on',
