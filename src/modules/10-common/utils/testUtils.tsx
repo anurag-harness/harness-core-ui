@@ -178,6 +178,7 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
               },
               updateAppStore: () => void 0,
               currentUserInfo: { uuid: '' },
+              accountInfo: {},
               ...defaultAppStoreValues
             }}
           >

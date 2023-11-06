@@ -45,7 +45,8 @@ export const defaultAppStoreValues: Omit<AppStoreContextProps, 'updateAppStore'>
     admin: false,
     twoFactorAuthenticationEnabled: false,
     emailVerified: false
-  }
+  },
+  accountInfo: {}
 }
 
 export const communityLicenseStoreValues = {
