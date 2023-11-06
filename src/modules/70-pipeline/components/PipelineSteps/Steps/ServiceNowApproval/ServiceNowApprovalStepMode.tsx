@@ -63,9 +63,9 @@ import { ConnectorConfigureOptions } from '@platform/connectors/components/Conne
 import { Connectors } from '@platform/connectors/constants'
 import { ServiceNowApprovalRejectionCriteria } from './ServiceNowApprovalRejectionCriteria'
 import { ServiceNowApprovalChangeWindow } from './ServiceNowApprovalChangeWindow'
+import { checkIfFixedAndValidString } from '../JiraApproval/helper'
 import css from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApproval.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import { checkIfFixedAndValidString } from '../JiraApproval/helper'
 
 const fetchingTicketTypesPlaceholder: StringKeys = 'pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'
 
