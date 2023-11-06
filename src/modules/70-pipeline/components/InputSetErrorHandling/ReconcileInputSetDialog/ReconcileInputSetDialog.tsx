@@ -65,11 +65,13 @@ export function ReconcileInputSetDialog({
   const identifier = overlayInputSetIdentifier ?? get(inputSet, 'identifier')
   const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
   const storeMetadata = {
-    branch: defaultTo(get(yamlDiffGitDetails, 'branch', inputSetBranch), branch),
+    branch: get(yamlDiffGitDetails, 'branch') ?? defaultTo(get(inputSet, 'gitDetails.branch', inputSetBranch), branch),
     connectorRef: defaultTo(get(inputSet, 'connectorRef', inputSetConnectorRef), connectorRef),
-    repoName: defaultTo(get(yamlDiffGitDetails, 'repoName', inputSetRepoName), repoName),
+    repoName:
+      get(yamlDiffGitDetails, 'repoName') ??
+      defaultTo(get(inputSet, 'gitDetails.repoName', inputSetRepoName), repoName),
     storeType: get(inputSet, 'storeType', storeType),
-    filePath: defaultTo(get(yamlDiffGitDetails, 'filePath'), defaultFilePath)
+    filePath: get(yamlDiffGitDetails, 'filePath') ?? get(inputSet, 'gitDetails.filePath', defaultFilePath)
   }
 
   useEffect(() => {
