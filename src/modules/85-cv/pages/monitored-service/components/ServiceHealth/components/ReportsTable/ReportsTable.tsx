@@ -10,7 +10,7 @@ import { TableV2, Text } from '@harness/uicore'
 import { Column } from 'react-table'
 import { useStrings } from 'framework/strings'
 import { SRMAnalysisStepDetailDTO } from 'services/cv'
-import { RenderDateTime, RenderStepName, RenderImpact, RenderStatus } from './RenderTable.utils'
+import { RenderDateTime, RenderStepName, RenderImpact, RenderStatus } from './ReportsTable.utils'
 
 interface ReportsTableInterface {
   data: SRMAnalysisStepDetailDTO[]
@@ -45,7 +45,7 @@ export default function ReportsTable({ data, showDrawer }: ReportsTableInterface
       width: '20%'
     },
     {
-      Header: getString('typeLabel'),
+      Header: getString('status'),
       width: '15%',
       accessor: 'analysisStatus',
       Cell: RenderStatus

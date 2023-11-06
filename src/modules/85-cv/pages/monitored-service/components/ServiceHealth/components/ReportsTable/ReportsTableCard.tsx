@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Card, Container, Icon, NoDataCard, PageError } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import React, { useState, useEffect } from 'react'
+import { Card, Container, Heading, Icon, NoDataCard, PageError, Pagination } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import noDataImage from '@cv/assets/noChangesData.svg'
 import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
@@ -23,8 +23,26 @@ interface ReportTableInterface {
 export default function ReportsTableCard(props: ReportTableInterface): JSX.Element {
   const { startTime, endTime } = props
   const { getString } = useStrings()
-  const { data, loading, error, refetch } = useFetchReportsList({ startTime, endTime })
-  const { content: resourceData = [] } = data?.resource || {}
+  const [page, setPage] = useState(0)
+  const { data, loading, error, refetch } = useFetchReportsList({ startTime, endTime, pageIndex: page })
+  const {
+    content: resourceData = [],
+    pageSize = 0,
+    pageIndex = 0,
+    totalPages = 0,
+    totalItems = 0
+  } = data?.resource || {}
+
+  useEffect(() => {
+    if (startTime && endTime) {
+      refetch({
+        queryParams: { startTime, endTime, pageIndex: page, pageSize: 10 },
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
+        }
+      })
+    }
+  }, [startTime, endTime, page])
 
   let content = null
 
@@ -35,7 +53,7 @@ export default function ReportsTableCard(props: ReportTableInterface): JSX.Eleme
       </Container>
     )
   } else if (error) {
-    content = <PageError message={getErrorMessage(error)} onClick={refetch} />
+    content = <PageError message={getErrorMessage(error)} onClick={() => refetch()} />
   } else if (!resourceData.length) {
     content = (
       <NoDataCard
@@ -49,8 +67,22 @@ export default function ReportsTableCard(props: ReportTableInterface): JSX.Eleme
   }
 
   return (
-    <Card className={css.reportsTableCard}>
-      <Container height={458}>{content}</Container>
-    </Card>
+    <>
+      <Heading level={2} font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
+        {getString('ce.perspectives.reports.title', { count: resourceData.length })}
+      </Heading>
+      <Card className={css.reportsTableCard}>
+        <Container className={css.tableContainer} height={415}>
+          {content}
+        </Container>
+        <Pagination
+          pageSize={pageSize}
+          pageIndex={pageIndex}
+          pageCount={totalPages}
+          itemCount={totalItems}
+          gotoPage={setPage}
+        />
+      </Card>
+    </>
   )
 }

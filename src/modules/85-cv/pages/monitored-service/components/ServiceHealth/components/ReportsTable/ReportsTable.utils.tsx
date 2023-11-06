@@ -7,7 +7,7 @@
 
 import React from 'react'
 import moment from 'moment'
-import { IconName, Text } from '@harness/uicore'
+import { IconName, Text, Container } from '@harness/uicore'
 import { Renderer, CellProps } from 'react-table'
 import { SRMAnalysisStepDetailDTO } from 'services/cv'
 import {
@@ -57,9 +57,11 @@ export const RenderDateTime: Renderer<CellProps<SRMAnalysisStepDetailDTO>> = ({ 
 export const RenderStepName: Renderer<CellProps<SRMAnalysisStepDetailDTO>> = ({ row }): JSX.Element => {
   const rowdata = row?.original
   return (
-    <Text tooltip={rowdata.stepName} font={{ size: 'small' }}>
-      {rowdata.stepName}
-    </Text>
+    <Container className={css.reportName}>
+      <Text tooltip={rowdata.stepName} font={{ size: 'small' }}>
+        {rowdata.stepName}
+      </Text>
+    </Container>
   )
 }
 
@@ -75,7 +77,14 @@ export const RenderImpact: Renderer<CellProps<SRMAnalysisStepDetailDTO>> = ({ ro
 
 export const RenderStatus: Renderer<CellProps<SRMAnalysisStepDetailDTO>> = ({ row }): JSX.Element => {
   const rowdata = row?.original
-  const { color, backgroundColor, label, icon, iconColor } = statusToColorMappingAnalysisReport(rowdata.analysisStatus)
+  const { analysisStatus } = rowdata
+  return ReportStatusCard({ status: analysisStatus })
+}
+
+export const ReportStatusCard = ({ status }: { status: string }): JSX.Element => {
+  const { color, backgroundColor, label, icon, iconColor } = statusToColorMappingAnalysisReport(
+    status as SRMAnalysisStepDetailDTO['analysisStatus']
+  )
   const iconColorProp = iconColor ? { color: iconColor } : {}
   const iconProps = { ...iconColorProp, iconSize: 12 }
   return (

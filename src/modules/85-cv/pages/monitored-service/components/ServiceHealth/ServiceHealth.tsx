@@ -17,8 +17,7 @@ import {
   useToaster,
   Button,
   ButtonVariation,
-  Dialog,
-  Heading
+  Dialog
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
@@ -301,9 +300,6 @@ export default function ServiceHealth({
             />
           </Container>
           <Container width="50%">
-            <Heading level={2} font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
-              {getString('ce.perspectives.reports.title', { count: 0 })}
-            </Heading>
             <ReportsTableCard
               startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
               endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}

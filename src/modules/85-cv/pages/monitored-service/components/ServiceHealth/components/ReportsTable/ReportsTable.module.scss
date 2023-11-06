@@ -12,6 +12,21 @@
 .reportsTableCard {
   width: 100% !important;
   background-color: var(--white);
+  height: 500px;
+  overflow: hidden;
+}
+
+.tableContainer {
+  div:first-child {
+    overflow-x: hidden;
+  }
+
+  :global(.TableV2--header) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--white);
+  }
 }
 
 .statusCard {
@@ -25,4 +40,17 @@
   width: fit-content;
   margin: 0 !important;
   align-self: center;
+}
+
+.reportName {
+  p {
+    padding-right: var(--spacing-medium) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  span {
+    width: 90% !important;
+    overflow: hidden !important;
+  }
 }

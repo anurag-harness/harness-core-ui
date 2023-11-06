@@ -38,6 +38,7 @@ export default function AnalyzeDeploymentImpact(props: AnalyzeDeploymentImpactVi
 
   const { accountId } = params
   const { status, failureInfo } = step
+  const hasError = Boolean(failureInfo?.responseMessages?.length)
   const activityId = useMemo(() => getActivityId(step), [step])
 
   const { error, data, loading, refetch } = useGetSRMAnalysisSummary({
@@ -85,7 +86,20 @@ export default function AnalyzeDeploymentImpact(props: AnalyzeDeploymentImpactVi
   let content = <></>
 
   if (!activityId) {
-    content = (
+    content = hasError ? (
+      <Container margin={'xlarge'} data-testid={'errorContainer'} flex={{ justifyContent: 'center' }} height={500}>
+        <NoDataCard
+          message={
+            <Layout.Vertical flex={{ justifyContent: 'center', alignItems: 'center' }}>
+              {failureInfo?.responseMessages?.map(item => (
+                <Text key={item.message}>{item.message}</Text>
+              ))}
+            </Layout.Vertical>
+          }
+          icon="warning-sign"
+        />
+      </Container>
+    ) : (
       <Container margin={'xlarge'} data-testid={'errorContainer'} flex={{ justifyContent: 'center' }} height={500}>
         <NoDataCard message={getString('pipeline.verification.logs.noAnalysis')} icon="warning-sign" />
       </Container>

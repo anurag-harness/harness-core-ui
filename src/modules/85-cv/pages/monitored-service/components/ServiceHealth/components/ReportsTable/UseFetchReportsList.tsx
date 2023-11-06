@@ -6,37 +6,40 @@
  */
 
 import { useParams } from 'react-router-dom'
-import { GetDataError } from 'restful-react'
+import { GetDataError, UseGetReturn } from 'restful-react'
 import { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { RestResponsePageSRMAnalysisStepDetailDTO, useReportListAccount, useReportListProject } from 'services/cv'
 
 interface UseFetchReportsListInterface {
   startTime: number
   endTime: number
+  pageIndex?: number
 }
 
 export interface UseFetchReportsListValue {
   data: RestResponsePageSRMAnalysisStepDetailDTO | null
   loading: boolean
   error: GetDataError<unknown> | null
-  refetch: () => Promise<void>
+  refetch: UseGetReturn<any, any, any>['refetch']
 }
 
 export const useFetchReportsList = (props: UseFetchReportsListInterface): UseFetchReportsListValue => {
-  const { startTime, endTime } = props
+  const { startTime, endTime, pageIndex } = props
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
 
   const accountLevelReportList = useReportListAccount({
     accountIdentifier: accountId,
-    queryParams: { startTime, endTime }
+    queryParams: { startTime, endTime, pageIndex, pageSize: 10 },
+    lazy: true
   })
 
   const reportList = useReportListProject({
+    lazy: true,
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    queryParams: { startTime, endTime }
+    queryParams: { startTime, endTime, pageIndex, pageSize: 10 }
   })
 
   return isAccountLevel ? { ...accountLevelReportList } : { ...reportList }
