@@ -254,9 +254,9 @@ describe.skip('subscriptionUtils', () => {
         },
         {
           paymentFrequency: 'monthly',
-          description: 'authSettings.costCalculator.maus',
-          unitDescription: 'authSettings.costCalculator.mau.perkMau',
-          underComment: 'authSettings.costCalculator.mau.kMauFree',
+          description: 'platform.authSettings.costCalculator.maus',
+          unitDescription: 'platform.authSettings.costCalculator.mau.perkMau',
+          underComment: 'platform.authSettings.costCalculator.mau.kMauFree',
           quantity: 12,
           unitPrice: 1
         }
@@ -282,9 +282,9 @@ describe.skip('subscriptionUtils', () => {
         },
         {
           paymentFrequency: 'monthly',
-          description: 'authSettings.costCalculator.maus',
-          unitDescription: 'authSettings.costCalculator.mau.perkMau',
-          underComment: 'authSettings.costCalculator.mau.kMauFree',
+          description: 'platform.authSettings.costCalculator.maus',
+          unitDescription: 'platform.authSettings.costCalculator.mau.perkMau',
+          underComment: 'platform.authSettings.costCalculator.mau.kMauFree',
           quantity: 0,
           unitPrice: 1
         }
@@ -310,9 +310,9 @@ describe.skip('subscriptionUtils', () => {
         },
         {
           paymentFrequency: 'Yearly',
-          description: 'authSettings.costCalculator.maus',
-          unitDescription: 'authSettings.costCalculator.mau.permMau',
-          underComment: 'authSettings.costCalculator.mau.mMauFree',
+          description: 'platform.authSettings.costCalculator.maus',
+          unitDescription: 'platform.authSettings.costCalculator.mau.permMau',
+          underComment: 'platform.authSettings.costCalculator.mau.mMauFree',
           quantity: 12,
           unitPrice: 3
         }
@@ -339,9 +339,9 @@ describe.skip('subscriptionUtils', () => {
         },
         {
           paymentFrequency: 'Yearly',
-          description: 'authSettings.costCalculator.maus',
-          unitDescription: 'authSettings.costCalculator.mau.permMau',
-          underComment: 'authSettings.costCalculator.mau.mMauFree',
+          description: 'platform.authSettings.costCalculator.maus',
+          unitDescription: 'platform.authSettings.costCalculator.mau.permMau',
+          underComment: 'platform.authSettings.costCalculator.mau.mMauFree',
           quantity: 0,
           unitPrice: 3
         }
