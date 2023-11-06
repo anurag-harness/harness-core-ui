@@ -6,7 +6,7 @@
  */
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
-import { get, omit } from 'lodash-es'
+import { get, isArray, omit } from 'lodash-es'
 import type { PipelineFilterProperties, FilterDTO, NGTag, FilterProperties } from 'services/pipeline-ng'
 
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
@@ -114,6 +114,9 @@ export const createRequestBodyPayload = ({
 }
 
 export const getMultiSelectFormOptions = (values?: any[], entityName?: string): SelectOption[] | undefined => {
+  if (!isArray(values)) {
+    return
+  }
   return values?.map(item => {
     return { label: get(item, `${entityName}.name`) ?? item, value: get(item, `${entityName}.name`) ?? item }
   })
