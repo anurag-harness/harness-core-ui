@@ -18,7 +18,8 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType
+  MultiTypeInputType,
+  parseStringToTime
 } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
@@ -27,7 +28,8 @@ import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/compo
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
-  getDurationValidationSchema
+  getDurationValidationSchema,
+  isValidTimeString
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
@@ -529,9 +531,26 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
     }
   })
 
+  const checkIfFixedAndValidString = (val: string): boolean => {
+    return getMultiTypeFromValue(val) === MultiTypeInputType.FIXED && isValidTimeString(val)
+  }
+
   return (
     <Formik<JiraApprovalData>
       onSubmit={values => {
+        const timeoutString = (formikRef as React.MutableRefObject<FormikProps<JiraApprovalData>>)?.current?.values
+          ?.timeout
+        const retryIntervalString = (formikRef as React.MutableRefObject<FormikProps<JiraApprovalData>>)?.current
+          ?.values?.spec?.retryInterval
+        if (checkIfFixedAndValidString(timeoutString || '') && checkIfFixedAndValidString(retryIntervalString)) {
+          const retryInterval = parseStringToTime(retryIntervalString)
+          const timeout = parseStringToTime(timeoutString || '')
+          if (retryInterval > timeout)
+            (formikRef as React.MutableRefObject<FormikProps<JiraApprovalData>>)?.current?.setFieldError(
+              'spec.retryInterval',
+              getString('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+            )
+        }
         onUpdate?.(values)
       }}
       formName="jiraApproval"
@@ -543,9 +562,9 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
-          retryInterval: getDurationValidationSchema({ minimum: '10s' }).required(
-            getString('pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs')
-          ),
+          retryInterval: getDurationValidationSchema({
+            minimum: '10s'
+          }).required(getString('pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs')),
           connectorRef: Yup.string().required(getString('pipeline.jiraApprovalStep.validations.connectorRef')),
           issueKey: Yup.string().trim().required(getString('pipeline.jiraApprovalStep.validations.issueKey')),
           approvalCriteria: Yup.object().shape({
@@ -571,6 +590,7 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
     >
       {(formik: FormikProps<JiraApprovalData>) => {
         setFormikRef(formikRef, formik)
+
         return (
           <FormikForm>
             <FormContent

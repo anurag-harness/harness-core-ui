@@ -237,6 +237,7 @@ jiraApprovalStep:
       in: '{{ key }} is in'
       not_in: '{{ key }} is not in'
   validations:
+    retryIntervalExceedingTimeout: Retry interval should not be more than timeout
     connectorRef: Jira Connector is required
     project: '{{$.common.validation.projectIsRequired}}'
     issueKey: Issue Key is required

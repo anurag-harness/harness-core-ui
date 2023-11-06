@@ -4587,6 +4587,7 @@ export interface StringsMap {
   'pipeline.jiraApprovalStep.validations.issueType': string
   'pipeline.jiraApprovalStep.validations.project': string
   'pipeline.jiraApprovalStep.validations.requiredField': string
+  'pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout': string
   'pipeline.jiraCreateStep.addFields': string
   'pipeline.jiraCreateStep.descriptionPlaceholder': string
   'pipeline.jiraCreateStep.fetchingFields': string
