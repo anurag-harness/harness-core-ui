@@ -15,7 +15,7 @@ import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY }
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import { debounce } from 'lodash-es'
-import SessionToken, { TokenTimings } from 'framework/utils/SessionToken'
+import SessionToken from 'framework/utils/SessionToken'
 import useOpenApiClients from 'framework/hooks/useOpenAPIClients'
 import { queryClient } from 'services/queryClient'
 import { AppStoreProvider } from 'framework/AppStore/AppStoreContext'
@@ -64,7 +64,8 @@ interface AppProps {
 }
 const LEAST_REFRESH_TIME_MINUTES = 15
 const MAX_REFRESH_TIME_MINUTES = 120
-const REFRESH_TIME_PERCENTAGE_IN_MINUTES = 5
+const REFRESH_TIME_PERCENTAGE = 5
+
 export const getRequestOptions = (): Partial<RequestInit> => {
   const token = SessionToken.getToken()
   const headers: RequestInit['headers'] = {}
@@ -195,7 +196,10 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
 
   useEffect(() => {
     if (refreshTokenResponse?.resource) {
+      // Token will be auto-set in cookie via the header "set-cookie"
+      // [TEMPORARY]: Saving the new token in storage. Can remove this next line after complete migration to cookie
       SecureStorage.set('token', refreshTokenResponse.resource)
+
       SecureStorage.set('lastTokenSetTime', Date.now())
     }
   }, [refreshTokenResponse])
@@ -207,16 +211,20 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   const checkAndRefreshToken = debounce(function checkAndRefreshTokenFun() {
     const currentTime = Date.now()
     const milliSecondsToMinutes = 1000 * 60 // 1000 milliseconds is equal to 1 second, 60 seconds equal to one minute
-    const lastTokenSetTime = SessionToken.getLastTokenTimings(TokenTimings.Creation) as number
-    const lastTokenExpiryTime = SessionToken.getLastTokenTimings(TokenTimings.Expiration) as number
-    let refreshInterval = (lastTokenExpiryTime - lastTokenSetTime) / milliSecondsToMinutes
-    refreshInterval = (refreshInterval / 100) * REFRESH_TIME_PERCENTAGE_IN_MINUTES
-    const differenceInMinutes = (currentTime - lastTokenSetTime) / milliSecondsToMinutes
-    refreshInterval = Math.min(Math.max(refreshInterval, LEAST_REFRESH_TIME_MINUTES), MAX_REFRESH_TIME_MINUTES)
-    if (differenceInMinutes > refreshInterval && !refreshingToken) {
-      refreshToken({ queryParams: getQueryParams() as any, requestOptions: getRequestOptions() })
+    const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
+
+    let refreshInterval = SessionToken.getSessionTimeOutInMinutes()
+    if (refreshInterval) {
+      refreshInterval = (refreshInterval / 100) * REFRESH_TIME_PERCENTAGE
+      refreshInterval = Math.min(Math.max(refreshInterval, LEAST_REFRESH_TIME_MINUTES), MAX_REFRESH_TIME_MINUTES)
+
+      const differenceInMinutes = (currentTime - lastTokenSetTime) / milliSecondsToMinutes
+      if (differenceInMinutes > refreshInterval && !refreshingToken) {
+        refreshToken({ queryParams: getQueryParams() as any, requestOptions: getRequestOptions() })
+      }
     }
   }, 2000)
+
   useEffect(() => {
     // considering user to be active when user is either doing mouse or key board events
     document?.addEventListener('mousedown', checkAndRefreshToken)
