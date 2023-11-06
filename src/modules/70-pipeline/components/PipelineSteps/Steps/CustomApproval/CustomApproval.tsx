@@ -234,7 +234,7 @@ export class CustomApproval extends PipelineStep<CustomApprovalData> {
       rejectionCriteria: getDefaultCriterias(),
       approvalCriteria: getDefaultCriterias(),
       scriptTimeout: '10m',
-      retryInterval: '10s',
+      retryInterval: '1m',
       shell: customApprovalType[0].value,
       onDelegate: 'targethost',
       source: {
