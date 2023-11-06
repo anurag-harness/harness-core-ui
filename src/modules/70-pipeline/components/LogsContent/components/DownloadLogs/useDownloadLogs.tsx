@@ -53,7 +53,8 @@ const checkStatusAndDownload = async (
         headers: {
           'X-Harness-Token': logsToken
         }
-      }
+      },
+      body: undefined
     })
 
     if (!response?.status) {

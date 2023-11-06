@@ -36,12 +36,7 @@ import type {
 import { showHarnessCoPilot, resolveCurrentStep } from '@pipeline/utils/executionUtils'
 import type { ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
-import {
-  ExecutionStatus,
-  isExecutionComplete,
-  isExecutionFinishedAnyhow,
-  isExecutionWaitingForInput
-} from '@pipeline/utils/statusHelpers'
+import { ExecutionStatus, isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -332,7 +327,7 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
               className={css.fullScreen}
               variation={ButtonVariation.ICON}
               withoutCurrentColor
-              disabled={!isExecutionFinishedAnyhow(currentStep?.status)}
+              disabled={!isExecutionComplete(currentStep?.status)}
               onClick={async () => {
                 await downloadLogsAction?.({
                   logsScope: LogsScope.Step,

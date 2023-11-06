@@ -34,8 +34,7 @@ import {
   isExecutionComplete,
   isExecutionActive,
   ExecutionStatus,
-  isRetryPipelineAllowed,
-  isExecutionFinishedAnyhow
+  isRetryPipelineAllowed
 } from '@pipeline/utils/statusHelpers'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
@@ -431,7 +430,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                     logsToken
                   })
                 }
-                disabled={!isExecutionFinishedAnyhow(executionStatus)}
+                disabled={!isExecutionComplete(executionStatus)}
               />
             )}
           </Menu>
