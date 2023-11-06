@@ -40,10 +40,7 @@ import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { yamlPathRegex } from '@common/utils/StringUtils'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import {
-  DefaultStableVersionValue,
-  VersionsDropDown
-} from '@templates-library/components/VersionsDropDown/VersionsDropDown'
+import { DefaultStableVersionValue, VersionsDropDown } from '@pipeline/components/VersionsDropDown/VersionsDropDown'
 
 import { ExtraQueryParams, getDisableFields, MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
 

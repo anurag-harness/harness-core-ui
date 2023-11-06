@@ -25,7 +25,7 @@ import {
   useGetTemplateMetadataList,
   TemplateMetadataSummaryResponse
 } from 'services/template-ng'
-import { DefaultStableVersionValue } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
+import { DefaultStableVersionValue } from '@pipeline/components/VersionsDropDown/VersionsDropDown'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { getVersionLabelText } from '@templates-library/utils/templatesUtils'
 

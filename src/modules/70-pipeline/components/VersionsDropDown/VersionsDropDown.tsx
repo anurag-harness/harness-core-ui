@@ -18,7 +18,7 @@ export interface VersionsDropDownProps extends DropDownProps {
   stableVersion?: string
 }
 
-export const VersionsDropDown: React.FC<VersionsDropDownProps> = props => {
+export function VersionsDropDown(props: VersionsDropDownProps): React.ReactElement {
   const { stableVersion, ...rest } = props
   const { getString } = useStrings()
   const getCustomLabel = React.useCallback(

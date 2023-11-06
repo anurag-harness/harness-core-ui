@@ -51,7 +51,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
-import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
+import { VersionsDropDown } from '@pipeline/components/VersionsDropDown/VersionsDropDown'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import {
   EntityCachedCopy,

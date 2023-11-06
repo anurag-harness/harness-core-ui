@@ -12,7 +12,7 @@ import {
   DefaultStableVersionValue,
   VersionsDropDown,
   VersionsDropDownProps
-} from '@templates-library/components/VersionsDropDown/VersionsDropDown'
+} from '@pipeline/components/VersionsDropDown/VersionsDropDown'
 
 const baseProps: VersionsDropDownProps = {
   items: [

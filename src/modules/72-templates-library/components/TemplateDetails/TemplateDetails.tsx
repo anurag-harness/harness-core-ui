@@ -61,10 +61,7 @@ import { TemplateReferenceByTabPanel } from '@templates-library/components/Templ
 import NoEntityFound, { ErrorPlacement } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
-import {
-  DefaultStableVersionValue,
-  VersionsDropDown
-} from '@templates-library/components/VersionsDropDown/VersionsDropDown'
+import { DefaultStableVersionValue, VersionsDropDown } from '@pipeline/components/VersionsDropDown/VersionsDropDown'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
