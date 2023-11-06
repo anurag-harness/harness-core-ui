@@ -1579,6 +1579,7 @@ csBot:
   askAIDA: Ask AIDA
   title: Harness AIDA Chatbot
   beta: BETA
+  placeholder: How do I install a delegate?
   subtitle: I can help searching anything on
   hdh: Harness Developer Hub
   feedback: Was this answer helpful?
