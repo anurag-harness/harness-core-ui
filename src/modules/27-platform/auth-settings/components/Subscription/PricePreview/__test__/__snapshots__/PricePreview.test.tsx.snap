@@ -287,7 +287,7 @@ exports[`PricePreview render 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              12K authSettings.costCalculator.maus/month
+              12K platform.authSettings.costCalculator.maus/month
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
@@ -309,7 +309,7 @@ exports[`PricePreview render 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              12K authSettings.costCalculator.maus/year
+              12K platform.authSettings.costCalculator.maus/year
             </p>
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
