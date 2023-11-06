@@ -178,12 +178,13 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
             <>
               <Layout.Horizontal
                 spacing={'small'}
+                background={Color.PRIMARY_5}
                 border={{ radius: 2, color: Color.GREY_200 }}
                 margin={{ bottom: 'xlarge' }}
                 padding={'medium'}
               >
-                <Icon name={'info'} className={css.infoIcon} />
-                <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.H6 }} className={css.infoText}>
+                <Icon name={'info'} color={Color.WHITE} className={css.infoIcon} />
+                <Text color={Color.WHITE} font={{ variation: FontVariation.H6 }} className={css.infoText}>
                   <String stringID="pipeline.barrierStep.helpText" />
                   <a rel="noreferrer" target="_blank" href={barrierDocLink}>
                     {`[${getString('common.forMoreInfo')}]`}

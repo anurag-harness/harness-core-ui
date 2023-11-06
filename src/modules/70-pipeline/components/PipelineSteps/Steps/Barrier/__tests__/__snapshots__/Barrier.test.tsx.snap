@@ -6,10 +6,10 @@ exports[`Barrier tests Edit stage- readonly: edit stage readonly 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--border StyledProps--border-color-grey200 StyledProps--margin-bottom-xlarge StyledProps--padding-medium"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--background-primary5 StyledProps--border StyledProps--border-color-grey200 StyledProps--margin-bottom-xlarge StyledProps--padding-medium"
     >
       <span
-        class="bp3-icon StyledProps--main infoIcon"
+        class="bp3-icon StyledProps--main infoIcon StyledProps--color StyledProps--color-white"
         data-icon="info"
       >
         <svg
@@ -26,7 +26,7 @@ exports[`Barrier tests Edit stage- readonly: edit stage readonly 1`] = `
         </svg>
       </span>
       <p
-        class="StyledProps--font StyledProps--main infoText StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-h6"
+        class="StyledProps--font StyledProps--main infoText StyledProps--color StyledProps--color-white StyledProps--font-variation-h6"
       >
         <span>
           pipeline.barrierStep.helpText
@@ -339,10 +339,10 @@ exports[`Barrier tests Edit view with runtime input values 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--border StyledProps--border-color-grey200 StyledProps--margin-bottom-xlarge StyledProps--padding-medium"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--background-primary5 StyledProps--border StyledProps--border-color-grey200 StyledProps--margin-bottom-xlarge StyledProps--padding-medium"
     >
       <span
-        class="bp3-icon StyledProps--main infoIcon"
+        class="bp3-icon StyledProps--main infoIcon StyledProps--color StyledProps--color-white"
         data-icon="info"
       >
         <svg
@@ -359,7 +359,7 @@ exports[`Barrier tests Edit view with runtime input values 1`] = `
         </svg>
       </span>
       <p
-        class="StyledProps--font StyledProps--main infoText StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-h6"
+        class="StyledProps--font StyledProps--main infoText StyledProps--color StyledProps--color-white StyledProps--font-variation-h6"
       >
         <span>
           pipeline.barrierStep.helpText
