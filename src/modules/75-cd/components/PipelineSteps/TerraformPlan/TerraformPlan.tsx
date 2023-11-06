@@ -79,7 +79,6 @@ import StepArtifactoryAuthentication from '@platform/connectors/components/Creat
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@platform/connectors/constants'
 
 import { isMultiTypeRuntime } from '@common/utils/utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import StepAWSAuthentication from '@platform/connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import {
   BackendConfigurationTypes,
