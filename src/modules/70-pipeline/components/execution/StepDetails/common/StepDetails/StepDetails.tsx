@@ -94,10 +94,10 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
     return !!delegateList?.find((item: DelegateInfo) => item.taskId === taskId)
   }
 
-  const delegateLogsAvailable =
-    (step.startTs !== undefined && step.delegateInfoList && step.delegateInfoList.length > 0) ||
-    (step.startTs !== undefined && step.stepDetails && Object.keys(step.stepDetails).length > 0)
   const delegateInfoList = !isEmpty(step.delegateInfoList) ? step.delegateInfoList : taskList
+  const delegateLogsAvailable =
+    (step.startTs !== undefined && !isEmpty(delegateInfoList)) ||
+    (step.startTs !== undefined && step.stepDetails && Object.keys(step.stepDetails).length > 0)
   const timePadding = 60 * 5 // 5 minutes
   const taskIds = delegateInfoList?.map(delegate => delegate.taskId || '')?.filter(a => a)
   const startTime = Math.floor((step?.startTs as number) / 1000) - timePadding
