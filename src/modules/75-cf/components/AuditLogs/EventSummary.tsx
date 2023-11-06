@@ -5,20 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Drawer, IDrawerProps, Classes } from '@blueprintjs/core'
 import { get } from 'lodash-es'
 import cx from 'classnames'
 import { Layout, Container, Text, Button, useToggle, Heading, PageError } from '@harness/uicore'
-import { Color } from '@harness/design-system'
-import type { MonacoDiffEditorProps } from 'react-monaco-editor'
+import { Color, FontVariation } from '@harness/design-system'
+import { MonacoDiffEditorProps } from 'react-monaco-editor'
 import {
   CF_LOCAL_STORAGE_ENV_KEY,
   DEFAULT_ENV,
   AuditLogAction,
   formatDate,
   formatTime,
-  ADIT_LOG_EMPTY_ENTRY_ID,
+  AUDIT_LOG_EMPTY_ENTRY_ID,
   getErrorMessage
 } from '@cf/utils/CFUtils'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
@@ -64,14 +64,15 @@ export interface EventSummaryProps {
   onClose: () => void
 }
 
-export const EventSummary: React.FC<EventSummaryProps> = ({ data, flagData, onClose }) => {
+export const EventSummary: FC<EventSummaryProps> = ({ data, flagData, onClose }) => {
   const { getString } = useStrings()
   const [environment] = useLocalStorage(CF_LOCAL_STORAGE_ENV_KEY, DEFAULT_ENV)
   const { selectedProject } = useAppStore()
   let text = getString('cf.auditLogs.createdMessageFF')
   const [showDiff, toggleShowDiff] = useToggle(false)
   const { objectBefore, objectAfter } = data
-  const isNewObject = objectBefore === ADIT_LOG_EMPTY_ENTRY_ID
+  const isNewObject = objectBefore === AUDIT_LOG_EMPTY_ENTRY_ID
+
   const {
     data: diffData,
     loading,
@@ -84,26 +85,29 @@ export const EventSummary: React.FC<EventSummaryProps> = ({ data, flagData, onCl
   const eventStrings = translateEvents(data.instructionSet, getString)
 
   switch (data.action) {
+    case AuditLogAction.FeatureActivationCreated:
+      text = getString('cf.auditLogs.flagCreated')
+      break
+    case AuditLogAction.FeatureActivationArchived:
+      text = getString('cf.auditLogs.flagArchived')
+      break
+    case AuditLogAction.FeatureActivationRestored:
+      text = getString('cf.auditLogs.flagRestored')
+      break
     case AuditLogAction.SegmentCreated:
-      text = getString('cf.auditLogs.createdMessageSegment')
+      text = getString('cf.auditLogs.segmentCreated')
       break
     case AuditLogAction.FeatureActivationPatched:
-      text = getString('cf.auditLogs.createdMessageFFUpdate')
-      break
-    case AuditLogAction.SegmentPatched:
-      text = getString('cf.auditLogs.updateMessageSegment')
+      text = getString('cf.auditLogs.flagUpdated')
       break
   }
+
   const date = `${formatDate(data.executedOn)}, ${formatTime(data.executedOn)} PST`
+
   const [valueBefore, setValueBefore] = useState<string | undefined>()
   const [valueAfter, setValueAfter] = useState<string | undefined>()
   const [buttonClientY, setButtonClientY] = useState(0)
   const editorHeight = useMemo(() => `calc(100vh - ${buttonClientY + 60}px)`, [buttonClientY])
-  const style = {
-    color: '#22222A',
-    fontWeight: 600,
-    fontSize: '10px'
-  }
 
   useEffect(() => {
     const _before = isNewObject ? undefined : get(diffData, 'data.objectsnapshots[0].value')
@@ -127,7 +131,9 @@ export const EventSummary: React.FC<EventSummaryProps> = ({ data, flagData, onCl
       <Container className={cx(Classes.DRAWER_BODY, css.body)} padding="xlarge">
         <Container className={css.eventSection} padding="large">
           <Layout.Vertical spacing="medium">
-            <Text style={{ fontSize: '14px', fontWeight: 'bold', color: '#9293AB' }}>{date}</Text>
+            <Text color={Color.GREY_400} font={{ variation: FontVariation.H6 }}>
+              {date}
+            </Text>
             <Text color={Color.GREY_400}>
               {getString('cf.auditLogs.summaryHeading', {
                 project: selectedProject?.name,
@@ -143,22 +149,26 @@ export const EventSummary: React.FC<EventSummaryProps> = ({ data, flagData, onCl
             </Text>
           </Container>
 
-          <Container>
-            <Heading level={4} style={{ ...style, padding: 'var(--spacing-xlarge) 0 0 var(--spacing-large)' }}>
-              {getString('cf.auditLogs.changeDetails').toLocaleUpperCase()}
-            </Heading>
-            <ul>
-              {eventStrings.map(message => (
-                <li key={message}>
-                  <Text>{message}</Text>
-                </li>
-              ))}
-            </ul>
-          </Container>
+          <Heading
+            color={Color.GREY_800}
+            level={4}
+            font={{ variation: FontVariation.TINY_SEMI }}
+            style={{ padding: 'var(--spacing-xlarge) 0 0 var(--spacing-large)' }}
+          >
+            {getString('cf.auditLogs.changeDetails').toLocaleUpperCase()}
+          </Heading>
+          <ul>
+            {eventStrings.map(message => (
+              <li key={message}>
+                <Text>{message}</Text>
+              </li>
+            ))}
+          </ul>
 
           <Container margin={{ top: 'small' }}>
             <Button
               data-testId="yaml-diff-btn"
+              className={css.yamlDiffBtn}
               minimal
               rightIcon={showDiff ? 'chevron-up' : 'chevron-down'}
               text={getString('auditTrail.yamlDifference').toLocaleUpperCase()}
@@ -168,7 +178,6 @@ export const EventSummary: React.FC<EventSummaryProps> = ({ data, flagData, onCl
                 toggleShowDiff()
                 refetch()
               }}
-              style={style}
             />
             {showDiff && (
               <Container margin={{ top: 'xsmall', left: 'small', right: 'small' }} height={editorHeight}>
