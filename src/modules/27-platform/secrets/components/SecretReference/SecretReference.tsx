@@ -16,7 +16,6 @@ import {
   Failure,
   listSecretsV2Promise,
   SecretDTOV2,
-  SecretTextSpecDTO,
   ResponsePageSecretResponseWrapper,
   ConnectorInfoDTO
 } from 'services/cd-ng'
@@ -317,19 +316,9 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
                       <Text lineClamp={1} font={{ weight: 'bold' }} color={Color.BLACK}>
                         {item.record.name}
                       </Text>
-                      {item.record.type === SecretTypeEnum.SECRET_TEXT ||
-                      item.record.type === SecretTypeEnum.SECRET_FILE ? (
-                        <Text lineClamp={1} font={{ size: 'small', weight: 'light' }} color={Color.GREY_600}>
-                          {`${getString('common.ID')}: ${item.identifier}.${
-                            (item.record.spec as SecretTextSpecDTO).secretManagerIdentifier
-                          }`}
-                        </Text>
-                      ) : null}
-                      {item.record.type === SecretTypeEnum.SSH_KEY ? (
-                        <Text lineClamp={1} font={{ size: 'small', weight: 'light' }} color={Color.GREY_600}>
-                          {`${getString('common.ID')}: ${item.identifier}`}
-                        </Text>
-                      ) : null}
+                      <Text lineClamp={1} font={{ size: 'small', weight: 'light' }} color={Color.GREY_600}>
+                        {`${getString('common.ID')}: ${item.identifier}`}
+                      </Text>
                     </Layout.Vertical>
                   </Layout.Horizontal>
                 </Layout.Horizontal>
