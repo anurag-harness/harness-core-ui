@@ -6,6 +6,41 @@ exports[`Barrier tests Edit stage- readonly: edit stage readonly 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main infoContainer StyledProps--border StyledProps--border-color-grey200 StyledProps--margin-bottom-xlarge StyledProps--padding-medium"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="info"
+      >
+        <svg
+          height="16"
+          viewBox="0 0 12 12"
+          width="16"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-h6"
+      >
+        <span>
+          pipeline.barrierStep.helpText
+        </span>
+        <a
+          href="pipeline.barrierStep.infoLink"
+          rel="noreferrer"
+          target="_blank"
+        >
+          [common.forMoreInfo]
+        </a>
+      </p>
+    </div>
+    <div
       class="formGroup lg"
     >
       <div
@@ -303,6 +338,41 @@ exports[`Barrier tests Edit view with runtime input values 1`] = `
   <div
     class="OverlaySpinner--overlaySpinner"
   >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main infoContainer StyledProps--border StyledProps--border-color-grey200 StyledProps--margin-bottom-xlarge StyledProps--padding-medium"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="info"
+      >
+        <svg
+          height="16"
+          viewBox="0 0 12 12"
+          width="16"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-h6"
+      >
+        <span>
+          pipeline.barrierStep.helpText
+        </span>
+        <a
+          href="pipeline.barrierStep.infoLink"
+          rel="noreferrer"
+          target="_blank"
+        >
+          [common.forMoreInfo]
+        </a>
+      </p>
+    </div>
     <div
       class="formGroup lg"
     >

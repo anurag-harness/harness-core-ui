@@ -1591,4 +1591,5 @@ billingInfo:
     addressLength: Cannot be more than 100 characters
     cityLenght: Cannot be more than 20 characters
     zipCode: Cannot be more than 10 characters
+forMoreInfo: For more info
 workflow: Workflow

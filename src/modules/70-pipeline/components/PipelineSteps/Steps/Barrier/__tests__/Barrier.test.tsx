@@ -28,7 +28,7 @@ describe('Barrier tests', () => {
   test('Edit stage view validations', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const onUpdate = jest.fn()
-    const { container, getByText, queryByText } = render(
+    const { container, getByText, queryByText, findByText } = render(
       <TestStepWidget
         initialValues={{
           timeout: '',
@@ -45,6 +45,9 @@ describe('Barrier tests', () => {
         onUpdate={onUpdate}
       />
     )
+    const helpText = await findByText('pipeline.barrierStep.helpText')
+    expect(helpText).toBeInTheDocument()
+
     // Submit empty form
     await act(() => ref.current?.submitForm()!)
     expect(getByText('pipelineSteps.stepNameRequired')).toBeTruthy()
