@@ -145,6 +145,7 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   onMultiSelectChange?: (arg: ScopeAndIdentifier[]) => void
   isRecordDisabled?: (val?: any) => boolean
   renderRecordDisabledWarning?: JSX.Element
+  componentName?: string
 }
 
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
@@ -478,6 +479,7 @@ export function getReferenceFieldProps({
   selectedConnectors,
   isRecordDisabled,
   renderRecordDisabledWarning,
+  componentName,
   isFavoritesEnabled
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
@@ -490,7 +492,7 @@ export function getReferenceFieldProps({
     selected,
     placeholder,
     defaultScope,
-    createNewLabel: getString('newConnector'),
+    createNewLabel: componentName || getString('newConnector'),
     // recordClassName: css.listItem,
     isNewConnectorLabelVisible: true,
     fetchRecords: (done, search, page, scope, signal = undefined, allTabSelected, sortMethod, favorite) => {
@@ -661,6 +663,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     onMultiSelectChange,
     isRecordDisabled,
     renderRecordDisabledWarning,
+    componentName,
     ...rest
   } = props
 
@@ -890,6 +893,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     selectedConnectors,
     isRecordDisabled,
     renderRecordDisabledWarning,
+    componentName,
     isFavoritesEnabled: PL_FAVORITES
   })
 
@@ -923,7 +927,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
               }
             : undefined
         }
-        componentName="Connector"
+        componentName={componentName || getString('connector')}
         noDataCard={{ image: ConnectorsEmptyState }}
         pagination={{
           itemCount: pagedConnectorData?.data?.totalItems || 0,

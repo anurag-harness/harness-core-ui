@@ -25,6 +25,7 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { SecretResponseWrapper, useDeleteSecretV2, useGetSettingValue } from 'services/cd-ng'
 import type { PageSecretResponseWrapper, SecretTextSpecDTO, SecretDTOV2 } from 'services/cd-ng'
 import { getStringForType } from '@secrets/utils/SSHAuthUtils'
@@ -34,7 +35,9 @@ import { useVerifyModal as useVerifyModalSSH } from '@secrets/modals/CreateSSHCr
 import { useVerifyModal as useVerifyModalWinRM } from '@secrets/modals/CreateWinRmCredModal/useVerifyModal'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { SecretIdentifiers } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -87,13 +90,45 @@ const RenderColumnSecret: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
 
 const RenderColumnDetails: Renderer<CellProps<SecretResponseWrapper>> = ({ row }) => {
   const data = row.original.secret
+  const { getString } = useStrings()
+  const { accountId } = useParams<AccountPathProps>()
+  const {
+    selectedProject,
+    selectedOrg,
+    currentUserInfo: { accounts = [] }
+  } = useAppStore()
+  const selectedAccount = accounts.find(account => account.uuid === accountId)
+  const scope = getScopeFromValue((data.spec as SecretTextSpecDTO).secretManagerIdentifier)
+  const getScopeName = () => {
+    switch (scope) {
+      case Scope.PROJECT: {
+        return `${getString('projectLabel')}: ${selectedProject?.name}`
+      }
+
+      case Scope.ORG: {
+        return `${getString('orgLabel')}: ${selectedOrg?.name}`
+      }
+
+      default: {
+        return `${getString('account')}: ${selectedAccount?.accountName}`
+      }
+    }
+  }
   return (
     <>
       {data.type === 'SecretText' || data.type === 'SecretFile' ? (
-        <Text color={Color.BLACK} lineClamp={1} width={230}>
-          {(data.spec as SecretTextSpecDTO).secretManagerIdentifier}
-        </Text>
+        <>
+          <Text color={Color.BLACK} lineClamp={1} width={230}>
+            {`${getString('platform.connectors.title.secretManager')}: ${
+              (data.spec as SecretTextSpecDTO).secretManagerIdentifier
+            }`}
+          </Text>
+          <Text color={Color.GREY_600} lineClamp={1} font={{ size: 'small' }} width={230}>
+            {getScopeName()}
+          </Text>
+        </>
       ) : null}
+
       {/* TODO {Abhinav} display SM name */}
       <Text color={Color.GREY_600} font={{ size: 'small' }}>
         {getStringForType(data.type)}
