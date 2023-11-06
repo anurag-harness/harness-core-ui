@@ -23,5 +23,6 @@ declare const styles: {
   readonly tabHeading: string
   readonly tabSubHeading: string
   readonly thumbnailSelect: string
+  readonly wrapSection: string
 }
 export default styles

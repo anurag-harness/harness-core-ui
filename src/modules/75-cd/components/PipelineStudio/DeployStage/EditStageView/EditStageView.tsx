@@ -412,7 +412,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
             ? cx(stageCss.contentSection, stageCss.paddedSection, {
                 [stageCss.paddedSectionNew]: CDS_PIPELINE_STUDIO_UPGRADES
               })
-            : css.contentSection
+            : cx(css.contentSection, stageCss.wrapSection)
         }
         ref={scrollRef}
       >
