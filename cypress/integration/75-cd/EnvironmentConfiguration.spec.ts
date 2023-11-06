@@ -120,7 +120,7 @@ describe('EnvironmentsV2 Configuration Page', () => {
 
     cy.wait('@envSecretCall')
 
-    cy.contains('p', 'Id: secretId.harnessSecretManager').should('be.visible').click()
+    cy.contains('p', 'Id: secretId').should('be.visible').click()
     cy.get('span[data-icon="pipeline-approval"]').should('be.visible') // Approval Icon visible
     cy.contains('button[type="button"]', 'Apply Selected').should('be.visible').click()
 
