@@ -28,8 +28,7 @@ import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/compo
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
-  getDurationValidationSchema,
-  isValidTimeString
+  getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
@@ -59,7 +58,13 @@ import type {
   JiraFormContentInterface,
   JiraProjectSelectOption
 } from './types'
-import { getApprovalRejectionCriteriaForInitialValues, getGenuineValue, resetForm, setIssueTypeOptions } from './helper'
+import {
+  checkIfFixedAndValidString,
+  getApprovalRejectionCriteriaForInitialValues,
+  getGenuineValue,
+  resetForm,
+  setIssueTypeOptions
+} from './helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import { ApprovalRejectionCriteria } from '../Common/ApprovalRejectionCriteria'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -530,10 +535,6 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
       fetchStatus: true
     }
   })
-
-  const checkIfFixedAndValidString = (val: string): boolean => {
-    return getMultiTypeFromValue(val) === MultiTypeInputType.FIXED && isValidTimeString(val)
-  }
 
   return (
     <Formik<JiraApprovalData>

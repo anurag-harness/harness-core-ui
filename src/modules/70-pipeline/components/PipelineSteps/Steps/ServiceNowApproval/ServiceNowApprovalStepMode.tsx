@@ -13,7 +13,8 @@ import {
   FormInput,
   getMultiTypeFromValue,
   Layout,
-  MultiTypeInputType
+  MultiTypeInputType,
+  parseStringToTime
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
@@ -64,6 +65,7 @@ import { ServiceNowApprovalRejectionCriteria } from './ServiceNowApprovalRejecti
 import { ServiceNowApprovalChangeWindow } from './ServiceNowApprovalChangeWindow'
 import css from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApproval.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import { checkIfFixedAndValidString } from '../JiraApproval/helper'
 
 const fetchingTicketTypesPlaceholder: StringKeys = 'pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'
 
@@ -404,7 +406,22 @@ function ServiceNowApprovalStepMode(
   })
   return (
     <Formik<ServiceNowApprovalData>
-      onSubmit={values => onUpdate?.(values)}
+      onSubmit={values => {
+        const timeoutString = (formikRef as React.MutableRefObject<FormikProps<ServiceNowApprovalData>>)?.current
+          ?.values?.timeout
+        const retryIntervalString = (formikRef as React.MutableRefObject<FormikProps<ServiceNowApprovalData>>)?.current
+          ?.values?.spec?.retryInterval
+        if (checkIfFixedAndValidString(timeoutString || '') && checkIfFixedAndValidString(retryIntervalString)) {
+          const retryInterval = parseStringToTime(retryIntervalString)
+          const timeout = parseStringToTime(timeoutString || '')
+          if (retryInterval > timeout)
+            (formikRef as React.MutableRefObject<FormikProps<ServiceNowApprovalData>>)?.current?.setFieldError(
+              'spec.retryInterval',
+              getString('pipeline.jiraApprovalStep.validations.retryIntervalExceedingTimeout')
+            )
+        }
+        onUpdate?.(values)
+      }}
       formName="serviceNowApproval"
       initialValues={props.initialValues}
       validate={data => {

@@ -16,6 +16,7 @@ import {
 } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { getApprovalRejectionCriteriaForSubmit } from '@pipeline/components/PipelineSteps/Steps/Common/ApprovalCommons'
 import type { JiraApprovalData, JiraProjectSelectOption } from './types'
+import { isValidTimeString } from '@common/components/MultiTypeDuration/helper'
 
 export const processFormData = (values: JiraApprovalData): JiraApprovalData => {
   return {
@@ -230,4 +231,8 @@ export const handleOperatorChange = (
       onChange({ ...values, spec: { ...values.spec, conditions: tobeUpdatedConditions } })
     }
   }
+}
+
+export const checkIfFixedAndValidString = (val: string): boolean => {
+  return getMultiTypeFromValue(val) === MultiTypeInputType.FIXED && isValidTimeString(val)
 }
