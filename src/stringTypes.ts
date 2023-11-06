@@ -167,6 +167,7 @@ export interface StringsMap {
   'common.city': string
   'common.clear': string
   'common.clearSelection': string
+  'common.clickHere': string
   'common.clickToExpand': string
   'common.clickToKnowMore': string
   'common.clientId': string
@@ -712,6 +713,7 @@ export interface StringsMap {
   'common.newVersion': string
   'common.nextExpiringDate': string
   'common.nextStep': string
+  'common.no': string
   'common.noAPIKeys': string
   'common.noActiveDeveloperData': string
   'common.noActiveServiceData': string
@@ -1437,6 +1439,7 @@ export interface StringsMap {
   'common.yamlDiffView.refreshedYamlLabel': string
   'common.yearly': string
   'common.yearlyPeak': string
+  'common.yes': string
   'common.zipCode': string
   'rbac.UserGroupRoleAssignmentForm.assignmentValidation': string
   'rbac.accessControlTitle.resourceGroups': string

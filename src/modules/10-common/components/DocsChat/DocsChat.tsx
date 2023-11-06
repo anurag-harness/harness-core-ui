@@ -7,7 +7,7 @@
 
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
-import { Avatar, Button, ButtonVariation, Icon, Layout, Popover, Tag, Text, useToggleOpen } from '@harness/uicore'
+import { Avatar, Icon, Layout, Popover, Tag, Text, useToggleOpen } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Intent, Menu, MenuItem } from '@blueprintjs/core'
 import ReactMarkdown from 'react-markdown'
@@ -54,36 +54,36 @@ function UsefulOrNot({ query, answer, openSubmitTicketModal }: UsefulOrNotProps)
 
   return (
     <>
-      <Layout.Horizontal spacing={'small'} flex={{ align: 'center-center' }}>
+      <Layout.Horizontal flex={{ align: 'center-center' }}>
         <Text>
           <String stringID="common.csBot.feedback" />
         </Text>
-        <Button
-          icon="main-thumbsup"
+        <button
           disabled={voted !== Vote.None}
-          variation={ButtonVariation.ICON}
-          className={cx({ [css.votedUp]: voted === Vote.Up })}
+          className={cx({ [css.votedUp]: voted === Vote.Up }, css.voteButton)}
           onClick={() => {
             trackEvent(AIChatActions.BotHelpful, { query, answer })
             setVoted(Vote.Up)
           }}
-        />
-        <Button
-          icon="main-thumbsdown"
+        >
+          <String stringID="common.yes" />
+        </button>
+        <button
           disabled={voted !== Vote.None}
-          variation={ButtonVariation.ICON}
-          className={cx({ [css.votedDown]: voted === Vote.Down })}
+          className={cx({ [css.votedDown]: voted === Vote.Down }, css.voteButton)}
           onClick={() => {
             trackEvent(AIChatActions.BotNotHelpful, { query, answer })
             setVoted(Vote.Down)
           }}
-        />
+        >
+          <String stringID="common.no" />
+        </button>
       </Layout.Horizontal>
       {voted === Vote.Down ? (
-        <Layout.Horizontal spacing="small">
+        <Layout.Horizontal spacing="small" flex={{ align: 'center-center' }}>
           <String stringID="common.csBot.ticketOnError" />
           <a href="javascript:;" onClick={openSubmitTicketModal}>
-            Click Here
+            <String stringID="common.clickHere" />
           </a>
         </Layout.Horizontal>
       ) : null}

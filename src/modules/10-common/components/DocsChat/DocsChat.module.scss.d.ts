@@ -22,6 +22,7 @@ declare const styles: {
   readonly messagesContainer: string
   readonly submitButton: string
   readonly user: string
+  readonly voteButton: string
   readonly votedDown: string
   readonly votedUp: string
 }
