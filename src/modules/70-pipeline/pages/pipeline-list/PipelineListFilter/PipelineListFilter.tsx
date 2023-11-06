@@ -176,11 +176,14 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
     event?: React.SyntheticEvent<HTMLElement, Event> | undefined
   ) => {
     killEvent(event)
-    updateQueryParams({
-      filterIdentifier: option.value ? option.value.toString() : undefined,
-      filters: undefined,
-      page: DEFAULT_PAGE_INDEX
-    })
+    updateQueryParams(
+      {
+        filterIdentifier: option.value ? option.value.toString() : undefined,
+        filters: undefined,
+        page: DEFAULT_PAGE_INDEX
+      },
+      { skipNulls: false, strictNullHandling: true }
+    )
     option?.value &&
       trackEvent(CDActions.ApplyAdvancedFilter, {
         category: Category.PIPELINE
@@ -189,11 +192,14 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
 
   const handleFilterClick = (filterIdentifier: string) => {
     if (filterIdentifier !== UNSAVED_FILTER_IDENTIFIER) {
-      updateQueryParams({
-        filterIdentifier,
-        filters: undefined,
-        page: DEFAULT_PAGE_INDEX
-      })
+      updateQueryParams(
+        {
+          filterIdentifier,
+          filters: undefined,
+          page: DEFAULT_PAGE_INDEX
+        },
+        { skipNulls: false, strictNullHandling: true }
+      )
     }
   }
 
@@ -226,7 +232,10 @@ export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterPro
         orgIdentifier
       })
       const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload)
-      updateQueryParams({ filters: updatedFilter?.filterProperties || {} })
+      updateQueryParams(
+        { filters: updatedFilter?.filterProperties || {} },
+        { skipNulls: false, strictNullHandling: true }
+      )
       refetchFilterList()
       trackEvent(CDActions.ApplyAdvancedFilter, {
         category: Category.PIPELINE

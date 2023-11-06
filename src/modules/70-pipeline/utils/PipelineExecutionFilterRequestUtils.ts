@@ -6,7 +6,7 @@
  */
 
 import type { MultiSelectOption, SelectOption } from '@harness/uicore'
-import { get, omit, startCase } from 'lodash-es'
+import { get, isArray, omit, startCase } from 'lodash-es'
 import type { PipelineExecutionFilterProperties, FilterDTO, NGTag, FilterProperties } from 'services/pipeline-ng'
 
 import { EXECUTION_STATUS } from '@pipeline/utils/statusHelpers'
@@ -227,6 +227,9 @@ export const getBuildType = (moduleProperties: {
 }
 
 export const getMultiSelectFormOptions = (values?: any[], entityName?: string): SelectOption[] | undefined => {
+  if (!isArray(values)) {
+    return
+  }
   return values?.map(item => {
     const entityValue = get(item, `${entityName}`)
     return {

@@ -218,10 +218,13 @@ export function ExecutionListFilter(): React.ReactElement {
     event?: React.SyntheticEvent<HTMLElement, Event> | undefined
   ) => {
     killEvent(event)
-    updateQueryParams({
-      filterIdentifier: option.value ? option.value.toString() : undefined,
-      filters: undefined
-    })
+    updateQueryParams(
+      {
+        filterIdentifier: option.value ? option.value.toString() : undefined,
+        filters: undefined
+      },
+      { skipNulls: false, strictNullHandling: true }
+    )
     option?.value &&
       trackEvent(CDActions.ApplyAdvancedFilter, {
         category: Category.PIPELINE_EXECUTION
@@ -230,10 +233,13 @@ export function ExecutionListFilter(): React.ReactElement {
 
   const handleFilterClick = (filterIdentifier: string) => {
     if (filterIdentifier !== UNSAVED_FILTER_IDENTIFIER) {
-      updateQueryParams({
-        filterIdentifier,
-        filters: undefined
-      })
+      updateQueryParams(
+        {
+          filterIdentifier,
+          filters: undefined
+        },
+        { skipNulls: false, strictNullHandling: true }
+      )
     }
   }
 
@@ -266,7 +272,10 @@ export function ExecutionListFilter(): React.ReactElement {
         orgIdentifier
       })
       const updatedFilter = await saveOrUpdateHandler(isUpdate, requestBodyPayload)
-      updateQueryParams({ filters: updatedFilter?.filterProperties || {} })
+      updateQueryParams(
+        { filters: updatedFilter?.filterProperties || {} },
+        { skipNulls: false, strictNullHandling: true }
+      )
       refetchFilterList()
       trackEvent(CDActions.ApplyAdvancedFilter, {
         category: Category.PIPELINE_EXECUTION
