@@ -35,9 +35,9 @@ import { useVerifyModal as useVerifyModalSSH } from '@secrets/modals/CreateSSHCr
 import { useVerifyModal as useVerifyModalWinRM } from '@secrets/modals/CreateWinRmCredModal/useVerifyModal'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { SecretIdentifiers } from '@secrets/components/CreateUpdateSecret/CreateUpdateSecret'
-import type { ModulePathParams, ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { Scope } from '@common/interfaces/SecretsInterface'
-import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { Scope, scopeStringKey } from '@common/interfaces/SecretsInterface'
+import { getScopeFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -91,26 +91,35 @@ const RenderColumnSecret: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
 const RenderColumnDetails: Renderer<CellProps<SecretResponseWrapper>> = ({ row }) => {
   const data = row.original.secret
   const { getString } = useStrings()
-  const { accountId } = useParams<AccountPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const {
     selectedProject,
     selectedOrg,
     currentUserInfo: { accounts = [] }
   } = useAppStore()
   const selectedAccount = accounts.find(account => account.uuid === accountId)
-  const scope = getScopeFromValue((data.spec as SecretTextSpecDTO).secretManagerIdentifier)
-  const getScopeName = () => {
-    switch (scope) {
-      case Scope.PROJECT: {
-        return `${getString('projectLabel')}: ${selectedProject?.name}`
+  const scopeFromSMIdentifier = getScopeFromValue((data.spec as SecretTextSpecDTO).secretManagerIdentifier)
+  const getScopeName = (): string => {
+    switch (scopeFromSMIdentifier) {
+      case Scope.ACCOUNT: {
+        return `${getString('account')}: ${selectedAccount?.accountName}`
       }
-
       case Scope.ORG: {
         return `${getString('orgLabel')}: ${selectedOrg?.name}`
       }
 
+      case Scope.PROJECT:
       default: {
-        return `${getString('account')}: ${selectedAccount?.accountName}`
+        // Special case for stale (or pre-existing data)
+        // if scopeFromSMIdentifier is Scope.PROJECT, then use the 'currentScope' from which API is hit
+        const currentScope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+        const name =
+          currentScope === Scope.ACCOUNT
+            ? selectedAccount?.accountName
+            : currentScope === Scope.ORG
+            ? selectedOrg?.name
+            : selectedProject?.name
+        return `${getString(scopeStringKey[currentScope])}: ${name}`
       }
     }
   }
