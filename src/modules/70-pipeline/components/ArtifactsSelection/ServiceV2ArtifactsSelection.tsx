@@ -338,7 +338,7 @@ export default function ServiceV2ArtifactsSelection({
       refetchConnectorList()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [artifactContext, artifacts, refetchConnectorList, selectedArtifact, stage]
+    [artifactContext, artifacts, refetchConnectorList, selectedArtifact, stage,artifactIndex]
   )
 
   const removeArtifactObject = (type: ModalViewFor, index: number): void => {
