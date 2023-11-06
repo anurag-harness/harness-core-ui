@@ -106,10 +106,9 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const secretTypeFromProps = props.type
   const [type, setType] = useState<SecretResponseWrapper['secret']['type']>(secretTypeFromProps || 'SecretText')
   const [secret, setSecret] = useState<SecretDTOV2>()
-  const [searchTerm /*setSearchTerm*/] = useState<string>('')
+  const [searchTerm] = useState<string>('')
   const [initialSecretManagerAPICallInProgress, setInitialSecretManagerAPICallInProgress] = useState(true)
-  // const [initialSecretManagerChangedOrSearchStared, setInitialSecretManagerChangedOrSearchStared] =
-  //   useState<boolean>(false)
+
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
     considerWarningAsError: false,
     errorHeaderMsg: 'platform.secrets.policyEvaluations.failedToSave',
@@ -590,43 +589,6 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                     }}
                   />
                 </Suspense>
-
-                {/* <FormInput.Select
-                  onQueryChange={(query: string) => {
-                    if (!initialSecretManagerChangedOrSearchStared) {
-                      setInitialSecretManagerChangedOrSearchStared(true)
-                    }
-                    setSearchTerm(query)
-                  }}
-                  name="secretManagerIdentifier"
-                  label={getString('platform.secrets.labelSecretsManager')}
-                  items={secretManagersOptions}
-                  disabled={editing || loadingSecretsManagers || loadingConnectorDetails}
-                  onChange={item => {
-                    if (!initialSecretManagerChangedOrSearchStared) {
-                      setInitialSecretManagerChangedOrSearchStared(true)
-                    }
-                    const secretManagerData = secretManagersApiResponse?.data?.content?.find(
-                      itemValue => itemValue.connector?.identifier === item.value
-                    )?.connector
-                    const readOnlyTemp =
-                      secretManagerData?.type === 'Vault'
-                        ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
-                        : false
-                    setReadOnlySecretManager(readOnlyTemp)
-                    formikProps.setFieldValue(
-                      'valueType',
-                      secretManagerData?.type === 'CustomSecretManager'
-                        ? 'CustomSecretManagerValues'
-                        : readOnlyTemp
-                        ? 'Reference'
-                        : 'Inline'
-                    )
-
-                    initializeTemplateInputs(secretManagerData)
-                    setSelectedSecretManager(secretManagerData)
-                  }}
-                /> */}
 
                 {!secretTypeFromProps ? (
                   <FormInput.RadioGroup
