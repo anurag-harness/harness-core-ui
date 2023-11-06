@@ -271,7 +271,8 @@ describe('ServiceNow Approval tests', () => {
           ticketType: '',
           ticketNumber: '',
           approvalCriteria: getDefaultCriterias(),
-          rejectionCriteria: getDefaultCriterias()
+          rejectionCriteria: getDefaultCriterias(),
+          retryInterval: '1m'
         }
       },
       template: {
@@ -284,7 +285,8 @@ describe('ServiceNow Approval tests', () => {
           ticketType: '',
           ticketNumber: '',
           approvalCriteria: getDefaultCriterias(),
-          rejectionCriteria: getDefaultCriterias()
+          rejectionCriteria: getDefaultCriterias(),
+          retryInterval: '1m'
         }
       },
       viewType: StepViewType.TriggerForm

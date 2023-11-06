@@ -282,7 +282,8 @@ describe('Jira Approval tests', () => {
           issueType: '',
           issueKey: '',
           approvalCriteria: getDefaultCriterias(),
-          rejectionCriteria: getDefaultCriterias()
+          rejectionCriteria: getDefaultCriterias(),
+          retryInterval: '1m'
         }
       },
       template: {
@@ -296,7 +297,8 @@ describe('Jira Approval tests', () => {
           issueType: '',
           issueKey: '',
           approvalCriteria: getDefaultCriterias(),
-          rejectionCriteria: getDefaultCriterias()
+          rejectionCriteria: getDefaultCriterias(),
+          retryInterval: '1m'
         }
       },
       viewType: StepViewType.TriggerForm
