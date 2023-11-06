@@ -435,7 +435,7 @@ export function FormikInputSetForm(props: FormikInputSetFormProps): React.ReactE
                                 originalPipeline={resolvedPipeline as PipelineInfoConfig}
                                 template={parse<Pipeline>(get(template, 'data.inputSetTemplateYaml', '')).pipeline}
                                 viewType={StepViewType.InputSet}
-                                disableRuntimeInputConfigureOptions={false}
+                                disableRuntimeInputConfigureOptions
                               />
                             )}
                           </Layout.Vertical>

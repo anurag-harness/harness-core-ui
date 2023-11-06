@@ -62,6 +62,7 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
 import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
@@ -70,7 +71,6 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { usePermission } from '@rbac/hooks/usePermission'
 
-import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import GitPopover from '../GitPopover/GitPopover'
 import { FormikInputSetForm } from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
@@ -139,7 +139,7 @@ const getInputSet = (
         description: parsedInputSetObj.inputSet.description,
         orgIdentifier: parsedInputSetObj.inputSet.orgIdentifier,
         projectIdentifier: parsedInputSetObj.inputSet.projectIdentifier,
-        pipeline: parsedPipelineWithValues,
+        pipeline: clearRuntimeInput(parsedPipelineWithValues),
         gitDetails: defaultTo(inputSetObj.gitDetails, {}),
         connectorRef: defaultTo(inputSetObj.connectorRef, ''),
         inputSetErrorWrapper: defaultTo(inputSetObj.inputSetErrorWrapper, {}),
@@ -154,7 +154,7 @@ const getInputSet = (
       description: inputSetObj?.description,
       orgIdentifier,
       projectIdentifier,
-      pipeline: parsedPipelineWithValues,
+      pipeline: clearRuntimeInput(parsedPipelineWithValues),
       gitDetails: defaultTo(inputSetObj.gitDetails, {}),
       connectorRef: defaultTo(inputSetObj.connectorRef, ''),
       inputSetErrorWrapper: defaultTo(inputSetObj.inputSetErrorWrapper, {}),

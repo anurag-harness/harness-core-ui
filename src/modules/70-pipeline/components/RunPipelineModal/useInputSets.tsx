@@ -286,13 +286,13 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
           setInputSet(memoizedParse<Pipeline>(rerunInputSetYaml as any))
         }
       } else {
-        setInputSet(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any))
+        setInputSet(clearRuntimeInput(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any)))
       }
     } else if (hasRuntimeInputs) {
       if (shouldMergeTemplateWithInputSetYAML && inputSetData?.data?.pipelineYaml) {
         // This is to take care of selectiveStage executions to retain values on switching stages
 
-        setInputSet(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any))
+        setInputSet(clearRuntimeInput(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any)))
         setShouldValidateForm(true)
       } else {
         // In Normal flow we do not need merge call the template is the source of truth for us

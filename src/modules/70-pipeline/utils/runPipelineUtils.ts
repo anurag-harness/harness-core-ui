@@ -447,7 +447,7 @@ export function getStageIdentifierFromStageData(selectedStageData: StageSelectio
 }
 
 export function getFilteredAllowableTypes(allowableTypes: AllowedTypes, viewType: StepViewType): AllowedTypes {
-  return viewType === StepViewType.TemplateUsage || viewType === StepViewType.InputSet
+  return viewType === StepViewType.TemplateUsage
     ? allowableTypes
     : ((allowableTypes as MultiTypeInputType[]).filter(allowedType => !isMultiTypeRuntime(allowedType)) as AllowedTypes)
 }
