@@ -66,7 +66,7 @@
     "@harness/ng-tooltip": "^1.31.153",
     "@harness/telemetry": "^1.0.42",
     "@harness/ts-transform-paths": "1.0.1",
-    "@harness/uicore": "^3.148.5",
+    "@harness/uicore": "^3.148.6",
     "@harness/use-modal": "1.1.0",
     "@harnessio/ff-react-client-sdk": "1.3.0",
     "@harnessio/react-audit-service-client": "^0.3.0",
