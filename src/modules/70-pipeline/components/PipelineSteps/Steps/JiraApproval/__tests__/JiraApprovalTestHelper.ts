@@ -27,6 +27,7 @@ export const getJiraApprovalEditModeProps = (): JiraApprovalStepModeProps => ({
     type: StepType.JiraApproval,
     identifier: '',
     spec: {
+      retryInterval: '1m',
       connectorRef: '',
       projectKey: '',
       issueKey: '',
@@ -47,6 +48,7 @@ export const getJiraApprovalEditModePropsWithConnectorId = (): JiraApprovalStepM
     type: StepType.JiraApproval,
     identifier: '',
     spec: {
+      retryInterval: '1m',
       connectorRef: 'cid',
       projectKey: '',
       issueKey: '',
@@ -71,6 +73,7 @@ export const getJiraApprovalEditModePropsWithValues = (): JiraApprovalStepModePr
     type: StepType.JiraApproval,
     identifier: '',
     spec: {
+      retryInterval: '1m',
       connectorRef: 'c1d1',
       projectKey: 'pid1',
       issueKey: 'tdc-2345',
@@ -118,6 +121,7 @@ export const getJiraApprovalDeploymentModeProps = (): JiraApprovalDeploymentMode
       projectKey: '',
       issueKey: '',
       issueType: '',
+      retryInterval: '1m',
       approvalCriteria: getDefaultCriterias(),
       rejectionCriteria: getDefaultCriterias()
     }
@@ -133,6 +137,7 @@ export const getJiraApprovalDeploymentModeProps = (): JiraApprovalDeploymentMode
         projectKey: RUNTIME_INPUT_VALUE,
         issueKey: RUNTIME_INPUT_VALUE,
         issueType: RUNTIME_INPUT_VALUE,
+        retryInterval: RUNTIME_INPUT_VALUE,
         approvalCriteria: getDefaultCriterias(),
         rejectionCriteria: getDefaultCriterias()
       }

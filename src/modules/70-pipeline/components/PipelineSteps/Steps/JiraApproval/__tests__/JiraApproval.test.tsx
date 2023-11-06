@@ -238,6 +238,7 @@ describe('Jira Approval tests', () => {
         connectorRef: 'c1d1',
         projectKey: 'pid1',
         issueKey: 'tdc-2345',
+        retryInterval: '1m',
         issueType: 'itd1',
         approvalCriteria: {
           type: 'KeyValues',

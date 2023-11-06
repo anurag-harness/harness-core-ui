@@ -28,6 +28,7 @@ export const getServiceNowApprovalEditModeProps = (): ServiceNowApprovalStepMode
     spec: {
       connectorRef: '',
       ticketType: '',
+      retryInterval: '1m',
       ticketNumber: '',
       approvalCriteria: getDefaultCriterias(),
       rejectionCriteria: getDefaultCriterias()
@@ -47,6 +48,7 @@ export const getServiceNowApprovalEditModePropsWithValues = (): ServiceNowApprov
     spec: {
       connectorRef: 'c1d1',
       ticketType: 'INCIDENT',
+      retryInterval: '1m',
       ticketNumber: 'itd1',
       approvalCriteria: {
         type: ApprovalRejectionCriteriaType.KeyValues,
@@ -88,6 +90,7 @@ export const getServiceNowApprovalDeploymentModeProps = (): SnowApprovalDeployme
     identifier: '',
     spec: {
       connectorRef: '',
+      retryInterval: '1m',
       ticketType: '',
       ticketNumber: '',
       approvalCriteria: getDefaultCriterias(),
@@ -102,6 +105,7 @@ export const getServiceNowApprovalDeploymentModeProps = (): SnowApprovalDeployme
       identifier: '',
       spec: {
         connectorRef: RUNTIME_INPUT_VALUE,
+        retryInterval: RUNTIME_INPUT_VALUE,
         ticketType: RUNTIME_INPUT_VALUE,
         ticketNumber: RUNTIME_INPUT_VALUE,
         changeWindow: {
