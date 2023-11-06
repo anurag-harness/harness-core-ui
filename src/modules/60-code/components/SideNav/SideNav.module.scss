@@ -47,3 +47,10 @@
     }
   }
 }
+
+.selected {
+  background-color: rgba(2, 120, 213, 0.8);
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+  opacity: 1;
+}

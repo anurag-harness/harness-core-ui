@@ -43,6 +43,7 @@ export default function CODESideNav(): React.ReactElement {
 
   const isFiles =
     path.endsWith(':repoName') || path.includes(':repoName/files/') || path.endsWith(':gitRef*/~/:resourcePath*')
+  const isCommit = path.includes(':repoName/commits/') || path.endsWith('/commit/:commitRef*')
 
   useEffect(() => {
     if (projectData?.data?.project) {
@@ -101,7 +102,7 @@ export default function CODESideNav(): React.ReactElement {
           {repoName && (
             <SidebarLink
               data-code-repo-section="commits"
-              className={css.subNav}
+              className={cx(css.subNav, { [css.selected]: isCommit })}
               icon="git-commit"
               textProps={{
                 iconProps: {
