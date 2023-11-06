@@ -273,14 +273,14 @@ describe('AuditLogsList', () => {
 
     expect(await screen.findByRole('heading', { name: 'auditTrail.eventSummary' })).toBeInTheDocument()
     expect(await screen.findByRole('heading', { name: 'CF.AUDITLOGS.CHANGEDETAILS' })).toBeInTheDocument()
-    expect(await screen.findByTestId('yaml-diff-btn')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'AUDITTRAIL.YAMLDIFFERENCE' })).toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('button', { name: 'Close' }))
 
     await waitFor(() => {
       expect(screen.queryByText('auditTrail.eventSummary')).not.toBeInTheDocument()
       expect(screen.queryByText('CF.AUDITLOGS.CHANGEDETAILS')).not.toBeInTheDocument()
-      expect(screen.queryByTestId('yaml-diff-btn')).not.toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: 'AUDITTRAIL.YAMLDIFFERENCE' })).not.toBeInTheDocument()
     })
   })
 })
