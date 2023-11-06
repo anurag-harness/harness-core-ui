@@ -5,15 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Tab, Tabs, Views } from '@harness/uicore'
+import { Container, Tab, Tabs } from '@harness/uicore'
 import React from 'react'
 import { FormikContextType, useFormikContext } from 'formik'
-import { useHistory, useParams } from 'react-router-dom'
 import type { ChangeSourceDTO, MonitoredServiceDTO } from 'services/cv'
 import type { MonitoredServiceConfig } from '@cv/components/MonitoredServiceListWidget/MonitoredServiceListWidget.types'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import SaveAndDiscardButton from '@cv/components/SaveAndDiscardButton/SaveAndDiscardButton'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { isUpdated, showDependencies } from '@cv/pages/monitored-service/components/Configurations/Configurations.utils'
 import { useStrings } from 'framework/strings'
@@ -24,7 +22,6 @@ import { CETAgentConfig } from '@cet/pages/CETAgentConfig'
 import { ModuleName } from 'framework/types/ModuleName'
 import { getSearchString } from '@cv/utils/CommonUtils'
 import routes from '@common/RouteDefinitions'
-import { useQueryParams } from '@common/hooks'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import {
   getIsAgentConfigSectionHidden,
