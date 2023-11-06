@@ -57,17 +57,18 @@ export function ReconcileInputSetDialog({
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
-  const { branch, connectorRef, repoName, storeType } = useQueryParams<InputSetGitQueryParams>()
+  const { branch, connectorRef, repoName, storeType, inputSetBranch, inputSetConnectorRef, inputSetRepoName } =
+    useQueryParams<InputSetGitQueryParams>()
   const { isGitSyncEnabled } = React.useContext(AppStoreContext)
 
   const updatedObj: any = yamlParse(newYaml)
   const identifier = overlayInputSetIdentifier ?? get(inputSet, 'identifier')
   const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
   const storeMetadata = {
-    branch: defaultTo(branch, get(yamlDiffGitDetails, 'branch')),
-    connectorRef: defaultTo(connectorRef, get(inputSet, 'connectorRef')),
-    repoName: defaultTo(repoName, get(yamlDiffGitDetails, 'repoName')),
-    storeType: defaultTo(storeType, get(inputSet, 'storeType', StoreType.INLINE)),
+    branch: defaultTo(get(yamlDiffGitDetails, 'branch', inputSetBranch), branch),
+    connectorRef: defaultTo(get(inputSet, 'connectorRef', inputSetConnectorRef), connectorRef),
+    repoName: defaultTo(get(yamlDiffGitDetails, 'repoName', inputSetRepoName), repoName),
+    storeType: get(inputSet, 'storeType', storeType),
     filePath: defaultTo(get(yamlDiffGitDetails, 'filePath'), defaultFilePath)
   }
 

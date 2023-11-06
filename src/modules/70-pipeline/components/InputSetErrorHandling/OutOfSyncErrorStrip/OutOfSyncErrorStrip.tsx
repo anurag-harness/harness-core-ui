@@ -90,8 +90,17 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
-  const { repoIdentifier, branch, inputSetRepoIdentifier, inputSetBranch, connectorRef, repoName, storeType } =
-    useQueryParams<InputSetGitQueryParams>()
+  const {
+    repoIdentifier,
+    branch,
+    inputSetRepoIdentifier,
+    inputSetBranch,
+    inputSetConnectorRef,
+    inputSetRepoName,
+    connectorRef,
+    repoName,
+    storeType
+  } = useQueryParams<InputSetGitQueryParams>()
 
   const goToInputSetList = (): void => {
     const route = routes.toInputSetList({
@@ -142,9 +151,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
   })
 
-  const reconcileBranch = isGitSyncEnabled
-    ? overlayInputSetBranch ?? inputSetBranch
-    : branch ?? get(inputSet, 'gitDetails.branch')
+  const reconcileBranch = isGitSyncEnabled ? overlayInputSetBranch ?? inputSetBranch : branch
 
   const {
     data: yamlDiffResponse,
@@ -159,9 +166,9 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
       pipelineIdentifier: pipelineIdentifier ?? get(inputSet, 'pipelineIdentifier'),
       repoIdentifier: isGitSyncEnabled
         ? overlayInputSetRepoIdentifier ?? inputSetRepoIdentifier
-        : repoName ?? get(inputSet, 'gitDetails.repoName'),
-      connectorRef: connectorRef ?? get(inputSet, 'connectorRef'),
-      storeType: storeType ?? get(inputSet, 'storeType'),
+        : defaultTo(get(inputSet, 'gitDetails.repoName', inputSetRepoName), repoName),
+      connectorRef: defaultTo(get(inputSet, 'connectorRef', inputSetConnectorRef), connectorRef),
+      storeType: get(inputSet, 'storeType', storeType),
       ...gitParams,
       ...(isGitSyncEnabled
         ? {
@@ -169,7 +176,9 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
           }
         : {}),
       pipelineBranch: reconcileBranch,
-      branch: reconcileBranch
+      ...(get(inputSet, 'gitDetails.repoName') === repoName
+        ? { branch: defaultTo(get(inputSet, 'gitDetails.branch', inputSetBranch), branch) }
+        : { branch: get(inputSet, 'gitDetails.branch', inputSetBranch) })
     },
     inputSetIdentifier: overlayInputSetIdentifier ?? get(inputSet, 'identifier', ''),
     lazy: true
