@@ -5,8 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { parseStringToTime } from '@harness/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ConnectorResponse } from 'services/cd-ng'
+import { checkIfFixedAndValidString } from './JiraApproval/helper'
+import { JiraApprovalData } from './JiraApproval/types'
+import { ServiceNowApprovalData } from './ServiceNowApproval/types'
 
 export const getConnectorValue = (connector?: ConnectorResponse): string => {
   const connectorIdentifier = connector?.connector?.identifier
@@ -46,3 +50,14 @@ export const getConnectorName = (connector?: ConnectorResponse): string => {
 
 export const barrierDocLink =
   'https://developer.harness.io/docs/continuous-delivery/x-platform-cd-features/cd-steps/flow-control/synchronize-deployments-using-barriers/'
+
+export function isRetryIntervalGreaterThanTimeout(formikValue: JiraApprovalData | ServiceNowApprovalData): boolean {
+  const timeoutString = formikValue?.timeout
+  const retryIntervalString = formikValue?.spec?.retryInterval
+  if (checkIfFixedAndValidString(timeoutString || '') && checkIfFixedAndValidString(retryIntervalString)) {
+    const retryInterval = parseStringToTime(retryIntervalString)
+    const timeout = parseStringToTime(timeoutString || '')
+    if (retryInterval > timeout) return true
+  }
+  return false
+}
