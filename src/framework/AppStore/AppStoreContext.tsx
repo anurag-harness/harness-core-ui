@@ -23,7 +23,9 @@ import {
   isGitSyncEnabledPromise,
   GitEnabledDTO,
   Organization,
-  useGetOrganization
+  useGetOrganization,
+  useGetAccountNG,
+  AccountDTO
 } from 'services/cd-ng'
 import { useGetFeatureFlags } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -34,6 +36,7 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 import routes from '@common/RouteDefinitions'
 import type { Error } from 'services/cd-ng'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
+import SecureStorage from 'framework/utils/SecureStorage'
 import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
 
 export type FeatureFlagMap = Partial<Record<FeatureFlag, boolean>>
@@ -53,6 +56,7 @@ export interface AppStoreContextProps {
   readonly supportingTemplatesGitx?: boolean
   readonly connectivityMode?: GitEnabledDTO['connectivityMode'] //'MANAGER' | 'DELEGATE'
   readonly currentUserInfo: UserInfo
+  readonly accountInfo: AccountDTO
   /** feature flags */
   readonly featureFlags: FeatureFlagMap
 
@@ -60,7 +64,7 @@ export interface AppStoreContextProps {
     data: Partial<
       Pick<
         AppStoreContextProps,
-        'selectedOrg' | 'selectedProject' | 'isGitSyncEnabled' | 'connectivityMode' | 'currentUserInfo'
+        'selectedOrg' | 'selectedProject' | 'isGitSyncEnabled' | 'connectivityMode' | 'currentUserInfo' | 'accountInfo'
       >
     >
   ): void
@@ -77,6 +81,7 @@ export const AppStoreContext = React.createContext<AppStoreContextProps>({
   currentUserInfo: { uuid: '' },
   isGitSyncEnabled: false,
   connectivityMode: undefined,
+  accountInfo: {},
   updateAppStore: () => void 0
 })
 
@@ -134,7 +139,8 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     supportingGitSimplification: true,
     gitSyncEnabledOnlyForFF: false,
     supportingTemplatesGitx: false,
-    connectivityMode: undefined
+    connectivityMode: undefined,
+    accountInfo: {}
   })
 
   if (!projectIdentifier && !orgIdentifier) {
@@ -160,6 +166,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     },
     lazy: true
   })
+
   const { data: userInfo, loading: userInfoLoading } = useGetCurrentUserInfo({
     queryParams: { accountIdentifier: accountId }
   })
@@ -171,6 +178,23 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
       accountId
     })
   )
+
+  const { data: accountData } = useGetAccountNG({ accountIdentifier: accountId })
+
+  useEffect(() => {
+    if (accountData?.data) {
+      const accountInfo = accountData?.data
+      setState(prevState => ({
+        ...prevState,
+        accountInfo
+      }))
+
+      if (accountInfo?.sessionTimeoutInMinutes) {
+        SecureStorage.set('sessionTimeOutInMinutes', accountInfo.sessionTimeoutInMinutes)
+      }
+    }
+  }, [accountData])
+
   const redirectUserToModuleHome = (featureFlagsMap: Partial<Record<FeatureFlag, boolean>>): void => {
     if (featureFlagsMap.CREATE_DEFAULT_PROJECT && source === 'signup' && module && !isPurposePage) {
       const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module)[module]
@@ -402,7 +426,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     data: Partial<
       Pick<
         AppStoreContextProps,
-        'selectedOrg' | 'selectedProject' | 'isGitSyncEnabled' | 'connectivityMode' | 'currentUserInfo'
+        'selectedOrg' | 'selectedProject' | 'isGitSyncEnabled' | 'connectivityMode' | 'currentUserInfo' | 'accountInfo'
       >
     >
   ): void {
@@ -412,7 +436,8 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
       selectedProject: data.selectedProject,
       isGitSyncEnabled: defaultTo(data.isGitSyncEnabled, prevState?.isGitSyncEnabled),
       connectivityMode: defaultTo(data.connectivityMode, prevState?.connectivityMode),
-      currentUserInfo: defaultTo(data.currentUserInfo, prevState?.currentUserInfo)
+      currentUserInfo: defaultTo(data.currentUserInfo, prevState?.currentUserInfo),
+      accountInfo: defaultTo(data.accountInfo, prevState?.accountInfo)
     }))
   }
 
