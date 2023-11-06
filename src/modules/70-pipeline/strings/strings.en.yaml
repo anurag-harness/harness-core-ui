@@ -93,7 +93,6 @@ barrierStep:
   barrierReferenceRequired: Barrier Reference is required
   barrierReferencePlaceholder: Select or Enter Barrier Reference
   helpText: When deploying interdependent services, coordinating the timing of component deployments is crucial. The Harness Barrier’s Step can be used to synchronize different stages and step groups in a Pipeline. These barriers work effectively when two or more parallel stages/step groups share the same barrier name, ensuring synchronized execution.
-  infoLink: https://developer.harness.io/docs/continuous-delivery/x-platform-cd-features/cd-steps/flow-control/synchronize-deployments-using-barriers/
 timeRemainingSuffix: remaining till timeout
 utilitiesStep:
   url: Enter the URL

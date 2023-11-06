@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.infoContainer {
+.infoText {
   a {
     color: var(--primary-7) !important;
   }
+}
 
-  span[data-icon='info'] {
-    margin-top: 2px !important;
-  }
+.infoIcon {
+  margin-top: 2px !important;
 }

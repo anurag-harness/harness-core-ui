@@ -4010,7 +4010,6 @@ export interface StringsMap {
   'pipeline.barrierStep.barrierReferencePlaceholder': string
   'pipeline.barrierStep.barrierReferenceRequired': string
   'pipeline.barrierStep.helpText': string
-  'pipeline.barrierStep.infoLink': string
   'pipeline.barriers.addBarrier': string
   'pipeline.barriers.flowControl': string
   'pipeline.barriers.syncBarriers': string

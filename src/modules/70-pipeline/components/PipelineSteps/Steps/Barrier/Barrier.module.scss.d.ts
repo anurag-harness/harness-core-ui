@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly infoContainer: string
+  readonly infoIcon: string
+  readonly infoText: string
 }
 export default styles
