@@ -28,6 +28,7 @@ export interface ServiceNowApprovalData extends StepElementConfig {
     connectorRef: string | SelectOption
     ticketType: string | ServiceNowTicketTypeSelectOption
     ticketNumber: string
+    retryInterval: string
     approvalCriteria: ApprovalRejectionCriteria
     rejectionCriteria: ApprovalRejectionCriteria
     changeWindow?: {

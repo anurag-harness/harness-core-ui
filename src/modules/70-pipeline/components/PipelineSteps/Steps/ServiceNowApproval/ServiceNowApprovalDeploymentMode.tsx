@@ -241,6 +241,25 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
         />
       ) : null}
 
+      {getMultiTypeFromValue(template?.spec?.retryInterval) === MultiTypeInputType.RUNTIME && (
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipeline.customApprovalStep.retryInterval')}
+          name={`${prefix}spec.retryInterval`}
+          disabled={readonly}
+          fieldPath={'spec.retryInterval'}
+          template={template}
+          className={css.deploymentViewMedium}
+        />
+      )}
+
       {getMultiTypeFromValue(template?.spec?.approvalCriteria?.spec?.expression) === MultiTypeInputType.RUNTIME ? (
         <FormMultiTypeTextAreaField
           className={css.deploymentViewMedium}

@@ -418,7 +418,15 @@ function FormContent({
           />
         )}
       </div>
-
+      <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <FormMultiTypeDurationField
+          name="spec.retryInterval"
+          label={getString('pipeline.customApprovalStep.retryInterval')}
+          multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+          className={stepCss.duration}
+          disabled={readonly}
+        />
+      </div>
       <ApprovalRejectionCriteria
         statusList={statusList}
         fieldList={fieldList}
@@ -535,6 +543,9 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
+          retryInterval: getDurationValidationSchema({ minimum: '10s' }).required(
+            getString('pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs')
+          ),
           connectorRef: Yup.string().required(getString('pipeline.jiraApprovalStep.validations.connectorRef')),
           issueKey: Yup.string().trim().required(getString('pipeline.jiraApprovalStep.validations.issueKey')),
           approvalCriteria: Yup.object().shape({

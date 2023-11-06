@@ -67,6 +67,7 @@ export class ServiceNowApproval extends PipelineStep<ServiceNowApprovalData> {
     spec: {
       connectorRef: '',
       ticketNumber: '',
+      retryInterval: '1m',
       ticketType: '',
       approvalCriteria: getDefaultCriterias(),
       rejectionCriteria: getDefaultCriterias()
@@ -173,9 +174,11 @@ export class ServiceNowApproval extends PipelineStep<ServiceNowApprovalData> {
   validateInputSet({
     data,
     template,
-    getString
+    getString,
+    viewType
   }: ValidateInputSetProps<ServiceNowApprovalData>): FormikErrors<ServiceNowApprovalData> {
     const errors: FormikErrors<ServiceNowApprovalData> = {}
+    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
     if (
       typeof template?.spec?.connectorRef === 'string' &&
@@ -223,6 +226,28 @@ export class ServiceNowApproval extends PipelineStep<ServiceNowApprovalData> {
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
           Object.assign(errors, err)
+        }
+      }
+    }
+
+    if (isRequired && getMultiTypeFromValue(template?.spec.retryInterval) === MultiTypeInputType.RUNTIME) {
+      const retryTimeoutSchema = Yup.object().shape({
+        spec: Yup.object().shape({
+          retryInterval: getDurationValidationSchema({ minimum: '10s' }).required(
+            getString?.('pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs')
+          )
+        })
+      })
+
+      try {
+        retryTimeoutSchema.validateSync(data, { abortEarly: false })
+      } catch (validationErrorsObj) {
+        /* istanbul ignore else */
+        if (validationErrorsObj instanceof Yup.ValidationError) {
+          validationErrorsObj.inner?.forEach(valError => {
+            const err = yupToFormErrors(valError)
+            merge(errors, err)
+          })
         }
       }
     }

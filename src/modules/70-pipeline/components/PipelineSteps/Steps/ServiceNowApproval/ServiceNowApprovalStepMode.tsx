@@ -312,6 +312,15 @@ function FormContent({
             />
           )}
         </div>
+        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+          <FormMultiTypeDurationField
+            name="spec.retryInterval"
+            label={getString('pipeline.customApprovalStep.retryInterval')}
+            multiTypeDurationProps={{ enableConfigureOptions: true, expressions, disabled: readonly, allowableTypes }}
+            className={stepCss.duration}
+            disabled={readonly}
+          />
+        </div>
         <ServiceNowApprovalRejectionCriteria
           fieldList={fieldList}
           title={getString('pipeline.approvalCriteria.approvalCriteria')}
@@ -408,6 +417,9 @@ function ServiceNowApprovalStepMode(
           connectorRef: ConnectorRefSchema(getString, {
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
+          retryInterval: getDurationValidationSchema({ minimum: '10s' }).required(
+            getString('pipeline.customApprovalStep.validation.minimumRetryIntervalIs10Secs')
+          ),
           ticketType: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.ticketType')),
           ticketNumber: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.issueNumber')),
           approvalCriteria: Yup.object().shape({

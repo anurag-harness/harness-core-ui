@@ -28,6 +28,7 @@ export interface JiraApprovalData extends StepElementConfig {
     issueKey: string
     approvalCriteria: ApprovalRejectionCriteria
     rejectionCriteria: ApprovalRejectionCriteria
+    retryInterval: string
   }
 }
 
