@@ -9,8 +9,8 @@ import React, { useEffect } from 'react'
 
 import cx from 'classnames'
 import { Icon } from '@harness/icons'
-import { Button, ButtonVariation, Popover, useToggleOpen } from '@harness/uicore'
-import { PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { Button, ButtonVariation, useToggleOpen } from '@harness/uicore'
+import { Drawer } from '@blueprintjs/core'
 import MainNav from '@common/navigation/MainNav'
 import SideNav from '@common/navigation/SideNav'
 import { useSidebar } from '@common/navigation/SidebarProvider'
@@ -71,21 +71,7 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
         <div className={css.aux}>
           <ul className={css.list}>
             <li>
-              <Popover
-                isOpen={isOpen}
-                minimal
-                position={Position.LEFT_BOTTOM}
-                popoverClassName={css.chatPopover}
-                hasBackdrop
-                interactionKind={PopoverInteractionKind.CLICK}
-                onInteraction={nextOpenState => {
-                  if (!nextOpenState) close()
-                }}
-              >
-                <button className={cx(css.listItem, css.copilot, { [css.open]: isOpen })} onClick={open}>
-                  <Icon name="harness-copilot" size={24} />
-                  <String stringID="common.csBot.aida" className={css.label} />
-                </button>
+              <Drawer isOpen={isOpen} onClose={close} size={488}>
                 <>
                   <Button
                     icon="cross"
@@ -98,7 +84,11 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
                   />
                   <DocsChat />
                 </>
-              </Popover>
+              </Drawer>
+              <button className={cx(css.listItem, css.copilot, { [css.open]: isOpen })} onClick={open}>
+                <Icon name="harness-copilot" size={24} />
+                <String stringID="common.csBot.aida" className={css.label} />
+              </button>
             </li>
           </ul>
         </div>
