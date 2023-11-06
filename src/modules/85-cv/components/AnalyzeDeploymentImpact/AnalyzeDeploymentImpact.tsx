@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState, useMemo } from 'react'
-import { Layout, Container, Text, Icon, PageError } from '@harness/uicore'
+import { Layout, Container, Text, Icon, PageError, NoDataCard } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Divider, Classes } from '@blueprintjs/core'
 import { useParams, Link } from 'react-router-dom'
@@ -75,13 +75,22 @@ export default function AnalyzeDeploymentImpact(props: AnalyzeDeploymentImpactVi
       setPollingIntervalId(intervalId)
     }
 
-    refetch?.()
+    if (activityId) {
+      refetch?.()
+    }
+
     return () => clearInterval(intervalId)
   }, [activityId, analysisStatus])
 
   let content = <></>
 
-  if (error) {
+  if (!activityId) {
+    content = (
+      <Container margin={'xlarge'} data-testid={'errorContainer'} flex={{ justifyContent: 'center' }} height={500}>
+        <NoDataCard message={getString('pipeline.verification.logs.noAnalysis')} icon="warning-sign" />
+      </Container>
+    )
+  } else if (error) {
     if (status === ExecutionStatusEnum.Skipped) {
       content = (
         <Container margin={'xlarge'} data-testid={'errorContainer'}>
