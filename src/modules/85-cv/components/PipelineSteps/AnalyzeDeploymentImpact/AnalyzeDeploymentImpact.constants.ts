@@ -22,7 +22,7 @@ export enum IdentifierTypes {
 }
 
 export const ANALYSE_DEFAULT_VALUES: AnalyzeDeploymentImpactData = {
-  name: '',
+  name: 'Analyze Deployment Impact',
   type: 'AnalyzeDeploymentImpact',
   identifier: '',
   timeout: '15m',
