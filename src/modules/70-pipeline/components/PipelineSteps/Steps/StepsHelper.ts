@@ -43,3 +43,6 @@ export const getConnectorName = (connector?: ConnectorResponse): string => {
     }` || ''
   )
 }
+
+export const barrierDocLink =
+  'https://developer.harness.io/docs/continuous-delivery/x-platform-cd-features/cd-steps/flow-control/synchronize-deployments-using-barriers/'

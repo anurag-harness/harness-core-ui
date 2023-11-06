@@ -69,13 +69,12 @@ import {
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
+import { barrierDocLink } from '../StepsHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './Barrier.module.scss'
 
 type BarrierData = StepElementConfig
-const infoLink =
-  'https://developer.harness.io/docs/continuous-delivery/x-platform-cd-features/cd-steps/flow-control/synchronize-deployments-using-barriers/'
 
 export interface BarrierVariableStepProps {
   initialValues: BarrierData
@@ -186,7 +185,7 @@ function BarrierWidget(props: BarrierProps, formikRef: StepFormikFowardRef<Barri
                 <Icon name={'info'} className={css.infoIcon} />
                 <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.H6 }} className={css.infoText}>
                   <String stringID="pipeline.barrierStep.helpText" />
-                  <a rel="noreferrer" target="_blank" href={infoLink}>
+                  <a rel="noreferrer" target="_blank" href={barrierDocLink}>
                     {`[${getString('common.forMoreInfo')}]`}
                   </a>
                 </Text>
