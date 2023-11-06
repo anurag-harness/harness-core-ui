@@ -71,7 +71,13 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
         <div className={css.aux}>
           <ul className={css.list}>
             <li>
-              <Drawer isOpen={isOpen} onClose={close} size={488}>
+              <Drawer
+                isOpen={isOpen}
+                onClose={close}
+                size={488}
+                style={{ marginRight: '60px' }}
+                transitionDuration={100}
+              >
                 <>
                   <Button
                     icon="cross"
