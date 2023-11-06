@@ -132,7 +132,7 @@ const ApiResponse = {
   empty: false
 }
 
-const HealthSourcesResponse = [
+const HealthSourcesResponse: cvService.HealthSourceV2[] = [
   {
     identifier: 'KQE5GbbKTD6w39T6_jwUog/Templatised_sumologic_metrics_health_source',
     name: 'Templatised sumologic metrics health source',
@@ -171,12 +171,7 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure api is called with non anomalous filter', async () => {
-    const useGetHealthSourcesSpy = jest
-      .spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId')
-      .mockReturnValue({
-        data: HealthSourcesResponse,
-        refetch: jest.fn() as unknown
-      } as any)
+    const useGetHealthSourcesSpy = jest.fn()
 
     const useGetDeploymentMetricsSpy = jest
       .spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId')
@@ -203,6 +198,10 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
+          healthSourcesError={null}
+          fetchHealthSources={useGetHealthSourcesSpy}
+          healthSourcesData={HealthSourcesResponse}
+          healthSourcesLoading={false}
         />
       </TestWrapper>
     )
@@ -253,10 +252,7 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure api is called with filter and selected page', async () => {
-    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
-      data: HealthSourcesResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetHealthSourcesSpy = jest.fn()
 
     const useGetDeploymentMetricsSpy = jest
       .spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId')
@@ -281,6 +277,10 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
+          healthSourcesError={null}
+          fetchHealthSources={useGetHealthSourcesSpy}
+          healthSourcesData={HealthSourcesResponse}
+          healthSourcesLoading={false}
         />
       </TestWrapper>
     )
@@ -319,10 +319,7 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure loading state is rendered', async () => {
-    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
-      data: HealthSourcesResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetHealthSourcesSpy = jest.fn()
 
     jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
       loading: true,
@@ -345,6 +342,10 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
+          healthSourcesError={null}
+          fetchHealthSources={useGetHealthSourcesSpy}
+          healthSourcesData={HealthSourcesResponse}
+          healthSourcesLoading={false}
         />
       </TestWrapper>
     )
@@ -353,10 +354,7 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure error state is rendred', async () => {
-    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
-      data: HealthSourcesResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetHealthSourcesSpy = jest.fn()
 
     const refetchFn = jest.fn()
     jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
@@ -380,6 +378,10 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
+          healthSourcesError={null}
+          fetchHealthSources={useGetHealthSourcesSpy}
+          healthSourcesData={HealthSourcesResponse}
+          healthSourcesLoading={false}
         />
       </TestWrapper>
     )
@@ -392,10 +394,7 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure no data state is rendered', async () => {
-    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
-      data: HealthSourcesResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetHealthSourcesSpy = jest.fn()
 
     const refetchFn = jest.fn()
     jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
@@ -420,6 +419,10 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
+          healthSourcesError={null}
+          fetchHealthSources={useGetHealthSourcesSpy}
+          healthSourcesData={HealthSourcesResponse}
+          healthSourcesLoading={false}
         />
       </TestWrapper>
     )
@@ -429,10 +432,7 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure that when new activityId is passed as prop view is reset', async () => {
-    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
-      data: HealthSourcesResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetHealthSourcesSpy = jest.fn()
 
     const refetchFn = jest.fn()
     const useGetDeploymentMetricsSpy = jest
@@ -458,6 +458,10 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
+          healthSourcesError={null}
+          fetchHealthSources={useGetHealthSourcesSpy}
+          healthSourcesData={HealthSourcesResponse}
+          healthSourcesLoading={false}
         />
       </TestWrapper>
     )
@@ -483,10 +487,7 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure polling works correctly', async () => {
-    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
-      data: HealthSourcesResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetHealthSourcesSpy = jest.fn()
 
     const refetchFn = jest.fn()
     const clonedNode = cloneDeep(MockExecutionNode)
@@ -513,6 +514,10 @@ describe('Unit tests for Deployment metrics ', () => {
           step={clonedNode}
           activityId={clonedNode!.progressData!.activityId as unknown as string}
           overviewData={null}
+          healthSourcesError={null}
+          fetchHealthSources={useGetHealthSourcesSpy}
+          healthSourcesData={HealthSourcesResponse}
+          healthSourcesLoading={false}
         />
       </TestWrapper>
     )
@@ -639,10 +644,7 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('should render accordion to display metrics', () => {
-    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
-      data: HealthSourcesResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetHealthSourcesSpy = jest.fn()
 
     jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
       data: ApiResponse,
@@ -665,6 +667,10 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
+          healthSourcesError={null}
+          fetchHealthSources={useGetHealthSourcesSpy}
+          healthSourcesData={HealthSourcesResponse}
+          healthSourcesLoading={false}
         />
       </TestWrapper>
     )
@@ -677,10 +683,7 @@ describe('Unit tests for Deployment metrics ', () => {
     // @ts-ignore
     useQueryParams.mockImplementation(() => ({ filterAnomalous: 'true' }))
 
-    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
-      data: HealthSourcesResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetHealthSourcesSpy = jest.fn()
 
     const useGetDeploymentMetricsSpy = jest
       .spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId')
@@ -705,6 +708,10 @@ describe('Unit tests for Deployment metrics ', () => {
           step={MockExecutionNode}
           activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
           overviewData={null}
+          healthSourcesError={null}
+          fetchHealthSources={useGetHealthSourcesSpy}
+          healthSourcesData={HealthSourcesResponse}
+          healthSourcesLoading={false}
         />
       </TestWrapper>
     )
@@ -732,10 +739,7 @@ describe('Unit tests for Deployment metrics ', () => {
 
   describe('Simple verification changes', () => {
     test('should not render nodes filter', () => {
-      jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
-        data: HealthSourcesResponse,
-        refetch: jest.fn() as unknown
-      } as any)
+      const useGetHealthSourcesSpy = jest.fn()
 
       jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
         data: ApiResponse,
@@ -758,6 +762,10 @@ describe('Unit tests for Deployment metrics ', () => {
             step={MockExecutionNode}
             activityId={MockExecutionNode!.progressData!.activityId as unknown as string}
             overviewData={overviewDataMock}
+            healthSourcesError={null}
+            fetchHealthSources={useGetHealthSourcesSpy}
+            healthSourcesData={HealthSourcesResponse}
+            healthSourcesLoading={false}
           />
         </TestWrapper>
       )
