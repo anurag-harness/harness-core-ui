@@ -2166,7 +2166,6 @@ const routes = {
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/tickets`
   ),
   /********************************************************************************************************************/
-  toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
   toCustomDashboard: withAccountId(() => '/dashboards'),
   toCustomDashboardHome: withAccountId(
     ({ folderId }: { folderId?: string }) => `/dashboards/folder/${folderId ? folderId : 'shared'}`

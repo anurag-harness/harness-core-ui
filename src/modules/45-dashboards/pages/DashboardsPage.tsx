@@ -11,6 +11,7 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
 import { isOnPrem } from '@common/utils/utils'
 import { useStrings } from 'framework/strings'
 
@@ -26,10 +27,20 @@ const isEnterpriseLicense = (
   )
 }
 
+const isCcmTeamLicense = (
+  licenseInformation: Record<string, ModuleLicenseDTO> | Record<string, undefined>
+): boolean => {
+  const ccmLicense = licenseInformation[ModuleName.CE]
+  return (
+    ccmLicense?.status === 'ACTIVE' &&
+    (ccmLicense?.edition === Editions.ENTERPRISE || ccmLicense?.edition === Editions.TEAM)
+  )
+}
+
 const isDashboardsLicensed = (
   licenseInformation: Record<string, ModuleLicenseDTO> | Record<string, undefined>
 ): boolean => {
-  return isOnPrem() || isEnterpriseLicense(licenseInformation)
+  return isOnPrem() || isEnterpriseLicense(licenseInformation) || isCcmTeamLicense(licenseInformation)
 }
 
 const DashboardsPage: React.FC = ({ children }) => {

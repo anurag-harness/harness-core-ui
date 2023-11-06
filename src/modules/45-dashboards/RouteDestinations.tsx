@@ -56,9 +56,6 @@ const CdbMicroFrontendPath = React.lazy(() => import('cdbui/MicroFrontendApp'))
 
 export const CdbNonMfeRoutes = (
   <>
-    <Route path={routes.toOldCustomDashboard({ ...accountPathProps })}>
-      <RedirectToHome />
-    </Route>
     <Route path={routes.toCustomDashboard({ ...accountPathProps })} exact>
       <RedirectToHome />
     </Route>
@@ -93,7 +90,6 @@ export const CdbMfeRoutes = (
     <RouteWithLayout
       layout={MinimalLayout}
       path={[
-        routes.toOldCustomDashboard({ ...accountPathProps }),
         routes.toCustomDashboard({ ...accountPathProps }),
         routes.toCustomDashboardHome({ ...accountPathProps, folderId: ':folderId' }),
         routes.toCustomFolderHome({ ...accountPathProps }),
