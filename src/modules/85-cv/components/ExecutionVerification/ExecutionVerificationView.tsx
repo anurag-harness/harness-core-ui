@@ -72,11 +72,6 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
   const canEnableMetricsTab = getCanEnableMetricsTab(healthSourcesData)
   const canEnableLogsTab = getCanEnableLogsTab(healthSourcesData)
 
-  // const defaultTabId = useMemo(
-  //   () => getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab }),
-  //   [canEnableLogsTab, canEnableMetricsTab, getString, type, healthSourcesLoading]
-  // )
-
   const [selectedTab, setSelectedTab] = useState(() =>
     getDefaultTabId({ getString, tabName: type, canEnableMetricsTab, canEnableLogsTab })
   )
