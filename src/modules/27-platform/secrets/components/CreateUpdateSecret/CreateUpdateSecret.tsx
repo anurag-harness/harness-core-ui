@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import {
   Formik,
   FormikForm,
@@ -44,7 +44,6 @@ import {
 } from 'services/cd-ng'
 import type { SecretTextSpecDTO, SecretFileSpecDTO } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
-import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import {
   // getIdentifierFromValue,
@@ -65,6 +64,10 @@ import VaultFormFields from './views/VaultFormFields'
 import LocalFormFields from './views/LocalFormFields'
 import CustomFormFields from './views/CustomFormFields/CustomFormFields'
 import css from './CreateUpdateSecret.module.scss'
+
+const ConnectorReferenceField = React.lazy(
+  () => import('@connectors/components/ConnectorReferenceField/ConnectorReferenceField')
+)
 
 export type SecretFormData = Omit<SecretDTOV2, 'spec'> & SecretTextSpecDTO & SecretFileSpecDTO & TemplateInputInterface
 
@@ -538,49 +541,50 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
             const typeOfSelectedSecretManager = selectedSecretManager?.type
             return (
               <FormikForm>
-                <div>hi</div>
-                <ConnectorReferenceField
-                  label={getString('platform.secrets.labelSecretsManager')}
-                  name={'secretManagerIdentifier'}
-                  componentName={getString('platform.connectors.title.secretManager')}
-                  disabled={editing}
-                  width={'100%'}
-                  type={[
-                    Connectors.GCP_KMS,
-                    Connectors.VAULT,
-                    Connectors.AWS_SECRET_MANAGER,
-                    Connectors.CUSTOM_SECRET_MANAGER,
-                    Connectors.AZURE_KEY_VAULT,
-                    Connectors.GcpSecretManager
-                  ]}
-                  selected={formikProps.values['secretManagerIdentifier']}
-                  placeholder={`- ${getString('select')} -`}
-                  accountIdentifier={accountIdentifier}
-                  {...(orgIdentifier ? { orgIdentifier } : {})}
-                  {...(projectIdentifier ? { projectIdentifier } : {})}
-                  onChange={(value, scope) => {
-                    const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
-                    const secretManagerData = { ...value, identifier: value?.identifier }
-                    const readOnlyTemp =
-                      secretManagerData?.type === 'Vault'
-                        ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
-                        : false
-                    setReadOnlySecretManager(readOnlyTemp)
-                    formikProps.setFieldValue(
-                      'valueType',
-                      secretManagerData?.type === 'CustomSecretManager'
-                        ? 'CustomSecretManagerValues'
-                        : readOnlyTemp
-                        ? 'Reference'
-                        : 'Inline'
-                    )
+                <Suspense fallback={getString('loading')}>
+                  <ConnectorReferenceField
+                    label={getString('platform.secrets.labelSecretsManager')}
+                    name={'secretManagerIdentifier'}
+                    componentName={getString('platform.connectors.title.secretManager')}
+                    disabled={editing}
+                    width={'100%'}
+                    type={[
+                      Connectors.GCP_KMS,
+                      Connectors.VAULT,
+                      Connectors.AWS_SECRET_MANAGER,
+                      Connectors.CUSTOM_SECRET_MANAGER,
+                      Connectors.AZURE_KEY_VAULT,
+                      Connectors.GcpSecretManager
+                    ]}
+                    selected={formikProps.values['secretManagerIdentifier']}
+                    placeholder={`- ${getString('select')} -`}
+                    accountIdentifier={accountIdentifier}
+                    {...(orgIdentifier ? { orgIdentifier } : {})}
+                    {...(projectIdentifier ? { projectIdentifier } : {})}
+                    onChange={(value, scope) => {
+                      const connectorRefWithScope = getConnectorIdentifierWithScope(scope, value?.identifier)
+                      const secretManagerData = { ...value, identifier: value?.identifier }
+                      const readOnlyTemp =
+                        secretManagerData?.type === 'Vault'
+                          ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
+                          : false
+                      setReadOnlySecretManager(readOnlyTemp)
+                      formikProps.setFieldValue(
+                        'valueType',
+                        secretManagerData?.type === 'CustomSecretManager'
+                          ? 'CustomSecretManagerValues'
+                          : readOnlyTemp
+                          ? 'Reference'
+                          : 'Inline'
+                      )
 
-                    initializeTemplateInputs(secretManagerData)
-                    setSelectedSecretManager(secretManagerData)
+                      initializeTemplateInputs(secretManagerData)
+                      setSelectedSecretManager(secretManagerData)
 
-                    formikProps?.setFieldValue('secretManagerIdentifier', connectorRefWithScope)
-                  }}
-                />
+                      formikProps?.setFieldValue('secretManagerIdentifier', connectorRefWithScope)
+                    }}
+                  />
+                </Suspense>
 
                 {/* <FormInput.Select
                   onQueryChange={(query: string) => {

@@ -1036,3 +1036,5 @@ export const DefaultSettingConnectorField: React.FC<SettingRendererProps & { typ
       />
     )
   }
+
+export default ConnectorReferenceField
