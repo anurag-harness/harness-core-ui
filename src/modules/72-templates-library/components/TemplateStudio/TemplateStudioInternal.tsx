@@ -53,11 +53,12 @@ import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHa
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { BannerEOL } from '@pipeline/components/BannerEOL/BannerEOL'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-ng'
 import { useCheckIfTemplateUsingV1Stage, ResponseEOLBannerResponseDTO } from 'services/cd-ng'
 import { DefaultNewVersionLabel } from 'framework/Templates/templates'
 import { NodeMetadataProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeMetadataContext'
+import { FeatureFlag } from '@common/featureFlags'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml, isPipelineOrStageType, isNewTemplate } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -107,6 +108,7 @@ export function TemplateStudioInternal(): React.ReactElement {
   const templateStudioSubHeaderHandleRef = React.useRef<TemplateStudioSubHeaderHandle | null>(null)
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
   const [showBanner, setShowBanner] = React.useState<boolean>(false)
+  const auxNavEnabled = useFeatureFlag(FeatureFlag.PL_AI_SUPPORT_CHATBOT)
 
   const { CDS_V1_EOL_BANNER } = useFeatureFlags()
 
@@ -436,11 +438,11 @@ export function TemplateStudioInternal(): React.ReactElement {
       />
       <BannerEOL isVisible={showBanner} />
       <Page.Header
-        className={css.rightMargin}
+        className={classNames({ [css.rightMargin]: !auxNavEnabled })}
         size={'small'}
         title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
       />
-      <Page.Body className={classNames(css.rightMargin, css.studioWrapper)}>
+      <Page.Body className={classNames({ [css.rightMargin]: !auxNavEnabled }, css.studioWrapper)}>
         {isLoading ? (
           <PageSpinner />
         ) : (

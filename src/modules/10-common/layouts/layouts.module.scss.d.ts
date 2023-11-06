@@ -9,8 +9,6 @@
 declare const styles: {
   readonly aux: string
   readonly btn: string
-  readonly chatButton: string
-  readonly chatWrapper: string
   readonly children: string
   readonly closeChat: string
   readonly copilot: string
