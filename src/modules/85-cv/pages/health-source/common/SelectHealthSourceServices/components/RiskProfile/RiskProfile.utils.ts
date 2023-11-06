@@ -6,6 +6,7 @@
  */
 
 import type { IOptionProps } from '@blueprintjs/core'
+import { RadioGroupProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { MetricPackDTO, RiskCategoryDTO } from 'services/cv'
 
 export function getRiskCategoryOptions(metricPacks?: MetricPackDTO[]): IOptionProps[] {
@@ -32,17 +33,19 @@ export function getRiskCategoryOptions(metricPacks?: MetricPackDTO[]): IOptionPr
   return riskCategoryOptions
 }
 
-export function getRiskCategoryOptionsV2(riskCategories?: RiskCategoryDTO[]): IOptionProps[] {
+export function getRiskCategoryOptionsV2(riskCategories?: RiskCategoryDTO[]): RadioGroupProps['items'] {
   if (!Array.isArray(riskCategories) || !riskCategories?.length) {
     return []
   }
 
-  const riskCategoryOptions: IOptionProps[] = []
+  const riskCategoryOptions: RadioGroupProps['items'] = []
   for (const riskCategory of riskCategories) {
-    if (riskCategory?.identifier && riskCategory?.displayName) {
+    const { identifier, displayName } = riskCategory || {}
+    if (identifier && displayName) {
       riskCategoryOptions.push({
-        label: riskCategory.displayName,
-        value: riskCategory.identifier
+        label: displayName,
+        value: identifier,
+        tooltipId: `RiskCategory_${identifier}`
       })
     }
   }
