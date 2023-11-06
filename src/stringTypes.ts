@@ -240,7 +240,6 @@ export interface StringsMap {
   'common.csBot.askAIDA': string
   'common.csBot.beta': string
   'common.csBot.errorMessage': string
-  'common.csBot.feedback': string
   'common.csBot.hdh': string
   'common.csBot.placeholder': string
   'common.csBot.subtitle': string
@@ -713,7 +712,6 @@ export interface StringsMap {
   'common.newVersion': string
   'common.nextExpiringDate': string
   'common.nextStep': string
-  'common.no': string
   'common.noAPIKeys': string
   'common.noActiveDeveloperData': string
   'common.noActiveServiceData': string
@@ -1439,7 +1437,6 @@ export interface StringsMap {
   'common.yamlDiffView.refreshedYamlLabel': string
   'common.yearly': string
   'common.yearlyPeak': string
-  'common.yes': string
   'common.zipCode': string
   'rbac.UserGroupRoleAssignmentForm.assignmentValidation': string
   'rbac.accessControlTitle.resourceGroups': string

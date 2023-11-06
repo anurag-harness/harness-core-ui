@@ -56,7 +56,7 @@ function UsefulOrNot({ query, answer, openSubmitTicketModal }: UsefulOrNotProps)
     <>
       <Layout.Horizontal flex={{ align: 'center-center' }}>
         <Text>
-          <String stringID="common.csBot.feedback" />
+          <String stringID="common.isHelpful" />
         </Text>
         <button
           disabled={voted !== Vote.None}
@@ -66,7 +66,7 @@ function UsefulOrNot({ query, answer, openSubmitTicketModal }: UsefulOrNotProps)
             setVoted(Vote.Up)
           }}
         >
-          <String stringID="common.yes" />
+          <String stringID="yes" />
         </button>
         <button
           disabled={voted !== Vote.None}
@@ -76,7 +76,7 @@ function UsefulOrNot({ query, answer, openSubmitTicketModal }: UsefulOrNotProps)
             setVoted(Vote.Down)
           }}
         >
-          <String stringID="common.no" />
+          <String stringID="no" />
         </button>
       </Layout.Horizontal>
       {voted === Vote.Down ? (
