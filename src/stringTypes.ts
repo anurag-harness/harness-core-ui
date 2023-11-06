@@ -235,9 +235,13 @@ export interface StringsMap {
   'common.createFlag': string
   'common.createPipeline': string
   'common.creating': string
+  'common.csBot.aida': string
   'common.csBot.askAIDA': string
+  'common.csBot.beta': string
   'common.csBot.errorMessage': string
   'common.csBot.feedback': string
+  'common.csBot.hdh': string
+  'common.csBot.subtitle': string
   'common.csBot.ticketOnError': string
   'common.csBot.title': string
   'common.current': string

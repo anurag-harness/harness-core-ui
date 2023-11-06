@@ -7,20 +7,28 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly aux: string
   readonly btn: string
   readonly chatButton: string
+  readonly chatPopover: string
   readonly chatWrapper: string
   readonly children: string
+  readonly closeChat: string
+  readonly copilot: string
   readonly expired: string
   readonly featuresBanner: string
   readonly flex: string
   readonly info: string
   readonly infoIcon: string
   readonly issueIcon: string
+  readonly label: string
   readonly levelUp: string
   readonly link: string
+  readonly list: string
+  readonly listItem: string
   readonly main: string
   readonly notExpired: string
+  readonly open: string
   readonly overUse: string
   readonly rhs: string
   readonly trialLicenseBanner: string

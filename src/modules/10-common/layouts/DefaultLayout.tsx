@@ -9,8 +9,8 @@ import React, { useEffect } from 'react'
 
 import cx from 'classnames'
 import { Icon } from '@harness/icons'
-import { Popover } from '@harness/uicore'
-import { PopoverInteractionKind } from '@blueprintjs/core'
+import { Button, ButtonVariation, Popover, useToggleOpen } from '@harness/uicore'
+import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import MainNav from '@common/navigation/MainNav'
 import SideNav from '@common/navigation/SideNav'
 import { useSidebar } from '@common/navigation/SidebarProvider'
@@ -34,6 +34,7 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
   const { module } = useModuleInfo()
   const { trackPage, identifyUser } = useTelemetry()
   const { currentUserInfo } = useAppStore()
+  const { isOpen, open, close } = useToggleOpen(false)
   const chatEnabled = useFeatureFlag(FeatureFlag.PL_AI_SUPPORT_CHATBOT)
 
   useEffect(() => {
@@ -67,13 +68,39 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
       </div>
 
       {chatEnabled ? (
-        <div className={css.chatWrapper}>
-          <Popover interactionKind={PopoverInteractionKind.CLICK}>
-            <div className={css.chatButton}>
-              <Icon name="code-chat" size={24} /> <String stringID="common.csBot.askAIDA" />
-            </div>
-            <DocsChat />
-          </Popover>
+        <div className={css.aux}>
+          <ul className={css.list}>
+            <li>
+              <Popover
+                isOpen={isOpen}
+                minimal
+                position={Position.LEFT_BOTTOM}
+                popoverClassName={css.chatPopover}
+                hasBackdrop
+                interactionKind={PopoverInteractionKind.CLICK}
+                onInteraction={nextOpenState => {
+                  if (!nextOpenState) close()
+                }}
+              >
+                <button className={cx(css.listItem, css.copilot, { [css.open]: isOpen })} onClick={open}>
+                  <Icon name="harness-copilot" size={24} />
+                  <String stringID="common.csBot.aida" className={css.label} />
+                </button>
+                <>
+                  <Button
+                    icon="cross"
+                    iconProps={{
+                      size: 24
+                    }}
+                    variation={ButtonVariation.PRIMARY}
+                    onClick={close}
+                    className={css.closeChat}
+                  />
+                  <DocsChat />
+                </>
+              </Popover>
+            </li>
+          </ul>
         </div>
       ) : null}
     </div>
