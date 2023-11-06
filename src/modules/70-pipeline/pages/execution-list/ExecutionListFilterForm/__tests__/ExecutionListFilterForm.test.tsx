@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, getAllByRole, getByPlaceholderText, getByText, render } from '@testing-library/react'
+import { fireEvent, getAllByRole, getByPlaceholderText, getByText, render, screen } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 
 import { Formik, FormikForm } from '@harness/uicore'
@@ -54,6 +54,11 @@ function WrapperComponent(): JSX.Element {
   )
 }
 
+const enterTagValue = (tagInputValues: HTMLElement, value: string): void => {
+  fireEvent.change(tagInputValues, { target: { value } })
+  fireEvent.keyDown(tagInputValues, { key: 'Enter', keyCode: 13 })
+}
+
 describe('<ExecutionListFilterForm /> test', () => {
   test('snapshot testing', () => {
     const { container } = render(<WrapperComponent />)
@@ -84,5 +89,15 @@ describe('<ExecutionListFilterForm /> test', () => {
     })
     const selectedTag = getByText(tagInputValues[0] as HTMLElement, 'Aborted')
     expect(selectedTag).toBeDefined()
+  })
+
+  test('Tag value convert to expected key:value', async () => {
+    const { container } = render(<WrapperComponent />)
+    const tagInputValues = screen.getByPlaceholderText(/Type and press enter to create a tag/)
+
+    //tag should retain true values - specifically for v: and d
+    const testTagValue = ['a:b', ':v', 'v:', 'd']
+    testTagValue.forEach(tagValue => enterTagValue(tagInputValues, tagValue))
+    testTagValue.forEach(tagValue => expect(getByText(container, tagValue)).toBeInTheDocument())
   })
 })
