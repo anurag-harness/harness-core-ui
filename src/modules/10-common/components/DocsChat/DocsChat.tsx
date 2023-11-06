@@ -10,6 +10,7 @@ import cx from 'classnames'
 import { Avatar, Button, ButtonVariation, Icon, Layout, Popover, Tag, Text, useToggleOpen } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Intent, Menu, MenuItem } from '@blueprintjs/core'
+import ReactMarkdown from 'react-markdown'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { AIChatActions } from '@common/constants/TrackingConstants'
 import { useHarnessSupportBot } from 'services/notifications'
@@ -221,15 +222,13 @@ function DocsChat(): JSX.Element {
                   <Icon name="harness-copilot" size={30} className={css.aidaIcon} />
                 ) : null}
                 <div className={css.message}>
-                  <p>
-                    {message.text === 'error' ? (
-                      <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
-                        {getString('common.csBot.errorMessage')}
-                      </a>
-                    ) : (
-                      message.text
-                    )}
-                  </p>
+                  {message.text === 'error' ? (
+                    <a href="javascript:;" onClick={openSubmitTicketModal} className={css.errorLink}>
+                      {getString('common.csBot.errorMessage')}
+                    </a>
+                  ) : (
+                    <ReactMarkdown>{message.text}</ReactMarkdown>
+                  )}
                 </div>
                 {message.author === 'user' ? (
                   <Avatar size={'small'} name={currentUserInfo.name} email={currentUserInfo.email} hoverCard={false} />
