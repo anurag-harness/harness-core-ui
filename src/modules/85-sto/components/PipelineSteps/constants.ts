@@ -1049,10 +1049,7 @@ export const sbomFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpe
       ]
     : []
 
-export const sbomFieldValidationConfig = (
-  data: SecurityStepData<SecurityStepSpec>,
-  stepViewType?: StepViewType
-): InputSetViewValidateFieldsConfig[] => [
+export const sbomFieldValidationConfig = (): InputSetViewValidateFieldsConfig[] => [
   {
     name: 'spec.sbom.generate',
     type: ValidationFieldTypes.Boolean,
@@ -1061,8 +1058,7 @@ export const sbomFieldValidationConfig = (
   {
     name: 'spec.sbom.format',
     type: ValidationFieldTypes.Text,
-    label: 'ssca.orchestrationStep.sbomFormat',
-    isRequired: stepViewType === StepViewType.InputSet && data.spec.mode !== 'ingestion'
+    label: 'ssca.orchestrationStep.sbomFormat'
   }
 ]
 

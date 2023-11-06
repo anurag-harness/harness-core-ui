@@ -143,7 +143,7 @@ export const editViewValidateFieldsConfig = (data: BlackduckStepData) => {
     ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
-    ...sbomFieldValidationConfig(data),
+    ...sbomFieldValidationConfig(),
     ...additionalFieldsValidationConfigEitView
   ]
 
@@ -158,7 +158,7 @@ export function getInputSetViewValidateFieldsConfig(data: BlackduckStepData): In
     ...ingestionFieldValidationConfig(data, StepViewType.InputSet),
     ...extraAuthFieldsValidationConfig(data, StepViewType.InputSet),
     ...imageFieldsValidationConfig(data, StepViewType.InputSet),
-    ...sbomFieldValidationConfig(data, StepViewType.InputSet),
+    ...sbomFieldValidationConfig(),
     ...additionalFieldsValidationConfigInputSet
   ]
 
