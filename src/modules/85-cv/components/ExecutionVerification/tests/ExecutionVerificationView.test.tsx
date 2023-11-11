@@ -89,18 +89,22 @@ describe('Unit tests for ExecutionVerificationView unit tests', () => {
   })
 
   test('Ensure correct tabId is returned  ', () => {
-    jest.mock('framework/strings', () => ({
-      useStrings: () => ({
-        getString: (val: string) => val
-      })
-    }))
-    expect(getDefaultTabId((item: string) => item, undefined)).toEqual('pipeline.verification.analysisTab.metrics')
-    expect(getDefaultTabId((item: string) => item, 'pipeline.verification.analysisTab.logs')).toEqual(
-      'pipeline.verification.analysisTab.logs'
-    )
-    expect(getDefaultTabId((item: string) => item, 'pipeline.verification.analysisTab.metrics')).toEqual(
+    expect(getDefaultTabId({ getString: key => key, canEnableLogsTab: false, canEnableMetricsTab: true })).toEqual(
       'pipeline.verification.analysisTab.metrics'
     )
+
+    expect(
+      getDefaultTabId({
+        getString: key => key,
+        tabName: 'pipeline.verification.analysisTab.logs',
+        canEnableLogsTab: true,
+        canEnableMetricsTab: true
+      })
+    ).toEqual('pipeline.verification.analysisTab.logs')
+
+    expect(
+      getDefaultTabId({ getString: (item: string) => item, canEnableMetricsTab: false, canEnableLogsTab: true })
+    ).toEqual('pipeline.verification.analysisTab.logs')
   })
 
   test('Ensure correct tabs are rendered via queryParams', async () => {
