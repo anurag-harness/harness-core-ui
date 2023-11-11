@@ -8,14 +8,21 @@
 import React from 'react'
 import moment from 'moment'
 import { IconName, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
 import { Renderer, CellProps } from 'react-table'
 import { SRMAnalysisStepDetailDTO } from 'services/cv'
-import { dateFormat, timeFormat, AnalysisStatus } from './ReportsTable.constants'
+import {
+  dateFormat,
+  timeFormat,
+  AnalysisStatus,
+  DefaultStatus,
+  SuccessStatus,
+  AbortedStatus,
+  RunningStatus
+} from './ReportsTable.constants'
 import css from './ReportsTable.module.scss'
 
-const statusToColorMappingAnalysisReport = (
-  status: SRMAnalysisStepDetailDTO['analysisStatus']
+export const statusToColorMappingAnalysisReport = (
+  status?: SRMAnalysisStepDetailDTO['analysisStatus']
 ): {
   icon?: IconName
   label: string
@@ -25,33 +32,13 @@ const statusToColorMappingAnalysisReport = (
 } => {
   switch (status) {
     case AnalysisStatus.COMPLETED:
-      return {
-        icon: 'success-tick',
-        label: AnalysisStatus.COMPLETED,
-        color: Color.GREEN_600,
-        backgroundColor: Color.GREEN_100
-      }
+      return SuccessStatus
     case AnalysisStatus.ABORTED:
-      return {
-        icon: 'circle-stop',
-        label: AnalysisStatus.ABORTED,
-        color: Color.BLACK,
-        backgroundColor: Color.GREY_200
-      }
+      return AbortedStatus
     case AnalysisStatus.RUNNING:
-      return {
-        icon: 'loading',
-        label: AnalysisStatus.RUNNING,
-        color: Color.WHITE,
-        iconColor: Color.WHITE,
-        backgroundColor: Color.PRIMARY_7
-      }
+      return RunningStatus
     default:
-      return {
-        label: '',
-        color: Color.GREY_500,
-        backgroundColor: Color.GREY_50
-      }
+      return DefaultStatus
   }
 }
 
@@ -88,8 +75,7 @@ export const RenderImpact: Renderer<CellProps<SRMAnalysisStepDetailDTO>> = ({ ro
 
 export const RenderStatus: Renderer<CellProps<SRMAnalysisStepDetailDTO>> = ({ row }): JSX.Element => {
   const rowdata = row?.original
-  const { color, backgroundColor, label, icon, iconColor } =
-    statusToColorMappingAnalysisReport(rowdata.analysisStatus) || {}
+  const { color, backgroundColor, label, icon, iconColor } = statusToColorMappingAnalysisReport(rowdata.analysisStatus)
   const iconColorProp = iconColor ? { color: iconColor } : {}
   const iconProps = { ...iconColorProp, iconSize: 12 }
   return (
