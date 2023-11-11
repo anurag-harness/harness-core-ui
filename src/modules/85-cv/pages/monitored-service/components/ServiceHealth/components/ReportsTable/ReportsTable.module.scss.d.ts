@@ -9,5 +9,6 @@
 declare const styles: {
   readonly noDataContainer: string
   readonly reportsTableCard: string
+  readonly statusCard: string
 }
 export default styles

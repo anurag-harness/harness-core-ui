@@ -6,22 +6,50 @@
  */
 
 import React from 'react'
-import { Card, Container, NoDataCard } from '@harness/uicore'
-import noDataImage from '@cv/assets/noChangesData.svg'
+import { TableV2, Text } from '@harness/uicore'
+import { Column } from 'react-table'
 import { useStrings } from 'framework/strings'
-import css from './ReportsTable.module.scss'
+import { SRMAnalysisStepDetailDTO } from 'services/cv'
+import { RenderDateTime, RenderStepName, RenderImpact, RenderStatus } from './RenderTable.utils'
 
-export default function ReportsTable(): JSX.Element {
+interface ReportsTableInterface {
+  data: SRMAnalysisStepDetailDTO[]
+  showDrawer: () => void
+}
+
+export default function ReportsTable({ data, showDrawer }: ReportsTableInterface): JSX.Element {
   const { getString } = useStrings()
-  return (
-    <Card className={css.reportsTableCard}>
-      <Container height={458}>
-        <NoDataCard
-          image={noDataImage}
-          containerClassName={css.noDataContainer}
-          message={getString('cv.monitoredServices.noAvailableData')}
-        />
-      </Container>
-    </Card>
-  )
+
+  const columns: Column<SRMAnalysisStepDetailDTO>[] = [
+    {
+      Header: getString('timeLabel'),
+      Cell: RenderDateTime,
+      accessor: 'analysisStartTime',
+      width: '15%'
+    },
+    {
+      Header: getString('name'),
+      Cell: RenderStepName,
+      accessor: 'stepName',
+      width: '30%'
+    },
+    {
+      Header: getString('cv.monitoredServices.changesTable.impact'),
+      Cell: RenderImpact,
+      accessor: 'monitoredServiceIdentifier',
+      width: '20%'
+    },
+    {
+      Header: getString('source'),
+      Cell: () => <Text>Analyse Impact</Text>,
+      width: '20%'
+    },
+    {
+      Header: getString('typeLabel'),
+      width: '15%',
+      accessor: 'analysisStatus',
+      Cell: RenderStatus
+    }
+  ]
+  return <TableV2<SRMAnalysisStepDetailDTO> sortable data={data} columns={columns} onRowClick={showDrawer} />
 }
