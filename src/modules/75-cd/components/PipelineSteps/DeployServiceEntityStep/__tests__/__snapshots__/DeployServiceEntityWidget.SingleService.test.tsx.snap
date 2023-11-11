@@ -1556,7 +1556,7 @@ exports[`DeployServiceEntityWidget - single service tests user can edit selected
                       class="Layout--vertical StyledProps--main StyledProps--padding-right-huge"
                     >
                       <div
-                        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
+                        class="Layout--horizontal StyledProps--main cardListContainer"
                       >
                         <label
                           class="Thumbnail--squareCardContainer"
