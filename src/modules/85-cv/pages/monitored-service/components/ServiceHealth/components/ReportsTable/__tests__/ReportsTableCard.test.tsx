@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
+import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as UseFetchReportList from '@cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/UseFetchReportsList'
 import { UseFetchReportsListValue } from '@cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/UseFetchReportsList'
@@ -55,6 +56,9 @@ describe('Reports Table', () => {
     )
     reportListMock.map(item => {
       expect(getByText(item.stepName)).toBeInTheDocument()
+    })
+    await act(() => {
+      fireEvent.click(container.querySelectorAll('.TableV2--body [role="row"]')[0])
     })
   })
 
