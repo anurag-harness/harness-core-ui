@@ -17,6 +17,7 @@
 
 .deployStage {
   min-width: 464px;
+  max-width: 864px;
   height: 635px;
   margin-top: 2px;
   overflow-y: scroll;
@@ -108,6 +109,9 @@
   }
   .cardListContainer {
     margin-top: 0 !important;
+    gap: var(--spacing-medium);
+    flex-wrap: wrap;
+    margin-left: 0 !important;
   }
 }
 
