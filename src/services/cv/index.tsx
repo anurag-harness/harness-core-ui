@@ -2985,29 +2985,28 @@ export interface HealthSourceRecordsRequest {
     | 'AZURE_METRICS'
   query?: string
   skipQueryValidationDataSourceTypes?: (
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-    | 'SUMOLOGIC_METRICS'
-    | 'SUMOLOGIC_LOG'
-    | 'SPLUNK_SIGNALFX_METRICS'
-    | 'GRAFANA_LOKI_LOGS'
-    | 'AZURE_LOGS'
-    | 'AZURE_METRICS'
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+    | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
+    | 'AzureLogs'
+    | 'AzureMetrics'
   )[]
   startTime: number
 }
@@ -3361,6 +3360,7 @@ export interface LearningEngineTask {
     | 'LOG_ANALYSIS'
     | 'TIME_SERIES_LOAD_TEST'
     | 'LOG_FEEDBACK'
+    | 'CV_LOG_CLUSTER'
   createdAt?: number
   endTime?: number
   exception?: string
@@ -3387,6 +3387,7 @@ export interface LearningEngineTask {
     | 'LOG_ANALYSIS'
     | 'TIME_SERIES_LOAD_TEST'
     | 'LOG_FEEDBACK'
+    | 'CV_LOG_CLUSTER'
   uuid?: string
   verificationTaskId?: string
 }
@@ -4437,6 +4438,17 @@ export interface PageSLOHealthListView {
   totalPages?: number
 }
 
+export interface PageSRMAnalysisStepDetailDTO {
+  content?: SRMAnalysisStepDetailDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageServiceLevelObjectiveV2Response {
   content?: ServiceLevelObjectiveV2Response[]
   empty?: boolean
@@ -4746,29 +4758,28 @@ export interface QueryRecordsRequest {
     | 'AZURE_METRICS'
   query?: string
   skipQueryValidationDataSourceTypes?: (
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-    | 'SUMOLOGIC_METRICS'
-    | 'SUMOLOGIC_LOG'
-    | 'SPLUNK_SIGNALFX_METRICS'
-    | 'GRAFANA_LOKI_LOGS'
-    | 'AZURE_LOGS'
-    | 'AZURE_METRICS'
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+    | 'SplunkSignalFXMetrics'
+    | 'GrafanaLokiLogs'
+    | 'AzureLogs'
+    | 'AzureMetrics'
   )[]
   startTime: number
 }
@@ -6135,6 +6146,14 @@ export interface RestResponsePageLogAnalysisClusterDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponsePageSRMAnalysisStepDetailDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: PageSRMAnalysisStepDetailDTO
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponsePageTimeSeriesMetricDataDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -6500,12 +6519,20 @@ export interface SLOTargetSpec {
 }
 
 export interface SRMAnalysisStepDetailDTO {
+  accountId: string
   analysisDuration: Duration
   analysisEndTime: number
   analysisStartTime: number
   analysisStatus: 'RUNNING' | 'COMPLETED' | 'ABORTED'
+  envIdentifier: string
+  environmentName?: string
   executionDetailIdentifier: string
   monitoredServiceIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceIdentifier: string
+  serviceName?: string
+  stepName: string
 }
 
 export interface SRMLicenseUsageDTO {
@@ -7416,6 +7443,7 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   basePath?: string
   default?: boolean
   delegateSelectors?: string[]
+  enableCache?: boolean
   k8sAuthEndpoint?: string
   namespace?: string
   readOnly?: boolean
@@ -7851,7 +7879,6 @@ export interface ChangeEventListForAccountQueryParams {
     | 'CustomFF'
     | 'DeploymentImpactAnalysis'
   )[]
-  searchText?: string
   startTime: number
   endTime: number
   pageIndex?: number
@@ -7939,6 +7966,87 @@ export const changeEventListForAccountPromise = (
     ChangeEventListForAccountPathParams
   >(getConfig('cv/api'), `/account/${accountIdentifier}/change-event`, props, signal)
 
+export interface ReportListAccountQueryParams {
+  serviceIdentifiers?: string[]
+  envIdentifiers?: string[]
+  monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
+  startTime: number
+  endTime: number
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
+}
+
+export interface ReportListAccountPathParams {
+  accountIdentifier: string
+}
+
+export type ReportListAccountProps = Omit<
+  GetProps<
+    RestResponsePageSRMAnalysisStepDetailDTO,
+    unknown,
+    ReportListAccountQueryParams,
+    ReportListAccountPathParams
+  >,
+  'path'
+> &
+  ReportListAccountPathParams
+
+/**
+ * get ReportList List for Account
+ */
+export const ReportListAccount = ({ accountIdentifier, ...props }: ReportListAccountProps) => (
+  <Get<RestResponsePageSRMAnalysisStepDetailDTO, unknown, ReportListAccountQueryParams, ReportListAccountPathParams>
+    path={`/account/${accountIdentifier}/change-event/report`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseReportListAccountProps = Omit<
+  UseGetProps<
+    RestResponsePageSRMAnalysisStepDetailDTO,
+    unknown,
+    ReportListAccountQueryParams,
+    ReportListAccountPathParams
+  >,
+  'path'
+> &
+  ReportListAccountPathParams
+
+/**
+ * get ReportList List for Account
+ */
+export const useReportListAccount = ({ accountIdentifier, ...props }: UseReportListAccountProps) =>
+  useGet<RestResponsePageSRMAnalysisStepDetailDTO, unknown, ReportListAccountQueryParams, ReportListAccountPathParams>(
+    (paramsInPath: ReportListAccountPathParams) => `/account/${paramsInPath.accountIdentifier}/change-event/report`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * get ReportList List for Account
+ */
+export const reportListAccountPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponsePageSRMAnalysisStepDetailDTO,
+    unknown,
+    ReportListAccountQueryParams,
+    ReportListAccountPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponsePageSRMAnalysisStepDetailDTO,
+    unknown,
+    ReportListAccountQueryParams,
+    ReportListAccountPathParams
+  >(getConfig('cv/api'), `/account/${accountIdentifier}/change-event/report`, props, signal)
+
 export interface ChangeEventTimelineForAccountQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]
@@ -7958,7 +8066,6 @@ export interface ChangeEventTimelineForAccountQueryParams {
     | 'CustomFF'
     | 'DeploymentImpactAnalysis'
   )[]
-  searchText?: string
   startTime: number
   endTime: number
   pointCount?: number
@@ -8302,7 +8409,6 @@ export interface ChangeEventListQueryParams {
     | 'CustomFF'
     | 'DeploymentImpactAnalysis'
   )[]
-  searchText?: string
   startTime: number
   endTime: number
   pageIndex?: number
@@ -8384,6 +8490,107 @@ export const changeEventListPromise = (
     signal
   )
 
+export interface ReportListProjectQueryParams {
+  serviceIdentifiers?: string[]
+  envIdentifiers?: string[]
+  monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
+  startTime: number
+  endTime: number
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
+}
+
+export interface ReportListProjectPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type ReportListProjectProps = Omit<
+  GetProps<
+    RestResponsePageSRMAnalysisStepDetailDTO,
+    unknown,
+    ReportListProjectQueryParams,
+    ReportListProjectPathParams
+  >,
+  'path'
+> &
+  ReportListProjectPathParams
+
+/**
+ * get ReportList List for Project
+ */
+export const ReportListProject = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: ReportListProjectProps) => (
+  <Get<RestResponsePageSRMAnalysisStepDetailDTO, unknown, ReportListProjectQueryParams, ReportListProjectPathParams>
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/change-event/report`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseReportListProjectProps = Omit<
+  UseGetProps<
+    RestResponsePageSRMAnalysisStepDetailDTO,
+    unknown,
+    ReportListProjectQueryParams,
+    ReportListProjectPathParams
+  >,
+  'path'
+> &
+  ReportListProjectPathParams
+
+/**
+ * get ReportList List for Project
+ */
+export const useReportListProject = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseReportListProjectProps) =>
+  useGet<RestResponsePageSRMAnalysisStepDetailDTO, unknown, ReportListProjectQueryParams, ReportListProjectPathParams>(
+    (paramsInPath: ReportListProjectPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/change-event/report`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * get ReportList List for Project
+ */
+export const reportListProjectPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponsePageSRMAnalysisStepDetailDTO,
+    unknown,
+    ReportListProjectQueryParams,
+    ReportListProjectPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponsePageSRMAnalysisStepDetailDTO,
+    unknown,
+    ReportListProjectQueryParams,
+    ReportListProjectPathParams
+  >(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/change-event/report`,
+    props,
+    signal
+  )
+
 export interface ChangeEventTimelineQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]
@@ -8403,7 +8610,6 @@ export interface ChangeEventTimelineQueryParams {
     | 'CustomFF'
     | 'DeploymentImpactAnalysis'
   )[]
-  searchText?: string
   startTime: number
   endTime: number
   pointCount?: number
@@ -17818,7 +18024,7 @@ export interface GetSRMAnalysisSummaryQueryParams {
 }
 
 export interface GetSRMAnalysisSummaryPathParams {
-  activityId: string
+  executionDetailId: string
 }
 
 export type GetSRMAnalysisSummaryProps = Omit<
@@ -17835,9 +18041,9 @@ export type GetSRMAnalysisSummaryProps = Omit<
 /**
  * get summary of srm analysis activity
  */
-export const GetSRMAnalysisSummary = ({ activityId, ...props }: GetSRMAnalysisSummaryProps) => (
+export const GetSRMAnalysisSummary = ({ executionDetailId, ...props }: GetSRMAnalysisSummaryProps) => (
   <Get<RestResponseSRMAnalysisStepDetailDTO, unknown, GetSRMAnalysisSummaryQueryParams, GetSRMAnalysisSummaryPathParams>
-    path={`/srm-analysis-step/${activityId}/analysis-summary`}
+    path={`/srm-analysis-step/${executionDetailId}/analysis-summary`}
     base={getConfig('cv/api')}
     {...props}
   />
@@ -17857,15 +18063,16 @@ export type UseGetSRMAnalysisSummaryProps = Omit<
 /**
  * get summary of srm analysis activity
  */
-export const useGetSRMAnalysisSummary = ({ activityId, ...props }: UseGetSRMAnalysisSummaryProps) =>
+export const useGetSRMAnalysisSummary = ({ executionDetailId, ...props }: UseGetSRMAnalysisSummaryProps) =>
   useGet<
     RestResponseSRMAnalysisStepDetailDTO,
     unknown,
     GetSRMAnalysisSummaryQueryParams,
     GetSRMAnalysisSummaryPathParams
   >(
-    (paramsInPath: GetSRMAnalysisSummaryPathParams) => `/srm-analysis-step/${paramsInPath.activityId}/analysis-summary`,
-    { base: getConfig('cv/api'), pathParams: { activityId }, ...props }
+    (paramsInPath: GetSRMAnalysisSummaryPathParams) =>
+      `/srm-analysis-step/${paramsInPath.executionDetailId}/analysis-summary`,
+    { base: getConfig('cv/api'), pathParams: { executionDetailId }, ...props }
   )
 
 /**
@@ -17873,14 +18080,14 @@ export const useGetSRMAnalysisSummary = ({ activityId, ...props }: UseGetSRMAnal
  */
 export const getSRMAnalysisSummaryPromise = (
   {
-    activityId,
+    executionDetailId,
     ...props
   }: GetUsingFetchProps<
     RestResponseSRMAnalysisStepDetailDTO,
     unknown,
     GetSRMAnalysisSummaryQueryParams,
     GetSRMAnalysisSummaryPathParams
-  > & { activityId: string },
+  > & { executionDetailId: string },
   signal?: RequestInit['signal']
 ) =>
   getUsingFetch<
@@ -17888,7 +18095,7 @@ export const getSRMAnalysisSummaryPromise = (
     unknown,
     GetSRMAnalysisSummaryQueryParams,
     GetSRMAnalysisSummaryPathParams
-  >(getConfig('cv/api'), `/srm-analysis-step/${activityId}/analysis-summary`, props, signal)
+  >(getConfig('cv/api'), `/srm-analysis-step/${executionDetailId}/analysis-summary`, props, signal)
 
 export interface StopSRMAnalysisStepQueryParams {
   accountId: string

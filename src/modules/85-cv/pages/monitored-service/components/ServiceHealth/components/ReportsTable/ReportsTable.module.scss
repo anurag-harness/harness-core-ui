@@ -13,3 +13,16 @@
   width: 100% !important;
   background-color: var(--white);
 }
+
+.statusCard {
+  padding: var(--spacing-xsmall) var(--spacing-small) !important;
+  border-radius: 5px;
+  height: 20px !important;
+  font-weight: bold !important;
+  font-size: var(--font-size-xsmall) !important;
+  text-transform: uppercase;
+  text-align: center;
+  width: fit-content;
+  margin: 0 !important;
+  align-self: center;
+}

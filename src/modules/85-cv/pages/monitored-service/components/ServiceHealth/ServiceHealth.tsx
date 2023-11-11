@@ -54,7 +54,7 @@ import MetricsAndLogs from './components/MetricsAndLogs/MetricsAndLogs'
 import AnomaliesCard from './components/AnomaliesCard/AnomaliesCard'
 import ChangesSourceCard from './components/ChangesSourceCard/ChangesSourceCard'
 import ChangesTable from './components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
-import ReportsTable from './components/ReportsTable/ReportsTable'
+import ReportsTableCard from './components/ReportsTable/ReportsTableCard'
 import css from './ServiceHealth.module.scss'
 
 export default function ServiceHealth({
@@ -304,7 +304,10 @@ export default function ServiceHealth({
             <Heading level={2} font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
               {getString('ce.perspectives.reports.title', { count: 0 })}
             </Heading>
-            <ReportsTable />
+            <ReportsTableCard
+              startTime={changesTableAndSourceCardStartAndEndtimeWithSlider[0]}
+              endTime={changesTableAndSourceCardStartAndEndtimeWithSlider[1]}
+            />
           </Container>
         </Layout.Horizontal>
 

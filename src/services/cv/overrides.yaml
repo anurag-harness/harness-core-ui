@@ -124,9 +124,11 @@ allowpaths:
   - /activity/{activityId}/healthSources
   - /account/{accountIdentifier}/change-event
   - /account/{accountIdentifier}/change-event/timeline
+  - /account/{accountIdentifier}/change-event/report
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event/timeline
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event/{activityId}
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event/report
   - /log-dashboard/logs-cluster
   - /error-tracking-dashboard/cluster
   - /user-journey/create
@@ -209,7 +211,7 @@ allowpaths:
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/log-feedback/{logFeedbackId}/ticket
   - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/baseline
   - /monitored-service/platform/list
-  - /srm-analysis-step/{activityId}/analysis-summary
+  - /srm-analysis-step/{executionDetailId}/analysis-summary
   - /srm-analysis-step/{executionDetailId}/stop-analysis
 
 operationIdOverrides:

@@ -152,6 +152,10 @@ jest.mock('services/cv', () => ({
   })
 }))
 
+jest.mock('@cv/pages/monitored-service/components/ServiceHealth/components/ReportsTable/UseFetchReportsList', () => ({
+  useFetchReportsList: jest.fn().mockReturnValue({ data: {}, loading: false })
+}))
+
 describe('Unit tests for ServiceHealth', () => {
   const props = {
     monitoredServiceIdentifier: 'monitored_service_identifier',
