@@ -37,7 +37,7 @@ $dot-space: 10px;
     width: 100%;
     position: relative;
     border-top: 2px solid var(--grey-100);
-    overflow: scroll;
+    overflow: auto;
     background: linear-gradient(90deg, $bg-color ($dot-space - $dot-size), transparent 1%) center,
       linear-gradient($bg-color ($dot-space - $dot-size), transparent 1%) center, $dot-color;
     background-size: $dot-space $dot-space;
