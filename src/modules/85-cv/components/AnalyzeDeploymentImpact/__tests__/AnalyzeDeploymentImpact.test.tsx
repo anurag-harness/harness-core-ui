@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
+import { SRMAnalysisStepDetailDTO } from 'services/cv'
 import AnalyzeDeploymentImpact from '../AnalyzeDeploymentImpact'
 import { stepMock, summaryMock } from './AnalyzeDeploymentImpact.mock'
 import AnalyzeDeploymentImpactConsoleView from '../AnalyzeDeploymentImpactConsoleView'
@@ -129,7 +130,7 @@ describe('AnalyzeDeploymentImpact', () => {
 
   test('calculateProgressPercentage', () => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1689487675000)
-    const data = { resource: summaryMock } as cvService.RestResponseSRMAnalysisStepDetailDTO
+    const data = { resource: summaryMock as unknown as SRMAnalysisStepDetailDTO }
     // no data
     expect(calculateProgressPercentage(null)).toEqual(0)
     // running state
