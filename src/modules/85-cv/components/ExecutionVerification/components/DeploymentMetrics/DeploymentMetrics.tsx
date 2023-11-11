@@ -38,7 +38,6 @@ import {
   GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
   HealthSourceV2,
   VerificationOverview,
-  useGetHealthSourcesForVerifyStepExecutionId,
   useGetMetricsAnalysisForVerifyStepExecutionId,
   useGetTransactionGroupsForVerifyStepExecutionId,
   useGetVerifyStepNodeNames
@@ -191,19 +190,6 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     const baseText = getString(filterText)
     return getFilterDisplayText(selectedOptions, baseText, getString('all'))
   }, [])
-
-  // const {
-  //   data: healthSourcesData,
-  //   error: healthSourcesError,
-  //   loading: healthSourcesLoading,
-  //   refetch: fetchHealthSources
-  // } = useGetHealthSourcesForVerifyStepExecutionId({
-  //   accountIdentifier: accountId,
-  //   orgIdentifier,
-  //   projectIdentifier,
-  //   verifyStepExecutionId: activityId,
-  //   lazy: true
-  // })
 
   useEffect(() => {
     if (activityId) {
